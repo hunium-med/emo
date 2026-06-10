@@ -39,9 +39,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .sidebar.hidden{margin-left:-230px;opacity:0;pointer-events:none}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99}
 @media(max-width:768px){.sidebar-overlay.show{display:block}}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:100;width:100%;min-width:100%;margin-left:0!important;opacity:1!important;pointer-events:auto!important;transform:translateX(-100%);transition:transform 0.25s ease;box-shadow:none}
+  .sidebar:not(.hidden){transform:translateX(0)}
+  .sidebar.hidden{transform:translateX(-100%)}
+  body.dark .sidebar{background:var(--bg)}
+  .topbar{padding:10px 12px;gap:4px}
+  .topbar-title{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .topbar-row2{flex-wrap:wrap;gap:4px}
+  .topbar-right{gap:2px}
+  .badges{display:flex;flex-wrap:wrap;gap:4px}
+  .badge{font-size:10px;padding:2px 7px}
+  .icon-btn,.status-btn{font-size:11px!important;padding:2px 6px!important}
+  .content{padding:10px}
+  .tc{padding:12px 14px;font-size:15px;line-height:1.65}
+  .tabs{padding:0 2px}
+  .tab{padding:9px 8px;font-size:12px}
+  .sidebar-bottom .btn{font-size:12px;padding:7px 10px}
+  .drug-fields{grid-template-columns:1fr}
+  .drug-field-label{padding-top:0}
+  .comp-entry{padding:14px 14px}
+  .stat-row{flex-direction:column}
+  .stat{min-width:auto}
+  .step{flex-direction:column;gap:6px}
+}
 .toggle-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid #B5D4F4;background:#f0f5fb;color:#185FA5;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .toggle-btn:hover{background:#E6F1FB}
-.sidebar-header{padding:16px 14px 10px;border-bottom:0.5px solid #B5D4F4}
+.sidebar-header{padding:16px 14px 10px;border-bottom:0.5px solid #B5D4F4;display:flex;align-items:center;justify-content:space-between}
+.sidebar-close{display:none;width:32px;height:32px;border-radius:8px;border:0.5px solid #B5D4F4;background:transparent;color:#185FA5;font-size:16px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-close:hover{background:#E6F1FB}
+@media(max-width:768px){.sidebar-close{display:flex}}
 .logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:#185FA5}
 .sidebar-search{padding:10px 10px 6px}
 .sidebar-search input{width:100%;padding:7px 10px;font-size:13px;border:0.5px solid #B5D4F4;border-radius:8px;background:#fff;color:#185FA5}
@@ -67,8 +94,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .btn-primary:hover{background:#0C447C}
 .btn-ghost{background:transparent;color:#4a7fa5;border:0.5px solid #B5D4F4}
 .main{flex:1;display:flex;flex-direction:column;background:#f7fafd;overflow:hidden}
-.topbar{padding:12px 20px;border-bottom:0.5px solid #B5D4F4;background:#f0f5fb;display:flex;align-items:center;justify-content:space-between}
-.topbar-title{font-size:16px;font-weight:500;color:#185FA5}
+.topbar{padding:12px 20px;border-bottom:0.5px solid #B5D4F4;background:#f0f5fb;display:flex;flex-direction:column;gap:6px}
+.topbar-row1{display:flex;align-items:center;gap:10px}
+.topbar-title{font-size:16px;font-weight:500;color:#185FA5;flex:1;min-width:0}
+.topbar-row2{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.topbar-row2:empty{display:none}
 .topbar-right{display:flex;gap:8px;align-items:center}
 .badges{display:flex;gap:5px}
 .badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:#E6F1FB;color:#185FA5}
@@ -84,10 +114,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .sl:first-child{margin-top:0}
 .cl li{padding:4px 0 4px 17px;position:relative;font-size:15px;list-style:none;line-height:1.55}
 .cl li::before{content:"";width:7px;height:7px;border-radius:50%;background:#378ADD;position:absolute;left:0;top:11px}
-.cl li.l2{padding-left:20px;font-size:15px}
-.cl li.l2::before{width:6px;height:6px;background:#85B7EB;border-radius:50%}
-.cl li.l3{padding-left:40px;font-size:15px}
-.cl li.l3::before{width:5px;height:5px;background:#B5D4F4;border-radius:50%}
+.cl li.l2{padding-left:20px}
+.cl li.l2::before{width:6px;height:6px;background:transparent;border:1.5px solid #85B7EB;border-radius:50%;left:36px}
+.cl li.l3{padding-left:40px}
+.cl li.l3::before{width:5px;height:5px;background:#85B7EB;border-radius:1px;left:72px}
 .cl{padding:0}
 .stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .stat{flex:1;min-width:90px;background:#E6F1FB;border:0.5px solid #B5D4F4;border-radius:8px;padding:10px 12px;text-align:center}
@@ -98,9 +128,73 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .step-title{font-size:16px;font-weight:500;color:#185FA5;margin-bottom:4px}
 .step-content{font-size:15px;line-height:1.6;color:#2c4a63}
 .pill{background:#E6F1FB;border:0.5px solid #B5D4F4;border-radius:20px;padding:3px 12px;font-size:16px;color:#185FA5;display:inline-block;margin:2px}
-.dr{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:0.5px solid #B5D4F4;border-radius:8px;background:#f8fbff;margin-bottom:6px}
-.dr-name{font-size:17px;font-weight:500;color:#185FA5}
-.dr-dose{font-size:16px;color:#4a7fa5}
+/* Drug entries — editorial style, grouped by treatment line */
+.drug-list{margin-top:4px}
+.drug-group{margin-bottom:24px}
+.drug-group:last-child{margin-bottom:8px}
+.drug-group-header{font-size:13px;font-weight:600;color:#4a7fa5;padding:10px 0 6px;border-bottom:0.5px solid #B5D4F4;margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
+.drug-group-header-en{color:#B5D4F4;font-weight:400;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;margin-left:2px}
+.drug-group-count{font-size:12px;color:#7ab3d9;font-weight:400}
+.drug-entry{padding:14px 0 12px;border-top:0.5px solid #f0f5fb}
+.drug-entry:first-child{border-top:0;padding-top:10px}
+.drug-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+.drug-name{font-size:17px;font-weight:500;color:#185FA5;line-height:1.35}
+.drug-class{margin-left:auto;font-size:12px;color:#4a7fa5;background:#f0f5fb;padding:2px 10px;border-radius:6px;letter-spacing:0.02em;font-weight:400}
+.drug-badge{display:inline-flex;align-items:center;font-size:11px;padding:2px 8px;border-radius:6px;font-weight:500}
+.drug-fields{display:grid;grid-template-columns:64px 1fr;gap:8px 14px;margin-top:8px}
+.drug-field-label{font-size:13px;color:#4a7fa5;font-weight:600;padding-top:3px}
+.drug-field-value{font-size:15px;color:#185FA5;line-height:1.7}
+.drug-field-value > p:first-child{margin-top:0}
+.drug-field-value > p:last-child{margin-bottom:0}
+body.dark .drug-group-header{color:var(--text);border-bottom-color:var(--border)}
+body.dark .drug-group-header-en{color:var(--text3);opacity:0.6}
+body.dark .drug-group-count{color:var(--text3)}
+body.dark .drug-entry{border-top-color:var(--border)}
+body.dark .drug-name{color:var(--text)}
+body.dark .drug-class{background:var(--bg2);color:var(--text2)}
+body.dark .drug-field-label{color:var(--text2)}
+body.dark .drug-field-value{color:var(--text)}
+
+/* Complication cards — contained, essay-style, with timeline pathophys */
+.comp-list{margin-top:18px}
+.comp-list-header{font-size:13px;font-weight:600;color:#4a7fa5;padding:10px 0 8px;border-bottom:0.5px solid #B5D4F4;margin-bottom:14px;display:flex;justify-content:space-between;align-items:baseline}
+.comp-list-header-en{color:#B5D4F4;font-weight:400;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;margin-left:2px}
+.comp-list-count{font-size:12px;color:#7ab3d9;font-weight:400}
+.comp-entry{padding:18px 22px 18px;background:#fbfdff;border:0.5px solid #E6F1FB;border-radius:10px;margin-bottom:14px;transition:border-color 0.15s}
+.comp-entry:hover{border-color:#B5D4F4}
+.comp-entry:last-of-type{margin-bottom:0}
+.comp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:4px;padding-bottom:14px;border-bottom:0.5px solid #E6F1FB}
+.comp-title-wrap{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;flex:1;min-width:0}
+.comp-name{font-size:18px;font-weight:500;color:#185FA5;line-height:1.35}
+.comp-name-en{font-size:13px;color:#7ab3d9;font-weight:400}
+.comp-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.comp-meta-badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:500;color:#4a7fa5;background:#fff;border:0.5px solid #B5D4F4;padding:3px 9px;border-radius:6px;letter-spacing:0.02em}
+.comp-meta-badge i{font-size:11px;opacity:0.75}
+.comp-meta-badge.comp-sev-high{color:#A32D2D;background:#FAEAE6;border-color:#F5C9C2}
+.comp-meta-badge.comp-sev-med{color:#854F0B;background:#FAF1E0;border-color:#EFD9B0}
+.comp-section{margin-top:16px}
+.comp-section:first-of-type{margin-top:14px}
+.comp-section-label{font-size:10px;font-weight:600;color:#185FA5;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:8px;display:flex;align-items:baseline;gap:6px}
+.comp-section-label-en{color:#B5D4F4;font-weight:400;letter-spacing:0.1em}
+.comp-section-content{font-size:15px;color:#185FA5;line-height:1.7}
+.comp-section-content > p:first-child{margin-top:0}
+.comp-section-content > p:last-child{margin-bottom:0}
+.comp-link-row{margin-top:14px;padding-top:12px;border-top:0.5px solid #E6F1FB}
+.comp-link{font-size:12px;color:#185FA5;cursor:pointer;display:inline-flex;align-items:center;gap:3px;padding:3px 0;border-bottom:1px dashed #B5D4F4;transition:border-color 0.15s}
+.comp-link:hover{border-bottom-color:#185FA5}
+body.dark .comp-list-header{color:var(--text);border-bottom-color:var(--border)}
+body.dark .comp-list-header-en{color:var(--text3);opacity:0.6}
+body.dark .comp-list-count{color:var(--text3)}
+body.dark .comp-entry{background:var(--bg2);border-color:var(--border)}
+body.dark .comp-entry:hover{border-color:var(--border-strong,var(--border))}
+body.dark .comp-head{border-bottom-color:var(--border)}
+body.dark .comp-name{color:var(--text)}
+body.dark .comp-name-en{color:var(--text3)}
+body.dark .comp-meta-badge{background:var(--bg);color:var(--text2);border-color:var(--border)}
+body.dark .comp-section-label{color:var(--text)}
+body.dark .comp-section-content{color:var(--text)}
+body.dark .comp-link-row{border-top-color:var(--border)}
+body.dark .comp-link{color:var(--text);border-bottom-color:var(--border)}
 .cb{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 13px;font-size:16px;margin:3px;cursor:default}
 .cb-linked{background:#E6F1FB;border:0.5px solid #85B7EB;color:#185FA5;cursor:pointer}
 .cb-linked:hover{background:#B5D4F4}
@@ -195,6 +289,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:12px}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:#4a7fa5}
 .legend-dot{width:10px;height:10px;border-radius:50%}
+
+/* Disease graph: focus + fade */
+.graph-node{cursor:pointer;transition:opacity 0.22s ease}
+.graph-node.faded{opacity:0.12}
+.graph-node.focused circle:first-child{stroke-width:3}
+.graph-edge{transition:opacity 0.22s ease,stroke-width 0.22s ease}
+.graph-edge.faded{opacity:0.05}
+.graph-edge.highlighted{stroke:var(--blue,#185FA5);stroke-width:2.5;opacity:1}
+.graph-toggle{padding:6px 12px;font-size:12px;background:transparent;border:0.5px solid var(--border,#B5D4F4);border-radius:6px;cursor:pointer;color:var(--text2,#4a7fa5);font-weight:400;transition:all 0.12s}
+.graph-toggle:hover{background:var(--hover)}
+.graph-toggle.on{background:var(--blue-bg,#E6F1FB);border-color:var(--blue,#185FA5);color:var(--blue,#185FA5);font-weight:500}
+
+/* Minimap */
+#minimap{position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,0.92);border:0.5px solid var(--border,#B5D4F4);border-radius:6px;backdrop-filter:blur(6px);padding:4px;box-shadow:0 2px 10px rgba(20,30,50,0.08);z-index:10;cursor:pointer}
+body.dark #minimap{background:rgba(20,30,50,0.85);border-color:#3a4a6a;box-shadow:0 2px 10px rgba(0,0,0,0.3)}
+#minimap svg{display:block}
+.mm-viewport{fill:rgba(24,95,165,0.08);stroke:var(--blue,#185FA5);stroke-width:1.2;pointer-events:none}
 .loading{display:flex;align-items:center;justify-content:center;height:100vh}
 .spinner{width:28px;height:28px;border:3px solid #B5D4F4;border-top-color:#185FA5;border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -589,35 +700,37 @@ body.dark .clue-badge-xref{color:var(--text3)}
 <div class="loading" id="loadingScreen">
   <div style="text-align:center">
     <div class="spinner" style="margin:0 auto 12px"></div>
-    <div style="font-size:14px;color:#185FA5">醫謀中...</div>
+    <div style="font-size:14px;color:#185FA5">連接 Supabase 中...</div>
   </div>
 </div>
 
 <div class="layout" id="app" style="display:none">
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <div class="sidebar hidden" id="sidebar">
-    <div class="sidebar-header"><div class="logo"><i class="ti ti-stethoscope"></i>醫謀</div></div>
+    <div class="sidebar-header"><div class="logo"><i class="ti ti-stethoscope"></i>MedBase TW</div><button class="sidebar-close" onclick="toggleSidebar()">✕</button></div>
     <div class="sidebar-search"><input id="searchInput" placeholder="搜尋疾病..." oninput="filterList()"></div>
     <div class="sidebar-section" id="countLabel">知識庫</div>
     <div class="sidebar-list" id="sidebarList"></div>
     <div class="sidebar-bottom">
       <button class="btn btn-primary" onclick="showSymptoms()" style="background:#2E8B57">🧠 症狀導向學習</button>
+      <button class="btn btn-primary" onclick="showTopics()" style="background:#6B3FA0">📚 知識專題</button>
       <button class="btn btn-primary" onclick="showGraph()">🔗 疾病關係圖</button>
       <button class="btn btn-ghost" onclick="showBookmarks()">⭐ 書籤列表</button>
     </div>
   </div>
   <div class="main">
     <div class="topbar">
-      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+      <div class="topbar-row1">
         <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
         <div class="topbar-title" id="topTitle">選擇一個條目</div>
-        <div id="topBadges" class="badges"></div>
-      </div>
-      <div class="topbar-right" id="topRight">
-        <div id="topStatus"></div>
         <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" title="切換深色模式">☀</button>
       </div>
-      <div class="badges" id="topBadges"></div>
+      <div class="topbar-row2" id="topbarRow2">
+        <div id="topBadges" class="badges"></div>
+        <div class="topbar-right" id="topRight">
+          <div id="topStatus"></div>
+        </div>
+      </div>
     </div>
     <div class="content" id="mainContent">
       <div class="empty">← 從左側選擇一個疾病條目</div>
@@ -646,6 +759,54 @@ var compareState = { selected: [] };
 var exploreState = { mechId: null, anatId: null };
 var currentId = null, currentTab = "def", currentView = "entry";
 var expandedCat = null; // accordion: only one category open at a time, null = all collapsed
+var graphState = { focusedId: null, onlyConnected: false };
+var topics = [], topicSecMap = {}, currentTopicId = null;
+var topicTypesList = [];
+var TOPIC_TYPES_DEFAULTS = {
+  exam:         { zh: "理學檢查",    icon: "ti-stethoscope" },
+  imaging:      { zh: "影像判讀",    icon: "ti-photo-scan" },
+  lab:          { zh: "實驗室檢驗",  icon: "ti-flask" },
+  scale:        { zh: "量表評分",    icon: "ti-list-numbers" },
+  procedure:    { zh: "處置操作",    icon: "ti-tool" },
+  algorithm:    { zh: "流程演算法",  icon: "ti-share" },
+  anatomy:      { zh: "解剖",        icon: "ti-body-scan" },
+  physiology:   { zh: "生理機轉",    icon: "ti-heartbeat" },
+  pharmacology: { zh: "藥理",        icon: "ti-pill" },
+  rehab:        { zh: "復健",        icon: "ti-walk" },
+  concept:      { zh: "概念標準",    icon: "ti-bulb" }
+};
+var TOPIC_TYPES = {};
+function buildTopicTypesMap(){
+  TOPIC_TYPES = {};
+  if (topicTypesList.length){
+    topicTypesList.forEach(function(t){
+      var def = TOPIC_TYPES_DEFAULTS[t.id];
+      TOPIC_TYPES[t.id] = {
+        zh: t.zh || (def ? def.zh : t.id),
+        icon: t.icon || (def ? def.icon : "ti-circle"),
+        sort_order: t.sort_order || 100
+      };
+    });
+  } else {
+    Object.keys(TOPIC_TYPES_DEFAULTS).forEach(function(k){
+      TOPIC_TYPES[k] = TOPIC_TYPES_DEFAULTS[k];
+    });
+  }
+}
+var SECTION_LABELS = {
+  overview:"總覽", indication:"適應症", contraindication:"禁忌症",
+  technique:"操作步驟", steps:"步驟", findings:"影像表現",
+  interpretation:"判讀", pitfall:"陷阱與常見錯誤", collection:"採檢",
+  differential:"鑑別", purpose:"用途", scoring:"計分方式",
+  thresholds:"臨界值", limitations:"限制", complications:"併發症",
+  flow:"流程", decision_points:"決策點", exceptions:"例外情況",
+  structure:"結構", relations:"鄰近關係", clinical_relevance:"臨床相關",
+  imaging:"影像", principle:"原理", regulation:"調節機制",
+  clinical_application:"臨床應用", mechanism:"作用機轉",
+  side_effects:"副作用", interactions:"交互作用",
+  assessment:"評估", intervention:"介入方法", progression:"進程",
+  definition:"定義", criteria:"標準", clinical_significance:"臨床意義"
+};
 var bookmarks = {}, notes = {}, dStatus = {};
 
 function loadUserData(){
@@ -677,7 +838,10 @@ async function init() {
       sb("symptom_mechanisms?select=*&order=sort_order").catch(function(){return []}),
       sb("mechanism_anatomies?select=*&order=sort_order").catch(function(){return []}),
       sb("anatomy_diseases?select=*&order=sort_order").catch(function(){return []}),
-      sb("disease_categories?select=*&order=sort_order").catch(function(){return []})
+      sb("disease_categories?select=*&order=sort_order").catch(function(){return []}),
+      sb("knowledge_topics?select=*&order=sort_order,name").catch(function(){return []}),
+      sb("knowledge_topic_sections?select=*&order=sort_order").catch(function(){return []}),
+      sb("topic_types?select=*&order=sort_order").catch(function(){return []})
     ]);
     diseases = results[0] || [];
     (results[1] || []).forEach(function(s) {
@@ -714,15 +878,45 @@ async function init() {
     CAT_COLORS = {};
     categoryList.forEach(function(c){ CAT_COLORS[c.name] = c.color; });
     if(!CAT_COLORS["其他"]) CAT_COLORS["其他"] = "#7ab3d9";
+    topics = Array.isArray(results[9]) ? results[9] : [];
+    topicSecMap = {};
+    (Array.isArray(results[10]) ? results[10] : []).forEach(function(s){
+      if (!topicSecMap[s.topic_id]) topicSecMap[s.topic_id] = {};
+      topicSecMap[s.topic_id][s.section_type] = s;
+    });
+    topicTypesList = Array.isArray(results[11]) ? results[11] : [];
+    buildTopicTypesMap();
     buildClueIndex();
     document.getElementById("loadingScreen").style.display = "none";
     document.getElementById("app").style.display = "flex";
     if(!isMobile())document.getElementById("sidebar").classList.remove("hidden");
     document.getElementById("countLabel").textContent = "知識庫（" + diseases.length + "）";
     renderSidebar(diseases);
-    var savedId = location.hash.replace("#","");
-    if (savedId && diseases.find(function(d){return d.id===savedId})) {
-      selectDisease(savedId);
+    var hash = location.hash.replace("#","");
+    if (hash === "graph") {
+      showGraph();
+    } else if (hash === "symptoms") {
+      showSymptoms();
+    } else if (hash === "topics") {
+      showTopics();
+    } else if (hash === "bookmarks") {
+      showBookmarks();
+    } else if (hash.indexOf("sx:") === 0) {
+      var sxId = hash.slice(3);
+      if (symptoms.find(function(s){ return s.id === sxId; })) {
+        showSymptomDetail(sxId);
+      } else {
+        showSymptoms();
+      }
+    } else if (hash.indexOf("topic:") === 0) {
+      var topicId = hash.slice(6);
+      if (topics.find(function(t){ return t.id === topicId; })) {
+        selectTopic(topicId);
+      } else {
+        showTopics();
+      }
+    } else if (hash && diseases.find(function(d){return d.id===hash})) {
+      selectDisease(hash);
     } else if (diseases.length > 0) {
       selectDisease(diseases[0].id);
     }
@@ -866,7 +1060,13 @@ function selectDisease(id) {
   // Sync sidebar accordion to the disease's category
   var d = diseases.find(function(x){ return x.id === id; });
   if (d && d.category) expandedCat = d.category;
-  try{history.replaceState(null,null,"#"+id)}catch(e){}
+  try{
+    if(currentView === "entry" && currentId === id){
+      history.replaceState(null,null,"#"+id);
+    } else {
+      history.pushState(null,null,"#"+id);
+    }
+  }catch(e){}
   closeSidebarMobile();
   // Smooth: DOM-only updates to keep CSS transitions alive (no innerHTML rebuild)
   applyAccordion();
@@ -891,6 +1091,7 @@ function renderEntry() {
   statusHtml += '</div>';
   document.getElementById("topStatus").innerHTML = statusHtml;
   document.getElementById("topBadges").innerHTML = badges.map(function(b) { return '<span class="badge">' + b + '</span>'; }).join("");
+  syncTopbarRow2();
 
   var secs = sectionMap[currentId] || {};
   var drugs = drugMap[currentId] || [];
@@ -974,22 +1175,36 @@ function renderRichText(text){
       }
       return;
     }
-    // Heading
-    if(trimmed.match(/^# /)){
+    // Heading L1-L3 (#, ##, ###)
+    var hm = trimmed.match(/^(#{1,3})\s+(.+)$/);
+    if(hm){
       if(inList){html+="</ul>";inList=false}
-      html+='<div style="font-size:16px;font-weight:600;color:#185FA5;margin:14px 0 6px">'+fmt(trimmed.substring(2))+'</div>';
+      var level = hm[1].length;
+      if (level === 1){
+        html+='<div style="font-size:17px;font-weight:600;color:#185FA5;margin:18px 0 6px;line-height:1.4">'+fmt(hm[2])+'</div>';
+      } else if (level === 2){
+        html+='<div style="font-size:14px;font-weight:600;color:#185FA5;margin:14px 0 4px;line-height:1.4">'+fmt(hm[2])+'</div>';
+      } else {
+        html+='<div style="font-size:11px;font-weight:600;color:#185FA5;text-transform:uppercase;letter-spacing:0.1em;margin:12px 0 3px;line-height:1.4">'+fmt(hm[2])+'</div>';
+      }
       return;
     }
-    // Bullet L2
+    // Bullet L3 (4+ spaces) — filled square
+    if(line.match(/^    +- /)){
+      if(!inList){html+='<ul style="list-style:none;padding:0;margin:4px 0">';inList=true}
+      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:55px;font-size:14px"><span style="width:5px;height:5px;border-radius:1px;background:#85B7EB;margin-top:9px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+fmt(line.replace(/^\s+-\s*/,""))+'</span></li>';
+      return;
+    }
+    // Bullet L2 — open circle
     if(line.match(/^  +- /)){
       if(!inList){html+='<ul style="list-style:none;padding:0;margin:4px 0">';inList=true}
-      html+='<li style="display:flex;align-items:flex-start;gap:6px;padding:2px 0;padding-left:20px;font-size:15px"><span style="width:6px;height:6px;border-radius:50%;background:#85B7EB;margin-top:8px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+fmt(line.replace(/^\s+-\s*/,""))+'</span></li>';
+      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:31px;font-size:15px"><span style="width:6px;height:6px;border-radius:50%;border:1.5px solid #85B7EB;background:transparent;margin-top:8px;flex-shrink:0;box-sizing:border-box"></span><span style="flex:1;min-width:0">'+fmt(line.replace(/^\s+-\s*/,""))+'</span></li>';
       return;
     }
-    // Bullet L1
+    // Bullet L1 — filled circle
     if(trimmed.match(/^- /)){
       if(!inList){html+='<ul style="list-style:none;padding:0;margin:4px 0">';inList=true}
-      html+='<li style="display:flex;align-items:flex-start;gap:6px;padding:2px 0;font-size:15px"><span style="width:7px;height:7px;border-radius:50%;background:#378ADD;margin-top:8px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+fmt(trimmed.substring(2))+'</span></li>';
+      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:8px;font-size:15px"><span style="width:7px;height:7px;border-radius:50%;background:#378ADD;margin-top:8px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+fmt(trimmed.substring(2))+'</span></li>';
       return;
     }
     // Regular paragraph
@@ -1305,6 +1520,38 @@ document.addEventListener("keydown", function(e){
   }
 });
 
+// Browser back/forward navigation
+window.addEventListener("popstate", function(){
+  var hash = location.hash.replace("#","");
+  if (hash === "graph") {
+    showGraph();
+  } else if (hash === "symptoms") {
+    showSymptoms();
+  } else if (hash === "topics") {
+    showTopics();
+  } else if (hash === "bookmarks") {
+    showBookmarks();
+  } else if (hash.indexOf("sx:") === 0) {
+    var sxId = hash.slice(3);
+    if (symptoms.find(function(s){ return s.id === sxId; })){
+      showSymptomDetail(sxId);
+    } else {
+      showSymptoms();
+    }
+  } else if (hash.indexOf("topic:") === 0) {
+    var topicId = hash.slice(6);
+    if (topics.find(function(t){ return t.id === topicId; })){
+      selectTopic(topicId);
+    } else {
+      showTopics();
+    }
+  } else if (hash && diseases.find(function(d){ return d.id === hash; })) {
+    selectDisease(hash);
+  } else if (diseases.length > 0) {
+    selectDisease(diseases[0].id);
+  }
+});
+
 function renderSection(data, drugs, comps, raw) {
   var content = data;
   if (typeof content === "string") try { content = JSON.parse(content); } catch(e) {}
@@ -1369,24 +1616,106 @@ function renderSection(data, drugs, comps, raw) {
   }
 
   if (drugs && drugs.length > 0) {
-    drugs.forEach(function(dr) {
-      var bc = BADGE_COLORS[dr.badge_color] || BADGE_COLORS.blue;
-      html += '<div class="dr"><div><div class="dr-name">' + dr.name + '</div><div class="dr-dose">' + (dr.dosage || "") + '</div></div>';
-      html += '<span style="padding:3px 10px;border-radius:20px;font-size:14px;font-weight:500;background:' + bc.bg + ';color:' + bc.fg + '">' + (dr.badge_label || dr.indication || "") + '</span></div>';
+    // Group by treatment_line (1, 2, 3, ..., null=未分線)
+    var groups = {};
+    drugs.forEach(function(dr){
+      var k = (dr.treatment_line == null) ? "null" : String(dr.treatment_line);
+      if (!groups[k]) groups[k] = [];
+      groups[k].push(dr);
     });
+    var lineKeys = Object.keys(groups).sort(function(a, b){
+      if (a === "null") return 1;
+      if (b === "null") return -1;
+      return parseInt(a, 10) - parseInt(b, 10);
+    });
+    var LINE_LABELS = { "1": ["第一線", "First-line"], "2": ["第二線", "Second-line"], "3": ["第三線", "Third-line"], "4": ["第四線", "Fourth-line"], "5": ["第五線", "Fifth-line"] };
+
+    html += '<div class="drug-list">';
+    lineKeys.forEach(function(lk){
+      var arr = groups[lk];
+      arr.sort(function(a, b){ return (a.sort_order||0) - (b.sort_order||0); });
+      var lbl = LINE_LABELS[lk] || ["其他", "Other"];
+      if (lk === "null") lbl = ["未分線", "Unclassified"];
+      html += '<div class="drug-group">';
+      html += '<div class="drug-group-header"><span>' + escHtml(lbl[0]) + ' <span class="drug-group-header-en">· ' + escHtml(lbl[1]) + '</span></span><span class="drug-group-count">' + arr.length + '</span></div>';
+      arr.forEach(function(dr){
+        html += '<div class="drug-entry">';
+        html += '<div class="drug-head">';
+        html += '<span class="drug-name">' + escHtml(dr.name || "") + '</span>';
+        // Optional badge_label (acute, special situation, etc.)
+        if (dr.badge_label){
+          var bc = BADGE_COLORS[dr.badge_color] || BADGE_COLORS.blue;
+          html += '<span class="drug-badge" style="background:' + bc.bg + ';color:' + bc.fg + '">' + escHtml(dr.badge_label) + '</span>';
+        }
+        if (dr.drug_class) html += '<span class="drug-class">' + escHtml(dr.drug_class) + '</span>';
+        html += '</div>';
+
+        // Build fields grid only with filled fields
+        var rows = [];
+        if (dr.mechanism)  rows.push({ label: "機轉", value: dr.mechanism });
+        if (dr.dosage)     rows.push({ label: "劑量", value: dr.dosage });
+        if (dr.indication) rows.push({ label: "適應症", value: dr.indication });
+        if (dr.notes)      rows.push({ label: "注意", value: dr.notes });
+
+        if (rows.length){
+          html += '<div class="drug-fields">';
+          rows.forEach(function(r){
+            html += '<div class="drug-field-label">' + escHtml(r.label) + '</div>';
+            html += '<div class="drug-field-value">' + renderRichText(r.value) + '</div>';
+          });
+          html += '</div>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    html += '</div>';
   }
 
   if (comps && comps.length > 0) {
-    html += '<div class="sl">常見併發症</div><div style="display:flex;flex-wrap:wrap;gap:4px">';
-    comps.forEach(function(c) {
-      if (c.has_link && c.linked_disease_id) {
-        html += '<span class="cb cb-linked" onclick="selectDisease(\'' + c.linked_disease_id + '\')">→ ' + c.name + (c.name_en ? "（" + c.name_en + "）" : "") + '</span>';
-      } else {
-        html += '<span class="cb cb-unlinked">' + c.name + (c.name_en ? "（" + c.name_en + "）" : "") + '</span>';
+    comps.sort(function(a, b){ return (a.sort_order||0) - (b.sort_order||0); });
+    html += '<div class="comp-list">';
+    html += '<div class="comp-list-header"><span>併發症 <span class="comp-list-header-en">· COMPLICATIONS</span></span><span class="comp-list-count">' + comps.length + '</span></div>';
+    comps.forEach(function(c){
+      html += '<div class="comp-entry">';
+      // Header: name + en + meta badges
+      html += '<div class="comp-head">';
+      html += '<div class="comp-title-wrap">';
+      html += '<span class="comp-name">' + escHtml(c.name || "") + '</span>';
+      if (c.name_en) html += '<span class="comp-name-en">' + escHtml(c.name_en) + '</span>';
+      html += '</div>';
+      html += '<div class="comp-meta">';
+      if (c.incidence) html += '<span class="comp-meta-badge"><i class="ti ti-percentage"></i> ' + escHtml(c.incidence) + '</span>';
+      if (c.timing)    html += '<span class="comp-meta-badge"><i class="ti ti-clock"></i> ' + escHtml(c.timing) + '</span>';
+      if (c.severity === "high")   html += '<span class="comp-meta-badge comp-sev-high"><i class="ti ti-alert-triangle-filled"></i> 高危</span>';
+      if (c.severity === "medium") html += '<span class="comp-meta-badge comp-sev-med"><i class="ti ti-alert-circle"></i> 中</span>';
+      html += '</div>';
+      html += '</div>';
+
+      // Sections — pathophys + clues use timeline; others use richText
+      function compSection(zh, en, value, useTimeline){
+        if (!value || !value.trim()) return "";
+        var s = '<div class="comp-section">';
+        s += '<div class="comp-section-label"><span>' + escHtml(zh) + '</span><span class="comp-section-label-en">· ' + escHtml(en) + '</span></div>';
+        s += '<div class="comp-section-content">' + (useTimeline ? renderPathway(value) : renderRichText(value)) + '</div>';
+        s += '</div>';
+        return s;
       }
+      html += compSection("病生理",   "PATHOPHYSIOLOGY",  c.pathophysiology, true);
+      html += compSection("臨床線索", "CLINICAL CLUES",   c.clinical_clues,  false);
+      html += compSection("預防",     "PREVENTION",       c.prevention,      false);
+      html += compSection("監測",     "MONITORING",       c.monitoring,      false);
+      html += compSection("處理",     "MANAGEMENT",       c.management,      false);
+
+      // Link to full disease page (if linked)
+      if (c.has_link && c.linked_disease_id){
+        html += '<div class="comp-link-row"><a class="comp-link" onclick="selectDisease(\'' + c.linked_disease_id + '\')">完整疾病頁 <i class="ti ti-arrow-narrow-right"></i></a></div>';
+      }
+      html += '</div>';
     });
     html += '</div>';
   } else if (content && content.complications) {
+    // Legacy: complications embedded in old prog content (rare)
     html += '<div class="sl">常見併發症</div><div style="display:flex;flex-wrap:wrap;gap:4px">';
     content.complications.forEach(function(c) {
       html += '<span class="cb cb-unlinked">' + c.name + (c.name_en ? "（" + c.name_en + "）" : "") + '</span>';
@@ -1399,16 +1728,20 @@ function renderSection(data, drugs, comps, raw) {
 
 function showGraph() {
   currentView = "graph";
+  try{history.pushState(null,null,"#graph")}catch(e){}
+  closeSidebarMobile();
   renderSidebar(diseases);
   document.getElementById("topTitle").textContent = "疾病關係圖";
   document.getElementById("topBadges").innerHTML = "";
+  document.getElementById("topStatus").innerHTML = "";
+  syncTopbarRow2();
 
   if (diseases.length === 0) {
     document.getElementById("mainContent").innerHTML = '<div class="card"><div class="empty">尚無疾病資料</div></div>';
     return;
   }
 
-  // Build edges from complications
+  // Build edges from complications using ALL diseases
   var edges = [];
   diseases.forEach(function(d) {
     var comps = compMap[d.id] || [];
@@ -1420,20 +1753,39 @@ function showGraph() {
     });
   });
 
+  // Filter to display set: optionally only connected diseases
+  var displayDiseases = diseases;
+  if (graphState.onlyConnected){
+    var hasEdge = {};
+    edges.forEach(function(e){ hasEdge[e.from] = true; hasEdge[e.to] = true; });
+    displayDiseases = diseases.filter(function(d){ return hasEdge[d.id]; });
+  }
+  if (!displayDiseases.length){
+    document.getElementById("mainContent").innerHTML = '<div class="card"><div class="empty">「只看有關係」開啟，但目前沒有疾病有併發症連結</div></div>';
+    return;
+  }
+  // Filter edges to those whose both ends are visible
+  var visibleSet = {};
+  displayDiseases.forEach(function(d){ visibleSet[d.id] = true; });
+  edges = edges.filter(function(e){ return visibleSet[e.from] && visibleSet[e.to]; });
+
+  // If focused disease no longer visible, clear focus
+  if (graphState.focusedId && !visibleSet[graphState.focusedId]) graphState.focusedId = null;
+
   // Layout: use full space
-  var W = 1200, H = Math.max(800, diseases.length * 40);
+  var W = 1200, H = Math.max(800, displayDiseases.length * 40);
   var cx = W / 2, cy = H / 2;
   var radius = Math.min(W, H) / 2 - 100;
   var nodes = {};
-  diseases.forEach(function(d, i) {
-    var angle = (2 * Math.PI * i) / diseases.length - Math.PI / 2;
+  displayDiseases.forEach(function(d, i) {
+    var angle = (2 * Math.PI * i) / displayDiseases.length - Math.PI / 2;
     nodes[d.id] = { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle), d: d };
   });
 
   // Simple force to spread nodes
   for (var iter = 0; iter < 80; iter++) {
-    diseases.forEach(function(a) {
-      diseases.forEach(function(b) {
+    displayDiseases.forEach(function(a) {
+      displayDiseases.forEach(function(b) {
         if (a.id === b.id) return;
         var na = nodes[a.id], nb = nodes[b.id];
         var dx = nb.x - na.x, dy = nb.y - na.y;
@@ -1461,7 +1813,7 @@ function showGraph() {
         b.y -= (dy / dist) * force;
       }
     });
-    diseases.forEach(function(d) {
+    displayDiseases.forEach(function(d) {
       var n = nodes[d.id];
       n.x = Math.max(60, Math.min(W - 60, n.x));
       n.y = Math.max(60, Math.min(H - 60, n.y));
@@ -1496,16 +1848,16 @@ function showGraph() {
     var tlen = Math.sqrt(tdx*tdx + tdy*tdy) || 1;
     var ox = -tdy / tlen * 18, oy = tdx / tlen * 18;
     var d = 'M' + sx + ',' + sy + ' Q' + (mx + ox) + ',' + (my + oy) + ' ' + ex + ',' + ey;
-    svg += '<path d="' + d + '" fill="none" stroke="#B5D4F4" stroke-width="1.5" marker-end="url(#arr)"><title>' + (e.label || '') + '</title></path>';
+    svg += '<path class="graph-edge" data-from="' + e.from + '" data-to="' + e.to + '" d="' + d + '" fill="none" stroke="#B5D4F4" stroke-width="1.5" marker-end="url(#arr)"><title>' + (e.label || '') + '</title></path>';
   });
 
   // Draw nodes
-  diseases.forEach(function(d) {
+  displayDiseases.forEach(function(d) {
     var n = nodes[d.id];
     var color = CAT_COLORS[d.category] || "#7ab3d9";
     var fill = CAT_FILLS[d.category] || "#f0f5fb";
     var r = 32;
-    svg += '<g style="cursor:pointer" onclick="selectDisease(\'' + d.id + '\')">';
+    svg += '<g class="graph-node" data-id="' + d.id + '" onclick="gNodeClick(\'' + d.id + '\')">';
     svg += '<circle cx="' + n.x + '" cy="' + n.y + '" r="' + r + '" fill="' + fill + '" stroke="' + color + '" stroke-width="2"/>';
     svg += '<circle cx="' + n.x + '" cy="' + n.y + '" r="' + (r + 4) + '" fill="transparent" stroke="transparent" stroke-width="8"><title>' + (d.name_en || d.name) + '</title></circle>';
     var name = d.name.length > 6 ? d.name.substring(0, 6) + '…' : d.name;
@@ -1518,24 +1870,41 @@ function showGraph() {
 
   // Legend
   var usedCats = {};
-  diseases.forEach(function(d) { if (d.category) usedCats[d.category] = CAT_COLORS[d.category] || "#7ab3d9"; });
+  displayDiseases.forEach(function(d) { if (d.category) usedCats[d.category] = CAT_COLORS[d.category] || "#7ab3d9"; });
   var legend = '<div class="legend" style="margin-top:14px">';
   Object.keys(usedCats).forEach(function(cat) {
     legend += '<div class="legend-item"><span class="legend-dot" style="background:' + usedCats[cat] + '"></span>' + cat + '</div>';
   });
   legend += '</div>';
 
-  var controls = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
-  controls += '<div style="display:flex;gap:4px;align-items:center">';
+  // Stats
+  var edgeCount = edges.length;
+  var hasEdgeCount = 0;
+  var allEdges = [];
+  diseases.forEach(function(d) {
+    var comps = compMap[d.id] || [];
+    comps.forEach(function(c) {
+      if (c.has_link && c.linked_disease_id) allEdges.push({from: d.id, to: c.linked_disease_id});
+    });
+  });
+  var allConnected = {};
+  allEdges.forEach(function(e){ allConnected[e.from]=true; allConnected[e.to]=true; });
+  hasEdgeCount = Object.keys(allConnected).length;
+
+  var controls = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap">';
+  controls += '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">';
   controls += '<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="gZoom(1.25)">＋</button>';
   controls += '<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="gZoom(0.8)">－</button>';
-  controls += '<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="gReset()">重置</button>';
+  controls += '<button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="gReset()">全圖</button>';
+  controls += '<button class="graph-toggle' + (graphState.onlyConnected ? ' on' : '') + '" onclick="gToggleConnected()" title="只顯示有併發症連結的疾病">' +
+    '<i class="ti ti-filter" style="vertical-align:-1px"></i> 只看有關係 ' +
+    '<span style="opacity:0.7">(' + hasEdgeCount + '/' + diseases.length + ')</span></button>';
   controls += '</div>';
-  controls += '<span style="font-size:11px;color:#7ab3d9">滾輪縮放 ｜ 拖曳移動 ｜ 點擊節點查看</span></div>';
+  controls += '<span style="font-size:11px;color:#7ab3d9">點節點高亮關係 · 再點一次開啟 · 點空白還原</span></div>';
 
-  var info = '<div style="font-size:12px;color:#7ab3d9;text-align:center;margin-top:8px">連線 = 併發症關係（箭頭方向為併發症指向）</div>';
+  var info = '<div style="font-size:12px;color:#7ab3d9;text-align:center;margin-top:8px">連線 = 併發症關係（箭頭方向為併發症指向） · 共 ' + edgeCount + ' 條連結</div>';
 
-  document.getElementById("mainContent").innerHTML = '<div class="card" style="padding:16px">' + controls + '<div id="graphWrap" style="overflow:hidden;border:0.5px solid #B5D4F4;border-radius:8px;height:calc(100vh - 180px);position:relative;cursor:grab"><div id="graphInner" style="transform-origin:0 0">' + svg + '</div></div>' + legend + info + '</div>';
+  document.getElementById("mainContent").innerHTML = '<div class="card" style="padding:16px">' + controls + '<div id="graphWrap" style="overflow:hidden;border:0.5px solid #B5D4F4;border-radius:8px;height:calc(100vh - 180px);position:relative;cursor:grab"><div id="graphInner" style="transform-origin:0 0">' + svg + '</div><div id="minimap"></div></div>' + legend + info + '</div>';
 
   // Init pan/zoom
   var gx=0,gy=0,gs=1,dragging=false,sx=0,sy=0;
@@ -1548,14 +1917,13 @@ function showGraph() {
     if (!wrap) return;
     var rect = wrap.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
-    // Bounding box of all nodes (with padding for labels)
     var minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
-    diseases.forEach(function(d){
+    displayDiseases.forEach(function(d){
       var n = nodes[d.id]; if (!n) return;
       if (n.x - nodeR < minX) minX = n.x - nodeR;
       if (n.x + nodeR > maxX) maxX = n.x + nodeR;
       if (n.y - nodeR < minY) minY = n.y - nodeR;
-      if (n.y + nodeR + 24 > maxY) maxY = n.y + nodeR + 24; // +24 for label below
+      if (n.y + nodeR + 24 > maxY) maxY = n.y + nodeR + 24;
     });
     if (!isFinite(minX) || !isFinite(minY)) { gx=0; gy=0; gs=1; applyTransform(); return; }
     var bw = maxX - minX, bh = maxY - minY;
@@ -1566,11 +1934,126 @@ function showGraph() {
     gx = rect.width/2 - (minX + bw/2) * gs;
     gy = rect.height/2 - (minY + bh/2) * gs;
     applyTransform();
+    updateMinimap();
   }
+
+  // === Minimap ===
+  var mmW = 180, mmH = 120, mmPad = 6;
+  var mmScale = 0, mmDx = 0, mmDy = 0;
+  function buildMinimap(){
+    var minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+    displayDiseases.forEach(function(d){
+      var n = nodes[d.id]; if (!n) return;
+      if (n.x < minX) minX = n.x;
+      if (n.x > maxX) maxX = n.x;
+      if (n.y < minY) minY = n.y;
+      if (n.y > maxY) maxY = n.y;
+    });
+    if (!isFinite(minX)) return;
+    var bw = Math.max(maxX - minX, 1), bh = Math.max(maxY - minY, 1);
+    mmScale = Math.min((mmW - mmPad*2) / bw, (mmH - mmPad*2) / bh);
+    mmDx = mmPad - minX * mmScale;
+    mmDy = mmPad - minY * mmScale;
+    var s = '<svg width="' + mmW + '" height="' + mmH + '">';
+    edges.forEach(function(e){
+      var a = nodes[e.from], b = nodes[e.to]; if (!a || !b) return;
+      s += '<line x1="' + (a.x*mmScale+mmDx) + '" y1="' + (a.y*mmScale+mmDy) + '" x2="' + (b.x*mmScale+mmDx) + '" y2="' + (b.y*mmScale+mmDy) + '" stroke="#B5D4F4" stroke-width="0.4" opacity="0.6"/>';
+    });
+    displayDiseases.forEach(function(d){
+      var n = nodes[d.id]; if (!n) return;
+      var color = CAT_COLORS[d.category] || "#7ab3d9";
+      s += '<circle cx="' + (n.x*mmScale+mmDx) + '" cy="' + (n.y*mmScale+mmDy) + '" r="1.8" fill="' + color + '"/>';
+    });
+    s += '<rect class="mm-viewport" x="0" y="0" width="0" height="0"/>';
+    s += '</svg>';
+    var el = document.getElementById("minimap");
+    if (el) el.innerHTML = s;
+  }
+  function updateMinimap(){
+    if (!mmScale) return;
+    var rect = wrap.getBoundingClientRect();
+    var svgMinX = -gx / gs, svgMinY = -gy / gs;
+    var svgW = rect.width / gs, svgH = rect.height / gs;
+    var vp = document.querySelector("#minimap .mm-viewport");
+    if (!vp) return;
+    vp.setAttribute("x", svgMinX*mmScale + mmDx);
+    vp.setAttribute("y", svgMinY*mmScale + mmDy);
+    vp.setAttribute("width", Math.max(svgW*mmScale, 4));
+    vp.setAttribute("height", Math.max(svgH*mmScale, 4));
+  }
+  buildMinimap();
+
+  // Wrap applyTransform to also update minimap
+  var _origApply = applyTransform;
+  applyTransform = function(){ _origApply(); updateMinimap(); };
+
+  // Click minimap → pan main view to that spot (centered)
+  var mmEl = document.getElementById("minimap");
+  if (mmEl){
+    mmEl.addEventListener("click", function(e){
+      if (!mmScale) return;
+      var r = mmEl.getBoundingClientRect();
+      var mx = e.clientX - r.left - 4, my = e.clientY - r.top - 4;
+      var svgX = (mx - mmDx) / mmScale, svgY = (my - mmDy) / mmScale;
+      var vr = wrap.getBoundingClientRect();
+      gx = vr.width/2 - svgX*gs;
+      gy = vr.height/2 - svgY*gs;
+      applyTransform();
+    });
+  }
+
+  // === Focus logic ===
+  function applyGraphFocus(){
+    var fid = graphState.focusedId;
+    var connected = {};
+    if (fid){
+      connected[fid] = true;
+      edges.forEach(function(e){
+        if (e.from === fid) connected[e.to] = true;
+        if (e.to === fid) connected[e.from] = true;
+      });
+    }
+    document.querySelectorAll(".graph-node").forEach(function(g){
+      var id = g.getAttribute("data-id");
+      g.classList.toggle("faded", !!fid && !connected[id]);
+      g.classList.toggle("focused", id === fid);
+    });
+    document.querySelectorAll(".graph-edge").forEach(function(pe){
+      var from = pe.getAttribute("data-from"), to = pe.getAttribute("data-to");
+      var isAdj = fid && (from === fid || to === fid);
+      pe.classList.toggle("faded", !!fid && !isAdj);
+      pe.classList.toggle("highlighted", !!isAdj);
+    });
+  }
+
+  window.gNodeClick = function(id){
+    if (graphState.focusedId === id){
+      // Second click on same node → drill into disease
+      graphState.focusedId = null;
+      selectDisease(id);
+    } else {
+      graphState.focusedId = id;
+      applyGraphFocus();
+    }
+  };
+
+  // Empty-area click → clear focus (won't fire after drag)
+  wrap.addEventListener("click", function(e){
+    if (e.target.closest("g.graph-node")) return;
+    if (e.target.closest("#minimap")) return;
+    if (graphState.focusedId){
+      graphState.focusedId = null;
+      applyGraphFocus();
+    }
+  });
+
+  // Restore focus state on render (e.g. after toggling onlyConnected)
+  if (graphState.focusedId) applyGraphFocus();
+
   // Defer one tick so wrap dimensions are real
   setTimeout(autoFit, 0);
 
-  wrap.addEventListener("mousedown",function(e){if(e.target.closest("g"))return;dragging=true;sx=e.clientX-gx;sy=e.clientY-gy;wrap.style.cursor="grabbing"});
+  wrap.addEventListener("mousedown",function(e){if(e.target.closest("g.graph-node"))return;if(e.target.closest("#minimap"))return;dragging=true;sx=e.clientX-gx;sy=e.clientY-gy;wrap.style.cursor="grabbing"});
   window.addEventListener("mousemove",function(e){if(!dragging)return;gx=e.clientX-sx;gy=e.clientY-sy;applyTransform()});
   window.addEventListener("mouseup",function(){dragging=false;if(wrap)wrap.style.cursor="grab"});
   wrap.addEventListener("wheel",function(e){e.preventDefault();var rect=wrap.getBoundingClientRect();var mx=e.clientX-rect.left,my=e.clientY-rect.top;var dz=e.deltaY<0?1.15:0.87;var ns=Math.max(0.2,Math.min(5,gs*dz));gx=mx-(mx-gx)*(ns/gs);gy=my-(my-gy)*(ns/gs);gs=ns;applyTransform()},{passive:false});
@@ -1579,6 +2062,10 @@ function showGraph() {
   wrap.addEventListener("touchend",function(){dragging=false});
   window.gZoom=function(f){var rect=wrap.getBoundingClientRect();var mx=rect.width/2,my=rect.height/2;var ns=Math.max(0.2,Math.min(5,gs*f));gx=mx-(mx-gx)*(ns/gs);gy=my-(my-gy)*(ns/gs);gs=ns;applyTransform()};
   window.gReset=autoFit;
+  window.gToggleConnected=function(){
+    graphState.onlyConnected = !graphState.onlyConnected;
+    showGraph();
+  };
 }
 
 function toggleSidebar(){
@@ -1590,6 +2077,16 @@ function toggleSidebar(){
 }
 function isMobile(){return window.innerWidth<=768}
 function closeSidebarMobile(){if(isMobile()){document.getElementById("sidebar").classList.add("hidden");document.getElementById("sidebarOverlay").classList.remove("show")}}
+
+function syncTopbarRow2(){
+  var r2=document.getElementById("topbarRow2");
+  if(!r2)return;
+  var badges=document.getElementById("topBadges");
+  var status=document.getElementById("topStatus");
+  var hasBadges=badges&&badges.innerHTML.trim();
+  var hasStatus=status&&status.innerHTML.trim();
+  r2.style.display=(hasBadges||hasStatus)?"flex":"none";
+}
 
 function toggleDark(){
   document.body.classList.toggle("dark");
@@ -1717,14 +2214,238 @@ function copyTreeText(btn){
   }
 }
 
+/* ============ Knowledge Topics ============ */
+function parseTopicBody(body, images){
+  if (!body) return { blocks: [], used: {} };
+  var blocks = [];
+  var used = {};
+  var parts = body.split(/(\[img:\d+\])/g);
+  parts.forEach(function(part){
+    if (!part) return;
+    var m = part.match(/^\[img:(\d+)\]$/);
+    if (m){
+      var idx = parseInt(m[1], 10) - 1;
+      if (images[idx]){
+        used[idx] = true;
+        blocks.push({ type: 'img', image: images[idx], idx: idx });
+      } else {
+        blocks.push({ type: 'text', text: '[img:' + (idx+1) + ' 找不到]' });
+      }
+    } else {
+      blocks.push({ type: 'text', text: part });
+    }
+  });
+  return { blocks: blocks, used: used };
+}
+
+function renderTopicInlineImage(im){
+  var url = escAttr(im.url);
+  var capAttr = escAttr(im.caption || "");
+  var s = '<figure style="margin:18px 0;border:0.5px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg2);max-width:600px">';
+  s += '<div style="background:#1a1a2e;cursor:zoom-in" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" style="display:block;width:100%;max-height:400px;object-fit:contain"></div>';
+  if (im.caption) s += '<figcaption style="padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.55">' + escHtml(im.caption) + '</figcaption>';
+  s += '</figure>';
+  return s;
+}
+
+function openTopicImage(url, caption){
+  var bg = document.createElement("div");
+  bg.style.cssText = "position:fixed;inset:0;background:rgba(10,15,25,0.9);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;cursor:zoom-out;backdrop-filter:blur(6px)";
+  bg.onclick = function(){ document.body.removeChild(bg); };
+  var img = document.createElement("img");
+  img.src = url;
+  img.style.cssText = "max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.5)";
+  img.onclick = function(e){ e.stopPropagation(); };
+  bg.appendChild(img);
+  if (caption){
+    var cap = document.createElement("div");
+    cap.textContent = caption;
+    cap.style.cssText = "color:#fff;font-size:14px;margin-top:14px;max-width:80%;text-align:center;line-height:1.6;opacity:0.85";
+    bg.appendChild(cap);
+  }
+  var hint = document.createElement("div");
+  hint.textContent = "點任意處關閉";
+  hint.style.cssText = "color:#fff;font-size:11px;opacity:0.5;margin-top:8px;letter-spacing:0.05em";
+  bg.appendChild(hint);
+  document.body.appendChild(bg);
+  // Esc to close
+  var onKey = function(e){ if(e.key==="Escape"){ document.body.removeChild(bg); document.removeEventListener("keydown",onKey); } };
+  document.addEventListener("keydown", onKey);
+}
+
+function showTopics(){
+  currentView = "topics";
+  currentTopicId = null;
+  try{history.pushState(null,null,"#topics")}catch(e){}
+  closeSidebarMobile();
+  renderSidebar(diseases); // keep disease sidebar visible (don't lose context)
+  document.getElementById("topTitle").textContent = "📚 知識專題";
+  document.getElementById("topBadges").innerHTML = topics.length ?
+    '<span class="badge" style="background:#F0E8FB;color:#6B3FA0">' + topics.length + ' 個專題</span>' : '';
+  document.getElementById("topStatus").innerHTML = "";
+  syncTopbarRow2();
+
+  if (!topics.length){
+    document.getElementById("mainContent").innerHTML =
+      '<div class="card"><div class="sxm-empty">' +
+      '<div class="sxm-empty-icon">📚</div>' +
+      '<div class="sxm-empty-text">尚無知識專題<br><span style="font-size:12px;color:var(--text3)">請先執行 migration_knowledge_topics.sql 並在 CMS 中新增</span></div>' +
+      '</div></div>';
+    return;
+  }
+  renderTopicList("");
+}
+
+function renderTopicList(query){
+  var q = (query||"").toLowerCase().trim();
+  var filtered = topics.filter(function(t){
+    if (!q) return true;
+    return (t.name||"").toLowerCase().indexOf(q)>=0 ||
+           (t.name_en||"").toLowerCase().indexOf(q)>=0 ||
+           (t.summary||"").toLowerCase().indexOf(q)>=0 ||
+           (t.specialty||"").toLowerCase().indexOf(q)>=0;
+  });
+
+  // Group by topic_type, in TOPIC_TYPES order
+  var groups = {};
+  filtered.forEach(function(t){
+    var k = t.topic_type || "concept";
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(t);
+  });
+  var typeKeys = Object.keys(groups).sort(function(a,b){
+    var oa = Object.keys(TOPIC_TYPES).indexOf(a), ob = Object.keys(TOPIC_TYPES).indexOf(b);
+    if (oa<0) oa=999; if (ob<0) ob=999;
+    return oa-ob;
+  });
+
+  var h = '<div class="card" style="padding:18px 22px">';
+  h += '<div class="sxm-search" style="margin-bottom:18px"><input placeholder="搜尋專題（中／英／摘要／專科）..." value="' + escHtml(query||"") + '" oninput="renderTopicList(this.value)"></div>';
+
+  if (!filtered.length){
+    h += '<div class="sxm-empty"><div class="sxm-empty-text">找不到符合的專題</div></div>';
+  } else {
+    typeKeys.forEach(function(tk){
+      var meta = TOPIC_TYPES[tk] || { zh: tk, icon: "ti-circle" };
+      var arr = groups[tk];
+      h += '<div style="margin-bottom:22px">';
+      h += '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border);margin-bottom:8px">';
+      h += '<i class="ti ' + meta.icon + '" style="font-size:16px;color:var(--blue)"></i>';
+      h += '<span style="font-size:13px;font-weight:500;color:var(--text)">' + escHtml(meta.zh) + '</span>';
+      h += '<span style="font-size:11px;color:var(--text3);margin-left:auto">' + arr.length + '</span>';
+      h += '</div>';
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0">';
+      arr.forEach(function(t){
+        h += '<div style="padding:12px 14px;border-bottom:0.5px solid var(--border);cursor:pointer;transition:background 0.12s" onmouseover="this.style.background=\'var(--hover)\'" onmouseout="this.style.background=\'transparent\'" onclick="selectTopic(\'' + t.id + '\')">';
+        h += '<div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px">' + escHtml(t.name) + '</div>';
+        if (t.name_en) h += '<div style="font-size:12px;color:var(--text2);margin-bottom:4px">' + escHtml(t.name_en) + '</div>';
+        if (t.summary) h += '<div style="font-size:12px;color:var(--text3);line-height:1.5">' + escHtml(t.summary) + '</div>';
+        h += '</div>';
+      });
+      h += '</div>';
+      h += '</div>';
+    });
+  }
+  h += '</div>';
+  document.getElementById("mainContent").innerHTML = h;
+}
+
+function selectTopic(id){
+  var t = topics.find(function(x){ return x.id === id; });
+  if (!t) return;
+  currentTopicId = id;
+  currentView = "topic-detail";
+  try{history.pushState(null,null,"#topic:"+id)}catch(e){}
+  document.getElementById("topTitle").textContent = t.name;
+  var meta = TOPIC_TYPES[t.topic_type] || { zh: t.topic_type, icon: "ti-circle" };
+  var badges = '<span class="badge" style="background:#F0E8FB;color:#6B3FA0"><i class="ti ' + meta.icon + '"></i> ' + escHtml(meta.zh) + '</span>';
+  if (t.specialty) badges += ' <span class="badge" style="background:var(--bg2);color:var(--text2)">' + escHtml(t.specialty) + '</span>';
+  if (t.category) badges += ' <span class="badge" style="background:' + (CAT_COLORS[t.category]||"#7ab3d9") + '22;color:' + (CAT_COLORS[t.category]||"#7ab3d9") + '">' + escHtml(t.category) + '</span>';
+  document.getElementById("topBadges").innerHTML = badges;
+  document.getElementById("topStatus").innerHTML = '<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="showTopics()"><i class="ti ti-arrow-left"></i> 返回專題列表</button>';
+  syncTopbarRow2();
+
+  var h = '<div class="card" style="padding:22px 26px">';
+
+  // Header
+  h += '<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px">';
+  h += '<span style="font-size:24px;font-weight:500;color:var(--text)">' + escHtml(t.name) + '</span>';
+  if (t.name_en) h += '<span style="font-size:15px;color:var(--text2);font-weight:400">' + escHtml(t.name_en) + '</span>';
+  h += '</div>';
+  h += '<div style="height:2px;width:32px;background:var(--blue);margin:0 0 18px"></div>';
+
+  if (t.summary){
+    h += '<p style="font-size:14px;line-height:1.7;color:var(--text2);margin:0 0 22px">' + escHtml(t.summary) + '</p>';
+  }
+
+  // Sections — in type's default order, then any extras
+  var secMap = topicSecMap[t.id] || {};
+  var typeDefaults = (TOPIC_TYPES[t.topic_type] && TOPIC_TYPES[t.topic_type].sections) || [];
+  var allKeys = [];
+  typeDefaults.forEach(function(k){ if (secMap[k]) allKeys.push(k); });
+  Object.keys(secMap).forEach(function(k){
+    if (allKeys.indexOf(k) < 0) allKeys.push(k);
+  });
+
+  if (!allKeys.length){
+    h += '<div class="sxm-empty" style="padding:30px 0"><div class="sxm-empty-text" style="color:var(--text3)">此專題尚無章節內容</div></div>';
+  } else {
+    allKeys.forEach(function(k){
+      var s = secMap[k];
+      var imgs = Array.isArray(s.images) ? s.images : [];
+      var hasBody = s.body && s.body.trim();
+      if (!hasBody && !imgs.length) return;
+      var label = SECTION_LABELS[k] || k;
+      h += '<div style="margin-bottom:26px">';
+      h += '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;font-weight:500;margin-bottom:8px">' + escHtml(label) + '</div>';
+
+      var used = {};
+      if (hasBody){
+        var parsed = parseTopicBody(s.body, imgs);
+        used = parsed.used;
+        parsed.blocks.forEach(function(b){
+          if (b.type === 'text'){
+            if (b.text.trim()){
+              h += '<div style="color:var(--text)">' + renderRichText(b.text) + '</div>';
+            }
+          } else if (b.type === 'img'){
+            h += renderTopicInlineImage(b.image);
+          }
+        });
+      }
+
+      // Remaining (unreferenced) images → bottom gallery
+      var leftover = imgs.filter(function(_, i){ return !used[i]; });
+      if (leftover.length){
+        h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:' + (hasBody ? '14' : '0') + 'px">';
+        leftover.forEach(function(im){
+          h += '<figure style="margin:0;border:0.5px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg2)">';
+          h += '<div style="background:#1a1a2e;cursor:zoom-in" onclick="openTopicImage(\'' + escAttr(im.url) + '\',\'' + escAttr(im.caption||"") + '\')"><img src="' + escHtml(im.url) + '" style="display:block;width:100%;max-height:220px;object-fit:contain"></div>';
+          if (im.caption) h += '<figcaption style="padding:8px 12px;font-size:12px;color:var(--text2);line-height:1.5">' + escHtml(im.caption) + '</figcaption>';
+          h += '</figure>';
+        });
+        h += '</div>';
+      }
+      h += '</div>';
+    });
+  }
+
+  h += '</div>';
+  document.getElementById("mainContent").innerHTML = h;
+}
+
+
 function showSymptoms(){
   currentView = "symptoms";
   currentSxId = null;
+  try{history.pushState(null,null,"#symptoms")}catch(e){}
+  closeSidebarMobile();
   renderSidebar(diseases);
   document.getElementById("topTitle").textContent = "🧠 症狀導向學習";
   document.getElementById("topBadges").innerHTML = symptoms.length ?
     '<span class="badge" style="background:#EAF3DE;color:#3B6D11">' + symptoms.length + ' 個症狀</span>' : '';
   document.getElementById("topStatus").innerHTML = "";
+  syncTopbarRow2();
 
   if (!symptoms.length){
     document.getElementById("mainContent").innerHTML =
@@ -1781,6 +2502,7 @@ function renderSymptomList(query){
 
 function showSymptomDetail(sxId){
   currentView = "symptomDetail";
+  try{history.pushState(null,null,"#sx:"+sxId)}catch(e){}
   // Reset mode-specific state when switching symptoms
   if (currentSxId !== sxId){
     detectiveState = { selected: [] };
@@ -1795,7 +2517,7 @@ function showSymptomDetail(sxId){
   document.getElementById("topBadges").innerHTML = sx.name_en ?
     '<span class="badge">' + escHtml(sx.name_en) + '</span>' : '';
   document.getElementById("topStatus").innerHTML = "";
-
+  syncTopbarRow2();
   var mechs = getMechs(sxId);
   var rf = sx.red_flags;
   if (typeof rf === "string") try{ rf = JSON.parse(rf); }catch(e){ rf = null; }
@@ -3104,10 +3826,13 @@ function renderInlineBold(s){
 
 function showBookmarks(){
   currentView="bookmarks";
+  try{history.pushState(null,null,"#bookmarks")}catch(e){}
+  closeSidebarMobile();
   renderSidebar(diseases);
   document.getElementById("topTitle").textContent="⭐ 書籤列表";
   document.getElementById("topBadges").innerHTML="";
   document.getElementById("topStatus").innerHTML="";
+  syncTopbarRow2();
 
   var bmList=diseases.filter(function(d){return bookmarks[d.id]}).sort(function(a,b){return(bookmarks[b.id]||0)-(bookmarks[a.id]||0)});
   var h='<div class="card">';
