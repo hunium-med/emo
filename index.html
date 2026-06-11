@@ -7,8 +7,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons-webfont/3.5.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#f0f5fb;--bg2:#f7fafd;--bg3:#f8fbff;--card:#fff;--border:#B5D4F4;--border2:#85B7EB;--text:#2c4a63;--text2:#4a7fa5;--text3:#7ab3d9;--blue:#185FA5;--blue-bg:#E6F1FB;--green:#3B6D11;--green-bg:#EAF3DE;--amber:#854F0B;--amber-bg:#FAEEDA;--red:#E24B4A;--step-bg:#f8fbff;--hover:rgba(24,95,165,0.08);--active:rgba(24,95,165,0.15);--img-bg:#1a1a2e}
-body.dark{--bg:#1a1e2e;--bg2:#1e2235;--bg3:#232840;--card:#252a3d;--border:#2e3550;--border2:#3a4260;--text:#c8cdd8;--text2:#8892a8;--text3:#5a6478;--blue:#5b9adf;--blue-bg:#1e2a42;--green:#7fc44e;--green-bg:#1e2e1e;--amber:#e8a838;--amber-bg:#2e2818;--red:#f07070;--step-bg:#2a2f42;--hover:rgba(90,140,220,0.08);--active:rgba(90,140,220,0.15);--img-bg:#0d0f18}
+:root{--bg:#f0f5fb;--bg2:#f7fafd;--bg3:#f8fbff;--card:#fff;--border:#B5D4F4;--border2:#85B7EB;--text:#2c4a63;--text2:#4a7fa5;--text3:#7ab3d9;--blue:#185FA5;--blue-bg:#E6F1FB;--green:#3B6D11;--green-bg:#EAF3DE;--amber:#854F0B;--amber-bg:#FAEEDA;--red:#E24B4A;--red-bg:#FBE9E9;--step-bg:#f8fbff;--hover:rgba(24,95,165,0.08);--active:rgba(24,95,165,0.15);--img-bg:#1a1a2e;
+  /* Type scale (1.20 minor third, base 16) */
+  --fs-display:24px;--fs-h1:20px;--fs-h2:17px;--fs-h3:15px;--fs-body:16px;--fs-sm:14px;--fs-xs:12px;--fs-label:11px;
+  /* Line heights */
+  --lh-tight:1.3;--lh-snug:1.45;--lh-normal:1.65;--lh-relaxed:1.75;
+  /* Weights */
+  --fw-normal:400;--fw-medium:500;--fw-semi:600;--fw-bold:700;
+  /* Vertical rhythm */
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;
+  /* Letterspacing for uppercase EN labels */
+  --ls-label:0.08em}
+body.dark{--bg:#1a1e2e;--bg2:#1e2235;--bg3:#232840;--card:#252a3d;--border:#2e3550;--border2:#3a4260;--text:#c8cdd8;--text2:#8892a8;--text3:#5a6478;--blue:#5b9adf;--blue-bg:#1e2a42;--green:#7fc44e;--green-bg:#1e2e1e;--amber:#e8a838;--amber-bg:#2e2818;--red:#f07070;--red-bg:#2e1c1c;--step-bg:#2a2f42;--hover:rgba(90,140,220,0.08);--active:rgba(90,140,220,0.15);--img-bg:#0d0f18}
 body.dark .sidebar-search input,body.dark .fg input,body.dark .fg select,body.dark .fg textarea,body.dark .notes-body textarea{background:var(--bg3);color:var(--text);border-color:var(--border)}
 body.dark p,body.dark div,body.dark span,body.dark li,body.dark td,body.dark th{color:inherit}
 body.dark b{color:var(--blue)}
@@ -167,54 +177,178 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .tab{padding:10px 11px;font-size:13px;color:#4a7fa5;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.1s;white-space:nowrap;flex-shrink:0}
 .tab:hover{color:#185FA5}
 .tab.active{color:#185FA5;border-bottom-color:#185FA5;font-weight:500}
-.tc{padding:16px 18px;font-size:17px;line-height:1.7;color:#2c4a63}
-.sl{font-size:16px;font-weight:600;color:#185FA5;letter-spacing:0;margin-bottom:8px;margin-top:16px}
+.tc{padding:18px 20px;font-size:var(--fs-body);line-height:var(--lh-relaxed);color:var(--text)}
+.tc p{margin-bottom:var(--sp-3)}
+.tc p:last-child{margin-bottom:0}
+.sl{font-size:var(--fs-h2);font-weight:var(--fw-semi);color:var(--blue);letter-spacing:0;margin-bottom:var(--sp-3);margin-top:var(--sp-5);padding-bottom:var(--sp-2);border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:8px}
 .sl:first-child{margin-top:0}
-.cl li{padding:4px 0 4px 17px;position:relative;font-size:15px;list-style:none;line-height:1.55}
-.cl li::before{content:"";width:7px;height:7px;border-radius:50%;background:#378ADD;position:absolute;left:0;top:11px}
+.sl .sl-en{font-size:var(--fs-label);font-weight:var(--fw-normal);color:var(--text3);text-transform:uppercase;letter-spacing:var(--ls-label)}
+.cl li{padding:5px 0 5px 18px;position:relative;font-size:var(--fs-body);list-style:none;line-height:var(--lh-normal)}
+.cl li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--border2);position:absolute;left:0;top:12px}
 .cl li.l2{padding-left:40px}
-.cl li.l2::before{width:6px;height:6px;background:transparent;border:1.5px solid #85B7EB;border-radius:50%;left:24px;top:12px}
+.cl li.l2::before{width:6px;height:6px;background:transparent;border:1.5px solid var(--border2);border-radius:50%;left:24px;top:13px}
 .cl li.l3{padding-left:64px}
-.cl li.l3::before{width:5px;height:5px;background:#85B7EB;border-radius:1px;left:49px;top:12px}
+.cl li.l3::before{width:5px;height:5px;background:var(--border2);border-radius:1px;left:49px;top:13px}
+/* A. Key fact — emphasized takeaway */
+.cl li.cl-key{background:var(--blue-bg);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:9px 12px 9px 14px;margin:6px 0;font-weight:var(--fw-medium);color:var(--text)}
+.cl li.cl-key::before{display:none}
+.cl li.cl-key.l2{margin-left:22px}
+body.dark .cl li.cl-key{background:var(--blue-bg)}
+/* C. Group header — subordinating label for items that have children */
+.cl li.cl-group{list-style:none;font-weight:var(--fw-semi);color:var(--text2);font-size:var(--fs-sm);text-transform:none;letter-spacing:0.01em;margin-top:12px;margin-bottom:2px;padding-left:0}
+.cl li.cl-group:first-child{margin-top:0}
+.cl li.cl-group::before{display:none}
+/* children directly under a group header tuck in tighter */
+.cl li.cl-group + li.l2,.cl li.cl-group + li.l1{margin-top:2px}
+/* renderRichText (paragraph/step context) versions */
+.rt-key{background:var(--blue-bg);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 14px;margin:8px 0;font-weight:var(--fw-medium);color:var(--text);font-size:var(--fs-body);line-height:var(--lh-normal)}
+.rt-group{font-weight:var(--fw-semi);color:var(--text2);font-size:var(--fs-sm);margin:12px 0 2px;line-height:var(--lh-snug)}
+/* B. Inline stat chips — percentages/ratios pop out of prose */
+.stat-chip{display:inline-block;font-size:0.86em;font-weight:var(--fw-semi);color:var(--blue);background:var(--blue-bg);border:0.5px solid var(--border);border-radius:6px;padding:0 7px;line-height:1.5;vertical-align:baseline;white-space:nowrap;letter-spacing:0.01em}
+.cl li.cl-key .stat-chip,.rt-key .stat-chip{background:var(--card);border-color:var(--border2)}
 .cl{padding:0}
-.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
-.stat{flex:1;min-width:90px;background:#E6F1FB;border:0.5px solid #B5D4F4;border-radius:8px;padding:10px 12px;text-align:center}
-.stat-val{font-size:18px;font-weight:500;color:#185FA5}
-.stat-lbl{font-size:13px;color:#4a7fa5;margin-top:2px}
-.step{display:flex;gap:10px;align-items:flex-start;padding:10px;border:0.5px solid #B5D4F4;border-radius:8px;margin-bottom:8px;background:#f8fbff}
-.step-num{min-width:26px;height:26px;border-radius:50%;background:#185FA5;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.step-title{font-size:16px;font-weight:500;color:#185FA5;margin-bottom:4px}
-.step-content{font-size:15px;line-height:1.6;color:#2c4a63}
-.pill{background:#E6F1FB;border:0.5px solid #B5D4F4;border-radius:20px;padding:3px 12px;font-size:16px;color:#185FA5;display:inline-block;margin:2px}
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:var(--sp-2)}
+.stat{flex:1;min-width:90px;background:var(--blue-bg);border:0.5px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.stat-val{font-size:var(--fs-h1);font-weight:var(--fw-semi);color:var(--blue);line-height:var(--lh-tight)}
+.stat-lbl{font-size:var(--fs-xs);color:var(--text2);margin-top:3px}
+.step{display:flex;gap:12px;align-items:flex-start;padding:12px;border:0.5px solid var(--border);border-radius:8px;margin-bottom:var(--sp-2);background:var(--step-bg)}
+.step-num{min-width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:var(--fs-xs);font-weight:var(--fw-semi);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-title{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--blue);margin-bottom:var(--sp-1)}
+.step-content{font-size:var(--fs-body);line-height:var(--lh-normal);color:var(--text)}
+.pill{background:var(--blue-bg);border:0.5px solid var(--border);border-radius:20px;padding:3px 12px;font-size:var(--fs-sm);color:var(--blue);display:inline-block;margin:2px}
+/* Cross-link entity links + hover preview */
+.ent-link{color:var(--blue);cursor:pointer;border-bottom:1px solid var(--border2);text-decoration:none;transition:background 0.12s,border-color 0.12s;border-radius:2px;padding:0 1px}
+.ent-link:hover{background:var(--blue-bg);border-bottom-color:var(--blue)}
+.ent-preview{position:fixed;z-index:1200;width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 40px rgba(20,30,50,0.22);padding:14px 16px;display:none;animation:entPop 0.14s ease-out}
+@keyframes entPop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.ent-preview-head{display:flex;align-items:flex-start;gap:9px;margin-bottom:8px}
+.ent-preview-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.ent-preview-name{font-size:var(--fs-h2);font-weight:var(--fw-semi);color:var(--text);line-height:var(--lh-tight)}
+.ent-preview-en{font-size:var(--fs-xs);color:var(--text2);margin-top:2px}
+.ent-preview-badges{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.ent-preview-badge{font-size:var(--fs-label);background:var(--blue-bg);color:var(--blue);padding:2px 8px;border-radius:5px;font-weight:var(--fw-medium)}
+.ent-preview-summary{font-size:var(--fs-sm);color:var(--text);line-height:var(--lh-normal);margin-bottom:10px}
+.ent-preview-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:var(--fs-xs);color:var(--text2);margin-bottom:10px}
+.ent-preview-cat{font-weight:var(--fw-semi)}
+.ent-preview-cta{font-size:var(--fs-xs);color:var(--blue);font-weight:var(--fw-medium);border-top:0.5px solid var(--border);padding-top:8px;display:flex;align-items:center;gap:4px}
+/* One-level disease relationship navigator */
+.relnav-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;margin-top:14px;padding:16px 18px 18px}
+.relnav-header{display:flex;align-items:baseline;gap:6px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.relnav-header-zh{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--blue)}
+.relnav-header-en{font-size:var(--fs-label);font-weight:var(--fw-normal);color:var(--text3);text-transform:uppercase;letter-spacing:var(--ls-label)}
+.relnav-flow{display:grid;grid-template-columns:1fr auto minmax(150px,0.9fr) auto 1fr;gap:8px;align-items:center}
+.relnav-col{min-width:0;align-self:stretch}
+.relnav-col-head{display:flex;align-items:baseline;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.relnav-col-zh{font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--text2);text-transform:uppercase;letter-spacing:var(--ls-label)}
+.relnav-col-en{font-size:var(--fs-label);color:var(--text3);letter-spacing:var(--ls-label)}
+.relnav-col-count{margin-left:auto;font-size:var(--fs-xs);color:var(--text3);background:var(--blue-bg);border-radius:10px;padding:0 7px;min-width:18px;text-align:center}
+.relnav-col-body{display:flex;flex-direction:column;gap:6px}
+.relnav-node{display:flex;align-items:center;gap:8px;padding:9px 10px;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color 0.12s,background 0.12s;text-decoration:none}
+.relnav-node:hover{border-color:var(--border2);background:var(--blue-bg)}
+.relnav-node-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.relnav-node-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.relnav-node-name{font-size:var(--fs-sm);font-weight:var(--fw-medium);color:var(--text);line-height:var(--lh-tight);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.relnav-node-en{font-size:var(--fs-label);color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.relnav-node-via{font-size:var(--fs-label);color:var(--text2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:0.85}
+.relnav-node-chev{font-size:14px;color:var(--text3);flex-shrink:0}
+.relnav-empty{font-size:var(--fs-xs);color:var(--text3);padding:14px 10px;text-align:center;border:1px dashed var(--border);border-radius:8px;line-height:var(--lh-snug)}
+.relnav-arrow{display:flex;align-items:center;justify-content:center;color:var(--border2);font-size:20px}
+.relnav-center{display:flex;flex-direction:column;align-items:center;gap:6px}
+.relnav-center-label{font-size:var(--fs-label);color:var(--text3);text-transform:uppercase;letter-spacing:var(--ls-label)}
+.relnav-current{display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--blue-bg);border:2px solid var(--blue);border-radius:10px;padding:12px 14px;width:100%;box-shadow:0 2px 10px rgba(24,95,165,0.1)}
+.relnav-current-dot{width:10px;height:10px;border-radius:50%;margin-bottom:2px}
+.relnav-current-name{font-size:var(--fs-h3);font-weight:var(--fw-bold);color:var(--blue);text-align:center;line-height:var(--lh-tight)}
+.relnav-current-en{font-size:var(--fs-label);color:var(--text2);text-align:center}
+@media(max-width:768px){
+  .relnav-flow{grid-template-columns:1fr;gap:4px}
+  .relnav-arrow{transform:rotate(90deg);font-size:18px;padding:2px 0}
+  .relnav-center{order:0}
+  .relnav-col-count{font-size:var(--fs-label)}
+}
+/* High-yield pearls */
+.pearls-intro{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);font-weight:var(--fw-medium);color:var(--amber);background:var(--amber-bg);border-radius:8px;padding:9px 12px;margin-bottom:16px}
+.pearls-intro i{font-size:16px}
+.pearls-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.pearl{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:var(--bg3);border:0.5px solid var(--border);border-left:3px solid var(--blue);border-radius:8px}
+.pearl-mark{color:var(--blue);flex-shrink:0;line-height:1;margin-top:3px}
+.pearl-mark i{font-size:14px}
+.pearl-body{flex:1;min-width:0;font-size:var(--fs-body);line-height:var(--lh-normal);color:var(--text)}
+.pearl-tag{display:inline-block;font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--amber);background:var(--amber-bg);padding:1px 8px;border-radius:5px;letter-spacing:0.02em;vertical-align:middle;margin-left:2px}
+/* Pattern recognition cover-the-answer cards */
+.pat-intro{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);font-weight:var(--fw-medium);color:var(--blue);background:var(--blue-bg);border-radius:8px;padding:9px 12px;margin-bottom:16px}
+.pat-intro i{font-size:16px}
+.pat-card{border:0.5px solid var(--border);border-radius:10px;margin-bottom:12px;padding:14px 16px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;background:var(--card)}
+.pat-card:hover{border-color:var(--border2)}
+.pat-card.revealed{border-color:var(--blue);box-shadow:0 2px 12px rgba(24,95,165,0.08)}
+.pat-trigger-label{font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--text3);text-transform:uppercase;letter-spacing:var(--ls-label);margin-bottom:8px}
+.pat-trigger-clues{display:flex;flex-wrap:wrap;gap:6px}
+.pat-clue{display:inline-block;font-size:var(--fs-sm);color:var(--text);background:var(--bg3);border:0.5px solid var(--border);border-radius:16px;padding:4px 12px;line-height:var(--lh-snug)}
+.pat-card.revealed .pat-clue{border-color:var(--border2)}
+.pat-reveal{margin-top:10px}
+.pat-prompt{display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--fs-sm);color:var(--text3);font-weight:var(--fw-medium);padding:10px;border:1px dashed var(--border);border-radius:8px;transition:opacity 0.15s}
+.pat-prompt i{font-size:15px}
+.pat-card.revealed .pat-prompt{display:none}
+.pat-answer{display:none;flex-direction:column;align-items:center;gap:6px;animation:patReveal 0.22s ease-out}
+.pat-card.revealed .pat-answer{display:flex}
+@keyframes patReveal{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.pat-arrow{color:var(--border2);font-size:18px;line-height:1}
+.pat-answer-name{font-size:var(--fs-h2);font-weight:var(--fw-bold);color:var(--blue);text-align:center}
+.pat-answer-name .ent-link{border-bottom:none;font-weight:var(--fw-bold)}
+.pat-answer-pearl{font-size:var(--fs-sm);color:var(--text2);text-align:center;line-height:var(--lh-normal);max-width:480px;background:var(--blue-bg);border-radius:8px;padding:8px 14px;margin-top:2px}
+/* Inline images inside disease section paragraphs */
+.inline-img{margin:16px 0;border:0.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg2);max-width:560px}
+.inline-img-frame{background:var(--img-bg);cursor:zoom-in;line-height:0}
+.inline-img-frame img{display:block;width:100%;max-height:420px;object-fit:contain}
+.inline-img-cap{padding:10px 14px;font-size:var(--fs-xs);color:var(--text2);line-height:var(--lh-snug)}
+.inline-img-missing{font-size:var(--fs-xs);color:var(--text3);padding:10px 12px;border:1px dashed var(--border);border-radius:8px;margin:12px 0;text-align:center}
 /* Drug entries — editorial style, grouped by treatment line */
 .drug-list{margin-top:4px}
-.drug-group{margin-bottom:24px}
+.drug-group{margin-bottom:28px}
 .drug-group:last-child{margin-bottom:8px}
-.drug-group-header{font-size:13px;font-weight:600;color:#4a7fa5;padding:10px 0 6px;border-bottom:0.5px solid #B5D4F4;margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
-.drug-group-header-en{color:#B5D4F4;font-weight:400;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;margin-left:2px}
-.drug-group-count{font-size:12px;color:#7ab3d9;font-weight:400}
-.drug-entry{padding:14px 0 12px;border-top:0.5px solid #f0f5fb}
-.drug-entry:first-child{border-top:0;padding-top:10px}
-.drug-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
-.drug-name{font-size:17px;font-weight:500;color:#185FA5;line-height:1.35}
-.drug-class{margin-left:auto;font-size:12px;color:#4a7fa5;background:#f0f5fb;padding:2px 10px;border-radius:6px;letter-spacing:0.02em;font-weight:400}
-.drug-badge{display:inline-flex;align-items:center;font-size:11px;padding:2px 8px;border-radius:6px;font-weight:500}
-.drug-fields{display:grid;grid-template-columns:64px 1fr;gap:8px 14px;margin-top:8px}
-.drug-field-label{font-size:13px;color:#4a7fa5;font-weight:600;padding-top:3px}
-.drug-field-value{font-size:15px;color:#185FA5;line-height:1.7}
+.drug-group-header{font-size:var(--fs-sm);font-weight:var(--fw-semi);color:var(--text2);padding:10px 0 6px;border-bottom:0.5px solid var(--border);margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
+.drug-group-header-en{color:var(--text3);font-weight:var(--fw-normal);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:var(--ls-label);margin-left:2px}
+.drug-group-count{font-size:var(--fs-xs);color:var(--text3);font-weight:var(--fw-normal)}
+.drug-entry{padding:0;border:0.5px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;background:var(--card)}
+.drug-entry:first-child{padding-top:0}
+.drug-head{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;padding:14px 16px 12px;background:var(--bg3);border-bottom:0.5px solid var(--border)}
+.drug-head-main{flex:1;min-width:0}
+.drug-name{font-size:var(--fs-h2);font-weight:var(--fw-semi);color:var(--blue);line-height:var(--lh-tight)}
+.drug-subtitle{font-size:var(--fs-xs);color:var(--text2);margin-top:3px;line-height:var(--lh-snug)}
+.drug-class{font-size:var(--fs-xs);color:var(--text2);background:var(--blue-bg);padding:3px 10px;border-radius:6px;letter-spacing:0.02em;font-weight:var(--fw-medium);white-space:nowrap}
+.drug-badge{display:inline-flex;align-items:center;font-size:var(--fs-label);padding:3px 9px;border-radius:6px;font-weight:var(--fw-semi);white-space:nowrap}
+.drug-body{padding:12px 16px 14px}
+.drug-field{margin-bottom:12px}
+.drug-field:last-child{margin-bottom:0}
+.drug-field-label{font-size:var(--fs-label);color:var(--text2);font-weight:var(--fw-semi);text-transform:uppercase;letter-spacing:var(--ls-label);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.drug-field-label::before{content:"";flex:1;height:1px;background:var(--border);order:2;opacity:0.5}
+.drug-field-label > span{order:1}
+.drug-field-value{font-size:var(--fs-body);color:var(--text);line-height:var(--lh-normal)}
 .drug-field-value > p:first-child{margin-top:0}
 .drug-field-value > p:last-child{margin-bottom:0}
+.drug-field.is-caution{background:var(--amber-bg);border-radius:8px;padding:10px 12px;margin-left:-2px;margin-right:-2px}
+.drug-field.is-caution .drug-field-label{color:var(--amber)}
+.drug-field.is-caution .drug-field-label::before{background:var(--amber);opacity:0.3}
 body.dark .drug-group-header{color:var(--text);border-bottom-color:var(--border)}
 body.dark .drug-group-header-en{color:var(--text3);opacity:0.6}
 body.dark .drug-group-count{color:var(--text3)}
-body.dark .drug-entry{border-top-color:var(--border)}
-body.dark .drug-name{color:var(--text)}
-body.dark .drug-class{background:var(--bg2);color:var(--text2)}
+body.dark .drug-entry{border-color:var(--border)}
+body.dark .drug-head{background:var(--bg3);border-bottom-color:var(--border)}
+body.dark .drug-name{color:var(--blue)}
+body.dark .drug-subtitle{color:var(--text2)}
+body.dark .drug-class{background:var(--blue-bg);color:var(--text2)}
 body.dark .drug-field-label{color:var(--text2)}
 body.dark .drug-field-value{color:var(--text)}
 
 /* Complication cards — contained, essay-style, with timeline pathophys */
 .comp-list{margin-top:18px}
+/* Prog tab: unify section-content list/pill blocks with the editorial comp-card language */
+.prog-content{margin-bottom:4px}
+.prog-content .sl{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--blue);margin-top:var(--sp-5);margin-bottom:var(--sp-3);padding-bottom:var(--sp-2);border-bottom:1px solid var(--border)}
+.prog-content .sl:first-child{margin-top:0}
+.prog-content .cl li{padding:6px 0 6px 18px}
+.prog-content .stat-row{margin-top:16px}
+.prog-content .pill{background:var(--bg3);border:0.5px solid var(--border);color:var(--text2);font-weight:var(--fw-normal)}
+.prog-content + .comp-list{margin-top:28px;padding-top:20px;border-top:1px solid var(--border)}
 .comp-list-header{font-size:13px;font-weight:600;color:#4a7fa5;padding:10px 0 8px;border-bottom:0.5px solid #B5D4F4;margin-bottom:14px;display:flex;justify-content:space-between;align-items:baseline}
 .comp-list-header-en{color:#B5D4F4;font-weight:400;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;margin-left:2px}
 .comp-list-count{font-size:12px;color:#7ab3d9;font-weight:400}
@@ -223,7 +357,7 @@ body.dark .drug-field-value{color:var(--text)}
 .comp-entry:last-of-type{margin-bottom:0}
 .comp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:4px;padding-bottom:14px;border-bottom:0.5px solid #E6F1FB}
 .comp-title-wrap{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;flex:1;min-width:0}
-.comp-name{font-size:18px;font-weight:500;color:#185FA5;line-height:1.35}
+.comp-name{font-size:var(--fs-h2);font-weight:var(--fw-semi);color:var(--blue);line-height:var(--lh-tight)}
 .comp-name-en{font-size:13px;color:#7ab3d9;font-weight:400}
 .comp-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex-shrink:0}
 .comp-meta-badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:500;color:#4a7fa5;background:#fff;border:0.5px solid #B5D4F4;padding:3px 9px;border-radius:6px;letter-spacing:0.02em}
@@ -232,9 +366,9 @@ body.dark .drug-field-value{color:var(--text)}
 .comp-meta-badge.comp-sev-med{color:#854F0B;background:#FAF1E0;border-color:#EFD9B0}
 .comp-section{margin-top:16px}
 .comp-section:first-of-type{margin-top:14px}
-.comp-section-label{font-size:10px;font-weight:600;color:#185FA5;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:8px;display:flex;align-items:baseline;gap:6px}
+.comp-section-label{font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--blue);text-transform:uppercase;letter-spacing:var(--ls-label);margin-bottom:8px;display:flex;align-items:baseline;gap:6px}
 .comp-section-label-en{color:#B5D4F4;font-weight:400;letter-spacing:0.1em}
-.comp-section-content{font-size:15px;color:#185FA5;line-height:1.7}
+.comp-section-content{font-size:var(--fs-body);color:var(--text);line-height:var(--lh-normal)}
 .comp-section-content > p:first-child{margin-top:0}
 .comp-section-content > p:last-child{margin-bottom:0}
 .comp-link-row{margin-top:14px;padding-top:12px;border-top:0.5px solid #E6F1FB}
@@ -819,12 +953,13 @@ var CAT_COLORS = {"其他":"#7ab3d9"};
 var categoryList = []; // [{name, color, sort_order}] from disease_categories table
 var CAT_FILLS = {"呼吸系統":"#E6F1FB","心臟系統":"#FAECE7","內分泌":"#FAEEDA","腎臟系統":"#E1F5EE","消化系統":"#F0E8FB","神經系統":"#F8E8F0","血液系統":"#F5EDE4","免疫系統":"#E8F5EE","骨骼肌肉系統":"#F5EDE4","皮膚系統":"#FAEEDA"};
 var BADGE_COLORS = {blue:{bg:"#E6F1FB",fg:"#185FA5"},green:{bg:"#EAF3DE",fg:"#3B6D11"},amber:{bg:"#FAEEDA",fg:"#854F0B"}};
-var TABS = [{key:"def",label:"概論"},{key:"patho",label:"病生理"},{key:"sx",label:"症狀"},{key:"hx",label:"病史詢問"},{key:"pe",label:"理學檢查"},{key:"dx",label:"診斷檢查"},{key:"img",label:"影像學"},{key:"tx",label:"治療"},{key:"drug",label:"藥物"},{key:"prog",label:"預後"}];
+var TABS = [{key:"def",label:"概論"},{key:"patho",label:"病生理"},{key:"sx",label:"症狀"},{key:"hx",label:"病史詢問"},{key:"pe",label:"理學檢查"},{key:"dx",label:"診斷檢查"},{key:"img",label:"影像學"},{key:"tx",label:"治療"},{key:"drug",label:"藥物"},{key:"prog",label:"預後"},{key:"pearls",label:"重點"},{key:"pattern",label:"題型"}];
 
 var diseases = [], sectionMap = {}, drugMap = {}, compMap = {};
 var symptoms = [], mechanisms = [], mechBySxId = {}, mechById = {};
 var anatomyById = {}, anatomyByMechId = {}, anatomyDxMap = {};
 var clueIndex = {};
+var _sectionInlineImages = []; // images available for inline [img:N] in the current section
 var currentSxId = null;
 var currentSymMode = "explore"; // "explore" | "localize" | "detective" | "compare"
 var detectiveState = { selected: [] };
@@ -960,6 +1095,7 @@ async function init() {
     topicTypesList = Array.isArray(results[11]) ? results[11] : [];
     buildTopicTypesMap();
     buildClueIndex();
+    buildEntityIndex();
     document.getElementById("loadingScreen").style.display = "none";
     document.getElementById("app").style.display = "flex";
     if(!isMobile())document.getElementById("sidebar").classList.remove("hidden");
@@ -1123,10 +1259,13 @@ function hasContent(data) {
   if (c.drugs && c.drugs.length > 0) return true;
   if (c.complications && c.complications.length > 0) return true;
   if (c.images && c.images.length > 0) return true;
+  if (c.groups && c.groups.length > 0) return true;     // pearls (重點)
+  if (c.patterns && c.patterns.length > 0) return true; // pattern (題型)
   return false;
 }
 
 function selectDisease(id) {
+  hideEntityPreview();
   currentId = id;
   currentTab = "def";
   currentView = "entry";
@@ -1148,6 +1287,7 @@ function selectDisease(id) {
 }
 
 function renderEntry() {
+  resetLinkPass();
   var d = diseases.find(function(x) { return x.id === currentId; });
   if (!d) return;
   var badges = d.badges || [];
@@ -1191,7 +1331,162 @@ function renderEntry() {
   }
 
   var bodyHtml = renderSection(secs[currentTab], currentTab === "drug" ? drugs : null, currentTab === "prog" ? comps : null, secs[currentTab]);
-  document.getElementById("mainContent").innerHTML = '<div class="card"><div class="tabs">' + tabsHtml + '</div><div class="tc">' + bodyHtml + '</div></div>' + renderNotesPanel();
+  document.getElementById("mainContent").innerHTML = '<div class="card"><div class="tabs">' + tabsHtml + '</div><div class="tc">' + bodyHtml + '</div></div>' + renderRelNav(currentId) + renderNotesPanel();
+}
+
+/* ===== One-level disease relationship navigator (subway-line view) ===== */
+function getDiseaseRelations(id){
+  // outgoing: current disease → diseases linked from its complications
+  var outgoing = [];
+  var seenOut = {};
+  (compMap[id] || []).forEach(function(c){
+    if (c.has_link && c.linked_disease_id && !seenOut[c.linked_disease_id]){
+      var d = diseases.find(function(x){ return x.id === c.linked_disease_id; });
+      if (d){ outgoing.push({ disease: d, via: c.name }); seenOut[c.linked_disease_id] = true; }
+    }
+  });
+  // incoming: any disease whose complications link TO the current disease
+  var incoming = [];
+  var seenIn = {};
+  diseases.forEach(function(src){
+    if (src.id === id) return;
+    (compMap[src.id] || []).forEach(function(c){
+      if (c.has_link && c.linked_disease_id === id && !seenIn[src.id]){
+        incoming.push({ disease: src, via: c.name });
+        seenIn[src.id] = true;
+      }
+    });
+  });
+  return { incoming: incoming, outgoing: outgoing };
+}
+
+function renderRelNav(id){
+  var rel = getDiseaseRelations(id);
+  if (!rel.incoming.length && !rel.outgoing.length) return ""; // nothing to show → omit entirely
+  var cur = diseases.find(function(x){ return x.id === id; });
+  if (!cur) return "";
+  var curColor = CAT_COLORS[cur.category] || "#7ab3d9";
+
+  function nodeHtml(item, dir){
+    var d = item.disease;
+    var col = CAT_COLORS[d.category] || "#7ab3d9";
+    var via = item.via ? '<div class="relnav-node-via" title="' + escHtml(item.via) + '">經由 ' + escHtml(item.via) + '</div>' : "";
+    return '<a class="relnav-node" onclick="selectDisease(\'' + d.id + '\')">' +
+      '<span class="relnav-node-dot" style="background:' + col + '"></span>' +
+      '<span class="relnav-node-body"><span class="relnav-node-name">' + escHtml(d.name) + '</span>' +
+      (d.name_en ? '<span class="relnav-node-en">' + escHtml(d.name_en) + '</span>' : '') +
+      via + '</span>' +
+      '<i class="ti ti-chevron-right relnav-node-chev"></i></a>';
+  }
+
+  function colHtml(title, en, items, dir){
+    var inner;
+    if (items.length){
+      inner = items.map(function(it){ return nodeHtml(it, dir); }).join("");
+    } else {
+      inner = '<div class="relnav-empty">' + (dir === "in" ? "無已知上游病因" : "無已知下游併發疾病") + '</div>';
+    }
+    return '<div class="relnav-col">' +
+      '<div class="relnav-col-head"><span class="relnav-col-zh">' + title + '</span>' +
+      '<span class="relnav-col-en">' + en + '</span>' +
+      '<span class="relnav-col-count">' + items.length + '</span></div>' +
+      '<div class="relnav-col-body">' + inner + '</div></div>';
+  }
+
+  var centerHtml = '<div class="relnav-center">' +
+    '<div class="relnav-center-label">當前疾病</div>' +
+    '<div class="relnav-current" style="border-color:' + curColor + '">' +
+    '<span class="relnav-current-dot" style="background:' + curColor + '"></span>' +
+    '<span class="relnav-current-name">' + escHtml(cur.name) + '</span>' +
+    (cur.name_en ? '<span class="relnav-current-en">' + escHtml(cur.name_en) + '</span>' : '') +
+    '</div></div>';
+
+  var html = '<div class="relnav-card">';
+  html += '<div class="relnav-header"><span class="relnav-header-zh">疾病關係</span>' +
+    '<span class="relnav-header-en">· DISEASE RELATIONSHIPS</span></div>';
+  html += '<div class="relnav-flow">';
+  html += colHtml("致病病因", "CAUSED BY", rel.incoming, "in");
+  html += '<div class="relnav-arrow relnav-arrow-1"><i class="ti ti-arrow-right"></i></div>';
+  html += centerHtml;
+  html += '<div class="relnav-arrow relnav-arrow-2"><i class="ti ti-arrow-right"></i></div>';
+  html += colHtml("併發疾病", "LEADS TO", rel.outgoing, "out");
+  html += '</div></div>';
+  return html;
+}
+
+/* ===== High-yield facts (pearls) ===== */
+// Schema: { groups: [ { title, facts: [ "fact text", ... ] } ] }
+//   or flat: { facts: [ ... ] }
+function renderPearls(content){
+  if (!content) return '<p style="color:var(--text3)">此疾病尚無重點整理</p>';
+  var groups = content.groups;
+  if (!groups && content.facts) groups = [{ title: "", facts: content.facts }];
+  if (!groups || !groups.length) return '<p style="color:var(--text3)">此疾病尚無重點整理</p>';
+
+  var html = '<div class="pearls-wrap">';
+  html += '<div class="pearls-intro"><i class="ti ti-bulb"></i> 高分重點 — 考前快速掃描</div>';
+  groups.forEach(function(g){
+    if (g.title) html += '<div class="sl">' + fmt(g.title) + '</div>';
+    html += '<div class="pearls-list">';
+    (g.facts || []).forEach(function(f){
+      // A fact may be a plain string or {text, tag}
+      var text = (typeof f === "string") ? f : (f.text || "");
+      var tag = (typeof f === "object" && f.tag) ? f.tag : "";
+      html += '<div class="pearl">';
+      html += '<span class="pearl-mark"><i class="ti ti-point-filled"></i></span>';
+      html += '<div class="pearl-body">' + linkifyEntities(fmt(text));
+      if (tag) html += ' <span class="pearl-tag">' + escHtml(tag) + '</span>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+/* ===== Pattern recognition (cover-the-answer cards) ===== */
+// Schema: { patterns: [ { trigger: ["clue 1","clue 2",...] OR "string",
+//                          answer: "診斷名", answer_id: "<disease uuid optional>",
+//                          pearl: "why / key discriminator (optional)" } ] }
+function renderPatterns(content){
+  if (!content || !content.patterns || !content.patterns.length){
+    return '<p style="color:var(--text3)">此疾病尚無題型辨識卡</p>';
+  }
+  var html = '<div class="pat-wrap">';
+  html += '<div class="pat-intro"><i class="ti ti-cards"></i> 題型辨識 — 點卡片揭曉答案</div>';
+  content.patterns.forEach(function(p, i){
+    var triggers = Array.isArray(p.trigger) ? p.trigger : [p.trigger];
+    html += '<div class="pat-card" id="pat-' + i + '" onclick="togglePattern(' + i + ')">';
+    // Trigger (always visible)
+    html += '<div class="pat-trigger">';
+    html += '<div class="pat-trigger-label">CLINICAL VIGNETTE · 臨床情境</div>';
+    html += '<div class="pat-trigger-clues">';
+    triggers.forEach(function(t){
+      html += '<span class="pat-clue">' + linkifyEntities(fmt(t)) + '</span>';
+    });
+    html += '</div></div>';
+    // Reveal prompt / answer
+    html += '<div class="pat-reveal" id="pat-reveal-' + i + '">';
+    html += '<div class="pat-prompt"><i class="ti ti-eye"></i> 點擊揭曉診斷</div>';
+    html += '<div class="pat-answer" id="pat-answer-' + i + '">';
+    html += '<div class="pat-arrow"><i class="ti ti-arrow-down"></i></div>';
+    if (p.answer_id){
+      html += '<div class="pat-answer-name"><a class="ent-link" onclick="event.stopPropagation();selectDisease(\'' + p.answer_id + '\')">' + escHtml(p.answer || "") + ' <i class="ti ti-arrow-narrow-right"></i></a></div>';
+    } else {
+      html += '<div class="pat-answer-name">' + escHtml(p.answer || "") + '</div>';
+    }
+    if (p.pearl) html += '<div class="pat-answer-pearl">' + linkifyEntities(fmt(p.pearl)) + '</div>';
+    html += '</div></div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function togglePattern(i){
+  var card = document.getElementById("pat-" + i);
+  if (!card) return;
+  card.classList.toggle("revealed");
 }
 
 function switchTab(key) {
@@ -1199,13 +1494,33 @@ function switchTab(key) {
   renderEntry();
 }
 
+function chipify(text){
+  if(!text) return text;
+  // B1. Explicit token: [stat:VALUE] or [stat:VALUE|label]
+  text = text.replace(/\[stat:([^\]\|]+)(?:\|([^\]]+))?\]/g, function(_, val, label){
+    var v = val.trim();
+    var l = label ? label.trim() : "";
+    return '<span class="stat-chip"' + (l ? ' title="'+l.replace(/"/g,'&quot;')+'"' : '') + '>' + v + '</span>';
+  });
+  // B2. Auto-detect parenthesised stat-like numbers inside parens. Handles:
+  //     （~85%）（85%）（80-90%）（>90%）（≥7.0%）（0.5-1%）, half & full-width parens.
+  text = text.replace(/[（(]\s*([~<>≤≥]?\s?\d+(?:\.\d+)?(?:\s?[-–~]\s?\d+(?:\.\d+)?)?%)\s*[）)]/g, function(_, num){
+    return '<span class="stat-chip">' + num.replace(/\s+/g,"") + '</span>';
+  });
+  // B3. Standalone fold-change / ratio like "10-20 倍" stays prose (not chipped) to avoid noise.
+  return text;
+}
+
 function fmt(text){
   if(!text)return "";
+  text = chipify(text);
   return text.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/__(.+?)__/g,'<u>$1</u>');
 }
 
 function renderRichText(text){
   if(!text)return "";
+  // Normalize literal "\n" (backslash+n stored by Postgres single-quoted strings) into real newlines
+  text = text.replace(/\\n/g, "\n");
   var lines=text.split("\n");
   var html="",inList=false,inTable=false;
   lines.forEach(function(line){
@@ -1213,6 +1528,20 @@ function renderRichText(text){
     if(!trimmed){
       if(inList){html+="</ul>";inList=false}
       if(inTable){html+="</tbody></table>";inTable=false}
+      return;
+    }
+    // Inline image reference [img:N] — renders a block figure from the section's images array
+    var imgm = trimmed.match(/^\[img:(\d+)\]$/);
+    if(imgm){
+      if(inList){html+="</ul>";inList=false}
+      if(inTable){html+="</tbody></table>";inTable=false}
+      var idx = parseInt(imgm[1],10) - 1;
+      var im = _sectionInlineImages[idx];
+      if(im && im.url){
+        html += renderInlineImage(im);
+      } else {
+        html += '<div class="inline-img-missing">[img:' + (idx+1) + ' 找不到圖片]</div>';
+      }
       return;
     }
     // Table row
@@ -1248,6 +1577,18 @@ function renderRichText(text){
       }
       return;
     }
+    // A. Key fact: "!! text" → emphasized takeaway block
+    if(trimmed.match(/^!!\s+/)){
+      if(inList){html+="</ul>";inList=false}
+      html+='<div class="rt-key">'+linkifyEntities(fmt(trimmed.replace(/^!!\s+/,"")))+'</div>';
+      return;
+    }
+    // C. Group header: ">> Label" → subordinating bold label
+    if(trimmed.match(/^>>\s+/)){
+      if(inList){html+="</ul>";inList=false}
+      html+='<div class="rt-group">'+linkifyEntities(fmt(trimmed.replace(/^>>\s+/,"")))+'</div>';
+      return;
+    }
     // Heading L1-L3 (#, ##, ###)
     var hm = trimmed.match(/^(#{1,3})\s+(.+)$/);
     if(hm){
@@ -1265,24 +1606,24 @@ function renderRichText(text){
     // Bullet L3 (4+ spaces) — filled square
     if(line.match(/^    +- /)){
       if(!inList){html+='<ul style="list-style:none;padding:0;margin:4px 0">';inList=true}
-      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:55px;font-size:14px"><span style="width:5px;height:5px;border-radius:1px;background:#85B7EB;margin-top:9px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+fmt(line.replace(/^\s+-\s*/,""))+'</span></li>';
+      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:55px;font-size:var(--fs-sm)"><span style="width:5px;height:5px;border-radius:1px;background:var(--border2);margin-top:9px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+linkifyEntities(fmt(line.replace(/^\s+-\s*/,"")))+'</span></li>';
       return;
     }
     // Bullet L2 — open circle
     if(line.match(/^  +- /)){
       if(!inList){html+='<ul style="list-style:none;padding:0;margin:4px 0">';inList=true}
-      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:31px;font-size:15px"><span style="width:6px;height:6px;border-radius:50%;border:1.5px solid #85B7EB;background:transparent;margin-top:8px;flex-shrink:0;box-sizing:border-box"></span><span style="flex:1;min-width:0">'+fmt(line.replace(/^\s+-\s*/,""))+'</span></li>';
+      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:31px;font-size:var(--fs-body)"><span style="width:6px;height:6px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;margin-top:8px;flex-shrink:0;box-sizing:border-box"></span><span style="flex:1;min-width:0">'+linkifyEntities(fmt(line.replace(/^\s+-\s*/,"")))+'</span></li>';
       return;
     }
     // Bullet L1 — filled circle
     if(trimmed.match(/^- /)){
       if(!inList){html+='<ul style="list-style:none;padding:0;margin:4px 0">';inList=true}
-      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:8px;font-size:15px"><span style="width:7px;height:7px;border-radius:50%;background:#378ADD;margin-top:8px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+fmt(trimmed.substring(2))+'</span></li>';
+      html+='<li style="display:flex;align-items:flex-start;gap:12px;padding:2px 0;padding-left:8px;font-size:var(--fs-body)"><span style="width:7px;height:7px;border-radius:50%;background:var(--border2);margin-top:8px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+linkifyEntities(fmt(trimmed.substring(2)))+'</span></li>';
       return;
     }
     // Regular paragraph
     if(inList){html+="</ul>";inList=false}
-    html+='<p style="margin:0 0 6px;font-size:17px;line-height:1.7">'+fmt(trimmed)+'</p>';
+    html+='<p style="margin:0 0 6px;font-size:var(--fs-body);line-height:var(--lh-normal)">'+linkifyEntities(fmt(trimmed))+'</p>';
   });
   if(inList)html+="</ul>";
   if(inTable)html+="</tbody></table>";
@@ -1625,18 +1966,37 @@ window.addEventListener("popstate", function(){
   }
 });
 
+// Detect whether any text field in a section places images inline via [img:N]
+function sectionUsesInlineImages(content){
+  if(!content) return false;
+  var re = /\[img:\d+\]/;
+  if(content.paragraphs && content.paragraphs.some(function(p){ return re.test(p); })) return true;
+  if(content.steps && content.steps.some(function(s){ return re.test(s.content||"") || re.test(s.title||""); })) return true;
+  if(content.lists && content.lists.some(function(l){ return (l.items||[]).some(function(it){ return re.test(it); }); })) return true;
+  return false;
+}
+
 function renderSection(data, drugs, comps, raw) {
   var content = data;
   if (typeof content === "string") try { content = JSON.parse(content); } catch(e) {}
   if (!content && !drugs && !comps) return '<p style="color:#7ab3d9">此區段尚無內容</p>';
 
+  // Custom renderers for high-yield & pattern-recognition tabs
+  if (currentTab === "pearls") return renderPearls(content);
+  if (currentTab === "pattern") return renderPatterns(content);
+
   var html = "";
 
+  // Make this section's images available for inline [img:N] references in paragraphs/steps/lists
+  _sectionInlineImages = (content && content.images) ? content.images : [];
+
   if (content) {
+    if (currentTab === "prog") html += '<div class="prog-content">';
     if (content.images && content.images.length) {
       if (currentTab === "img") {
         html += renderImagingViewer(content.images, content.terms);
-      } else {
+      } else if (!sectionUsesInlineImages(content)) {
+        // Only auto-dump image cards when the text doesn't place them inline via [img:N]
         content.images.forEach(function(img) {
           var mod = (img.modality || "other").toLowerCase();
           var modLabel = {xr:"X-Ray",ct:"CT",mri:"MRI",usg:"Ultrasound"}[mod] || img.modality || "Other";
@@ -1669,7 +2029,19 @@ function renderSection(data, drugs, comps, raw) {
         (l.items || []).forEach(function(item) {
           var lv = getLevel(item);
           var text = item.replace(/^\s+/, "");
-          html += '<li class="l' + lv + '">' + fmt(text) + '</li>';
+          // C. Group header: ">> Label" → bold subordinating label, children indent under it
+          var gm = text.match(/^>>\s+(.+)$/);
+          if (gm){
+            html += '<li class="l' + lv + ' cl-group">' + linkifyEntities(fmt(gm[1])) + '</li>';
+            return;
+          }
+          // A. Key fact: "!! text" → emphasized takeaway with left accent bar
+          var km = text.match(/^!!\s+(.+)$/);
+          if (km){
+            html += '<li class="l' + lv + ' cl-key">' + linkifyEntities(fmt(km[1])) + '</li>';
+            return;
+          }
+          html += '<li class="l' + lv + '">' + linkifyEntities(fmt(text)) + '</li>';
         });
         html += '</ul>';
       });
@@ -1686,6 +2058,7 @@ function renderSection(data, drugs, comps, raw) {
       });
       html += '</div>';
     }
+    if (currentTab === "prog") html += '</div>';
   }
 
   if (drugs && drugs.length > 0) {
@@ -1713,28 +2086,32 @@ function renderSection(data, drugs, comps, raw) {
       html += '<div class="drug-group-header"><span>' + escHtml(lbl[0]) + ' <span class="drug-group-header-en">· ' + escHtml(lbl[1]) + '</span></span><span class="drug-group-count">' + arr.length + '</span></div>';
       arr.forEach(function(dr){
         html += '<div class="drug-entry">';
+        // Header bar — name + subtitle (class) on left, badge on right
         html += '<div class="drug-head">';
-        html += '<span class="drug-name">' + escHtml(dr.name || "") + '</span>';
-        // Optional badge_label (acute, special situation, etc.)
+        html += '<div class="drug-head-main">';
+        html += '<div class="drug-name">' + linkifyEntities(escHtml(dr.name || "")) + '</div>';
+        if (dr.drug_class) html += '<div class="drug-subtitle">' + escHtml(dr.drug_class) + '</div>';
+        html += '</div>';
         if (dr.badge_label){
           var bc = BADGE_COLORS[dr.badge_color] || BADGE_COLORS.blue;
           html += '<span class="drug-badge" style="background:' + bc.bg + ';color:' + bc.fg + '">' + escHtml(dr.badge_label) + '</span>';
         }
-        if (dr.drug_class) html += '<span class="drug-class">' + escHtml(dr.drug_class) + '</span>';
         html += '</div>';
 
-        // Build fields grid only with filled fields
+        // Body — each field as a labeled section
         var rows = [];
-        if (dr.mechanism)  rows.push({ label: "機轉", value: dr.mechanism });
-        if (dr.dosage)     rows.push({ label: "劑量", value: dr.dosage });
-        if (dr.indication) rows.push({ label: "適應症", value: dr.indication });
-        if (dr.notes)      rows.push({ label: "注意", value: dr.notes });
+        if (dr.mechanism)  rows.push({ label: "機轉", en: "MECHANISM", value: dr.mechanism });
+        if (dr.dosage)     rows.push({ label: "劑量", en: "DOSAGE", value: dr.dosage });
+        if (dr.indication) rows.push({ label: "適應症", en: "INDICATION", value: dr.indication });
+        if (dr.notes)      rows.push({ label: "注意", en: "CAUTION", value: dr.notes, caution: true });
 
         if (rows.length){
-          html += '<div class="drug-fields">';
+          html += '<div class="drug-body">';
           rows.forEach(function(r){
-            html += '<div class="drug-field-label">' + escHtml(r.label) + '</div>';
+            html += '<div class="drug-field' + (r.caution ? " is-caution" : "") + '">';
+            html += '<div class="drug-field-label"><span>' + (r.caution ? '⚠ ' : '') + escHtml(r.label) + '</span></div>';
             html += '<div class="drug-field-value">' + renderRichText(r.value) + '</div>';
+            html += '</div>';
           });
           html += '</div>';
         }
@@ -2339,6 +2716,18 @@ function parseTopicBody(body, images){
     }
   });
   return { blocks: blocks, used: used };
+}
+
+function renderInlineImage(im){
+  // Disease-section inline image. Caption falls back across caption/title/description.
+  var url = escAttr(im.url);
+  var caption = im.caption || im.title || im.description || "";
+  var capAttr = escAttr(caption);
+  var s = '<figure class="inline-img">';
+  s += '<div class="inline-img-frame" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" alt="' + escAttr(caption) + '"></div>';
+  if (caption) s += '<figcaption class="inline-img-cap">' + fmt(caption) + '</figcaption>';
+  s += '</figure>';
+  return s;
 }
 
 function renderTopicInlineImage(im){
@@ -3765,6 +4154,153 @@ function buildClueIndex(){
       });
     });
   });
+}
+
+/* ===== Cross-linking: entity index + linkify + preview cards ===== */
+var entityIndex = { byName: {}, names: [], regex: null };
+
+function buildEntityIndex(){
+  entityIndex = { byName: {}, names: [], regex: null };
+  function add(name, type, id){
+    if (!name) return;
+    var key = name.toLowerCase().trim();
+    if (!key || key.length < 2) return;
+    if (!entityIndex.byName[key]) {
+      entityIndex.byName[key] = { type: type, id: id, name: name };
+      entityIndex.names.push(name);
+    }
+  }
+  diseases.forEach(function(d){
+    add(d.name, "disease", d.id);
+    if (d.name_en) add(d.name_en, "disease", d.id);
+  });
+  var sorted = entityIndex.names.slice().sort(function(a,b){ return b.length - a.length; });
+  var escaped = sorted.map(function(n){ return n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); });
+  if (escaped.length){
+    try { entityIndex.regex = new RegExp("(" + escaped.join("|") + ")", "g"); } catch(e){ entityIndex.regex = null; }
+  }
+}
+
+// Linkify a SAFE (already-escaped) HTML string. Skips content inside HTML tags.
+// _linkedThisPass tracks which entity ids were already linked to avoid noise.
+var _linkedThisPass = {};
+function resetLinkPass(){ _linkedThisPass = {}; }
+function linkifyEntities(safeHtml){
+  if (!safeHtml) return safeHtml;
+  // 1. Explicit tokens: [[dz:UUID|label]] or [[dz:UUID]]
+  safeHtml = safeHtml.replace(/\[\[dz:([0-9a-f-]+)(?:\|([^\]]+))?\]\]/gi, function(_, id, label){
+    var d = diseases.find(function(x){ return x.id === id; });
+    var text = label || (d ? d.name : "連結");
+    if (!d) return escHtml(text);
+    return entityLink("disease", id, text);
+  });
+  // 2. Auto-link known disease names (only on disease entry view, avoid inside tags, first mention only)
+  if (entityIndex.regex && currentView === "entry"){
+    var parts = safeHtml.split(/(<[^>]+>)/);
+    for (var i = 0; i < parts.length; i++){
+      if (parts[i].charAt(0) === "<") continue;
+      parts[i] = parts[i].replace(entityIndex.regex, function(match){
+        var ent = entityIndex.byName[match.toLowerCase().trim()];
+        if (!ent) return match;
+        if (ent.type === "disease" && ent.id === currentId) return match;
+        if (_linkedThisPass[ent.id]) return match; // already linked once this render
+        _linkedThisPass[ent.id] = true;
+        return entityLink(ent.type, ent.id, match);
+      });
+    }
+    safeHtml = parts.join("");
+  }
+  return safeHtml;
+}
+
+function entityLink(type, id, text){
+  return '<a class="ent-link" data-ent-type="' + type + '" data-ent-id="' + id +
+    '" onclick="onEntityClick(event,\'' + type + '\',\'' + id + '\')" ' +
+    'onmouseenter="showEntityPreview(event,\'' + type + '\',\'' + id + '\')" ' +
+    'onmouseleave="scheduleHidePreview()">' + text + '</a>';
+}
+
+function onEntityClick(e, type, id){
+  e.preventDefault(); e.stopPropagation();
+  hideEntityPreview(true);
+  if (type === "disease") selectDisease(id);
+}
+
+var _entPreviewTimer = null, _entHideTimer = null;
+
+function showEntityPreview(e, type, id){
+  if (isMobile()) return;
+  clearTimeout(_entHideTimer);
+  clearTimeout(_entPreviewTimer);
+  var anchor = e.currentTarget;
+  _entPreviewTimer = setTimeout(function(){
+    var card = buildEntityPreview(type, id);
+    if (!card) return;
+    var pop = document.getElementById("entPreview") || (function(){
+      var el = document.createElement("div");
+      el.id = "entPreview";
+      el.className = "ent-preview";
+      el.onmouseenter = function(){ clearTimeout(_entHideTimer); };
+      el.onmouseleave = scheduleHidePreview;
+      document.body.appendChild(el);
+      return el;
+    })();
+    pop.innerHTML = card;
+    pop.style.display = "block";
+    var r = anchor.getBoundingClientRect();
+    var pw = 320, ph = pop.offsetHeight || 160;
+    var left = r.left, top = r.bottom + 8;
+    if (left + pw > window.innerWidth - 12) left = window.innerWidth - pw - 12;
+    if (top + ph > window.innerHeight - 12) top = r.top - ph - 8;
+    pop.style.left = Math.max(12, left) + "px";
+    pop.style.top = Math.max(12, top) + "px";
+  }, 280);
+}
+
+function scheduleHidePreview(){
+  clearTimeout(_entPreviewTimer);
+  _entHideTimer = setTimeout(function(){ hideEntityPreview(); }, 200);
+}
+
+function hideEntityPreview(){
+  clearTimeout(_entPreviewTimer);
+  var pop = document.getElementById("entPreview");
+  if (pop) pop.style.display = "none";
+}
+
+function buildEntityPreview(type, id){
+  if (type !== "disease") return null;
+  var d = diseases.find(function(x){ return x.id === id; });
+  if (!d) return null;
+  var catColor = CAT_COLORS[d.category] || "#7ab3d9";
+  var secs = sectionMap[id] || {};
+  var summary = d.summary || "";
+  if (!summary && secs.def){
+    var defContent = secs.def;
+    if (typeof defContent === "string") { try { defContent = JSON.parse(defContent); } catch(e){} }
+    if (defContent && defContent.paragraphs && defContent.paragraphs.length){
+      summary = defContent.paragraphs[0].replace(/\*\*/g,"").replace(/\\n/g," ");
+    }
+  }
+  if (summary.length > 140) summary = summary.slice(0, 138) + "…";
+  var drugCount = (drugMap[id] || []).length;
+  var compCount = (compMap[id] || []).length;
+  var badges = "";
+  try { var bs = Array.isArray(d.badges) ? d.badges : JSON.parse(d.badges || "[]"); badges = bs.slice(0,3).map(function(b){ return '<span class="ent-preview-badge">' + escHtml(b) + '</span>'; }).join(""); } catch(e){}
+  var html = '<div class="ent-preview-head">';
+  html += '<span class="ent-preview-dot" style="background:' + catColor + '"></span>';
+  html += '<div><div class="ent-preview-name">' + escHtml(d.name) + '</div>';
+  if (d.name_en) html += '<div class="ent-preview-en">' + escHtml(d.name_en) + '</div>';
+  html += '</div></div>';
+  if (badges) html += '<div class="ent-preview-badges">' + badges + '</div>';
+  if (summary) html += '<div class="ent-preview-summary">' + escHtml(summary) + '</div>';
+  html += '<div class="ent-preview-meta">';
+  html += '<span class="ent-preview-cat" style="color:' + catColor + '">' + escHtml(d.category || "") + '</span>';
+  if (drugCount) html += '<span>· ' + drugCount + ' 藥物</span>';
+  if (compCount) html += '<span>· ' + compCount + ' 併發症</span>';
+  html += '</div>';
+  html += '<div class="ent-preview-cta">點擊查看完整疾病頁 <i class="ti ti-arrow-narrow-right"></i></div>';
+  return html;
 }
 
 function findCrossRefs(label, excludeKey){
