@@ -286,8 +286,10 @@ body.dark .btn-home:hover{background:var(--blue);color:#fff}
 .cmp-picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px;padding:14px;background:var(--card);border:0.5px solid var(--border);border-radius:12px}
 .cmp-chip{display:inline-flex;align-items:center;gap:7px;background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:var(--fs-sm);font-weight:var(--fw-medium)}
 .cmp-chip-dot{width:8px;height:8px;border-radius:50%}
-.cmp-chip-x{font-size:15px;cursor:pointer;color:var(--text3);margin-left:2px}
-.cmp-chip-x:hover{color:var(--red)}
+.cmp-chip-x{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);margin-left:3px;padding:2px;border-radius:4px}
+.cmp-chip-x:hover{color:var(--red);background:rgba(220,60,60,0.08)}
+.cmp-clear-btn{margin-left:auto;background:transparent;border:0.5px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 14px;font-size:var(--fs-sm);cursor:pointer;font-family:inherit}
+.cmp-clear-btn:hover{border-color:var(--red);color:var(--red)}
 .cmp-add-wrap{position:relative;min-width:160px;flex:1}
 .cmp-add{width:100%;padding:7px 12px;border:1px dashed var(--border2);border-radius:8px;font-size:var(--fs-sm);background:transparent;color:var(--text);font-family:inherit}
 .cmp-add:focus{outline:none;border-style:solid;border-color:var(--blue)}
@@ -297,14 +299,20 @@ body.dark .btn-home:hover{background:var(--blue);color:#fff}
 .cmp-add-item:last-child{border-bottom:none}
 .cmp-add-item:hover{background:var(--blue-bg)}
 .cmp-add-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.cmp-add-nofacts{font-size:var(--fs-label);color:var(--text3);margin-left:auto}
+.cmp-add-nofacts{font-size:var(--fs-label);color:var(--text3);margin-left:6px}
+.cmp-add-cat{font-size:var(--fs-label);color:var(--text2);background:var(--bg2);padding:1px 7px;border-radius:5px;margin-left:auto}
 .cmp-add-empty{padding:10px 12px;font-size:var(--fs-sm);color:var(--text3)}
 .cmp-empty{text-align:center;padding:40px 20px;color:var(--text3)}
 .cmp-empty i{font-size:34px;display:block;margin-bottom:10px;opacity:0.5}
 .cmp-suggest-label{font-size:var(--fs-xs);color:var(--text2);margin:20px 0 8px}
 .cmp-suggest{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.cmp-suggest-btn{font-size:var(--fs-sm);padding:6px 14px;border:0.5px solid var(--border);border-radius:8px;background:var(--card);color:var(--blue);cursor:pointer;font-family:inherit}
+.cmp-suggest-btn{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-sm);padding:6px 14px;border:0.5px solid var(--border);border-radius:8px;background:var(--card);color:var(--blue);cursor:pointer;font-family:inherit}
 .cmp-suggest-btn:hover{background:var(--blue-bg);border-color:var(--border2)}
+.cmp-suggest-btn-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cmp-suggest-groups{display:flex;flex-direction:column;gap:14px;max-width:640px;margin:0 auto}
+.cmp-suggest-group{text-align:center}
+.cmp-suggest-cat{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-xs);font-weight:var(--fw-semi);color:var(--text2);margin-bottom:7px}
+.cmp-suggest-cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .cmp-table-wrap{overflow-x:auto;border:0.5px solid var(--border);border-radius:12px;background:var(--card)}
 .cmp-table{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
 .cmp-table thead th{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--border)}
@@ -321,6 +329,7 @@ body.dark .btn-home:hover{background:var(--blue);color:#fff}
 .cmp-cell-empty{color:var(--text3);text-align:center}
 .cmp-row-hl .cmp-key{background:var(--amber-bg);color:var(--amber)}
 .cmp-cell-hl{background:var(--amber-bg)}
+mark.hl{background:var(--amber-bg);color:var(--amber);padding:0.05em 0.3em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone;font-weight:var(--fw-medium)}
 body.dark .cmp-table thead th{background:var(--bg3)}
 /* Mark flags in notes panel */
 .mark-flags{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
@@ -2086,6 +2095,8 @@ function renderEntry() {
 
   if (availTabs.length === 0) {
     document.getElementById("mainContent").innerHTML = '<div class="card"><div style="padding:40px;text-align:center;color:#7ab3d9;font-size:15px">此疾病尚無任何內容，請在 CMS 中編輯</div></div>' + renderNotesPanel();
+    renderBreadcrumb(d, availTabs);
+    scrollMainTop();
     return;
   }
 
@@ -2100,7 +2111,7 @@ function renderBreadcrumb(d, availTabs){
   var bc = document.getElementById("breadcrumb");
   if(!bc) return;
   if(currentView !== "entry" || !d){ bc.innerHTML = ""; bc.classList.remove("show"); return; }
-  var tabLbl = currentTab ? tabLabel(currentTab) : "";
+  var tabLbl = (availTabs && availTabs.length && currentTab) ? tabLabel(currentTab) : "";
   var sep = '<i class="ti ti-chevron-right bc-sep"></i>';
   var html = '<a class="bc-item bc-home" onclick="showHome()"><i class="ti ti-home"></i></a>' + sep;
   if(d.category){
@@ -2416,7 +2427,10 @@ function chipify(text){
 function fmt(text){
   if(!text)return "";
   text = chipify(text);
-  return text.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/__(.+?)__/g,'<u>$1</u>');
+  return text
+    .replace(/==(.+?)==/g,'<mark class="hl">$1</mark>')
+    .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+    .replace(/__(.+?)__/g,'<u>$1</u>');
 }
 
 function renderRichText(text){
@@ -2990,7 +3004,7 @@ function renderSection(data, drugs, comps, raw) {
         html += '<div class="sl">' + fmt(l.title) + '</div><ul class="cl">';
         (l.items || []).forEach(function(item) {
           var lv = getLevel(item);
-          var text = item.replace(/^\s+/, "");
+          var text = item.replace(/^\s+/, "").replace(/^[-*]\s+/, "");
           // C. Group header: ">> Label" → bold subordinating label, children indent under it
           var gm = text.match(/^>>\s+(.+)$/);
           if (gm){
@@ -3185,14 +3199,21 @@ function showGraph() {
   // If focused disease no longer visible, clear focus
   if (graphState.focusedId && !visibleSet[graphState.focusedId]) graphState.focusedId = null;
 
-  // Layout: use full space
-  var W = 1200, H = Math.max(800, displayDiseases.length * 40);
+  // Layout: circular/spherical arrangement on a square canvas
+  var nodeCount = displayDiseases.length;
+  // Square canvas sized to fit all nodes in a disc (area scales with node count)
+  var side = Math.max(900, Math.ceil(Math.sqrt(nodeCount) * 130));
+  var W = side, H = side;
   var cx = W / 2, cy = H / 2;
-  var radius = Math.min(W, H) / 2 - 100;
+  var boundR = Math.min(W, H) / 2 - 70; // disc radius nodes must stay within
+  var radius = boundR * 0.92;
   var nodes = {};
   displayDiseases.forEach(function(d, i) {
-    var angle = (2 * Math.PI * i) / displayDiseases.length - Math.PI / 2;
-    nodes[d.id] = { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle), d: d };
+    // Seed on concentric rings (sunflower-ish) so the start is already disc-shaped
+    var t = (i + 0.5) / nodeCount;
+    var rr = radius * Math.sqrt(t);
+    var angle = i * 2.399963; // golden angle → even disc fill
+    nodes[d.id] = { x: cx + rr * Math.cos(angle), y: cy + rr * Math.sin(angle), d: d };
   });
 
   // Simple force to spread nodes
@@ -3226,10 +3247,15 @@ function showGraph() {
         b.y -= (dy / dist) * force;
       }
     });
+    // Circular containment: keep every node inside the disc (instead of a rectangle)
     displayDiseases.forEach(function(d) {
-      var n = nodes[d.id];
-      n.x = Math.max(60, Math.min(W - 60, n.x));
-      n.y = Math.max(60, Math.min(H - 60, n.y));
+      var nn = nodes[d.id];
+      var dx = nn.x - cx, dy = nn.y - cy;
+      var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      if (dist > boundR) {
+        nn.x = cx + (dx / dist) * boundR;
+        nn.y = cy + (dy / dist) * boundR;
+      }
     });
   }
 
@@ -5499,6 +5525,11 @@ function removeFromCompare(id){
   showCompare();
 }
 
+function clearCompare(){
+  compareIds = [];
+  showCompare();
+}
+
 function showCompare(){
   currentView = "compare";
   currentId = null;
@@ -5524,21 +5555,40 @@ function showCompare(){
   picked.forEach(function(d){
     var col = CAT_COLORS[d.category] || "#7ab3d9";
     h += '<span class="cmp-chip"><span class="cmp-chip-dot" style="background:'+col+'"></span>'+escHtml(d.name)+
-         '<i class="ti ti-x cmp-chip-x" onclick="removeFromCompare(\''+d.id+'\')"></i></span>';
+         '<span class="cmp-chip-x" onclick="removeFromCompare(\''+d.id+'\')" title="移除"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></span>';
   });
   if (picked.length < 4){
     h += '<div class="cmp-add-wrap"><input id="cmpAdd" class="cmp-add" type="text" placeholder="+ 加入疾病…" oninput="cmpAddInput(this.value)" onkeydown="cmpAddKey(event)" autocomplete="off"><div id="cmpAddResults" class="cmp-add-results"></div></div>';
+  }
+  if (picked.length > 0){
+    h += '<button class="cmp-clear-btn" onclick="clearCompare()" title="清空全部">清空</button>';
   }
   h += '</div>';
 
   if (picked.length < 2){
     h += '<div class="cmp-empty"><i class="ti ti-columns-3"></i><div>再加入至少一個疾病即可開始比較</div>';
-    // suggest some common pairs that both have quick_facts
+    // suggest diseases that have quick_facts, grouped by system (category)
     var withFacts = diseases.filter(function(d){ return getQuickFacts(d.id).length > 0; });
     if (withFacts.length >= 2){
-      h += '<div class="cmp-suggest-label">有鑑別資料的疾病：</div><div class="cmp-suggest">';
-      withFacts.slice(0, 8).forEach(function(d){
-        h += '<button class="cmp-suggest-btn" onclick="addToCompare(\''+d.id+'\')">'+escHtml(d.name)+'</button>';
+      h += '<div class="cmp-suggest-label">有鑑別資料的疾病：</div>';
+      // group by category, preserving the sidebar category order
+      var byCat = {};
+      var catOrder = [];
+      withFacts.forEach(function(d){
+        var cat = d.category || "未分類";
+        if (!byCat[cat]){ byCat[cat] = []; catOrder.push(cat); }
+        byCat[cat].push(d);
+      });
+      h += '<div class="cmp-suggest-groups">';
+      catOrder.forEach(function(cat){
+        var col = CAT_COLORS[cat] || "#7ab3d9";
+        h += '<div class="cmp-suggest-group">';
+        h += '<div class="cmp-suggest-cat"><span class="cmp-suggest-cat-dot" style="background:'+col+'"></span>'+escHtml(cat)+'</div>';
+        h += '<div class="cmp-suggest">';
+        byCat[cat].forEach(function(d){
+          h += '<button class="cmp-suggest-btn" onclick="addToCompare(\''+d.id+'\')"><span class="cmp-suggest-btn-dot" style="background:'+col+'"></span>'+escHtml(d.name)+'</button>';
+        });
+        h += '</div></div>';
       });
       h += '</div>';
     }
@@ -5630,7 +5680,9 @@ function cmpAddInput(q){
     var col = CAT_COLORS[d.category] || "#7ab3d9";
     var hasFacts = getQuickFacts(d.id).length > 0;
     return '<a class="cmp-add-item" onclick="addToCompare(\''+d.id+'\')"><span class="cmp-add-dot" style="background:'+col+'"></span>'+
-      escHtml(d.name)+(hasFacts?'':' <span class="cmp-add-nofacts">無鑑別資料</span>')+'</a>';
+      escHtml(d.name)+
+      (d.category?'<span class="cmp-add-cat">'+escHtml(d.category)+'</span>':'')+
+      (hasFacts?'':' <span class="cmp-add-nofacts">無鑑別資料</span>')+'</a>';
   }).join("");
   box.classList.add("show");
 }
