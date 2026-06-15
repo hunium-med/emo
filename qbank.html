@@ -82,6 +82,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC
 .q-badge-paper{background:#EAF3DE;color:#3B6D11}
 .q-badge-diff{background:#F5E1E1;color:#A32D2D}
 .q-badge-dz{background:#E1EEFB;color:#0C447C;text-decoration:none;font-weight:600;cursor:pointer}
+.dz-filter-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#E1EEFB;border:0.5px solid #85B7EB;border-radius:10px;padding:10px 16px;margin-bottom:14px;font-size:14px;color:#0C447C;flex-wrap:wrap}
+.dz-filter-banner button{background:#185FA5;color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.dz-filter-banner button:hover{background:#0C447C}
 .q-badge-dz:hover{background:#185FA5;color:#fff}
 .q-right{display:flex;align-items:center;gap:8px}
 .q-num{font-size:12px;color:#4a7fa5}
@@ -317,6 +320,10 @@ var SB_USER=null;
 // URL of the main MedBase knowledge app (for linking questions → disease pages)
 var MAIN_APP_URL="https://hunium-med.github.io/emo/medbase-standalone.html";
 var diseaseNameMap={}; // disease_id → name (loaded from diseases table)
+// If launched from a disease page (?disease=<id>), restrict the bank to that disease.
+var diseaseFilter = (function(){
+  try{ return new URLSearchParams(location.search).get("disease") || null; }catch(e){ return null; }
+})();
 try{ var raw=localStorage.getItem("qbank_user"); if(raw)SB_USER=JSON.parse(raw); }catch(e){}
 
 function authHDRS(){
@@ -630,6 +637,7 @@ async function bootApp(){
 
     buildFilters();
     applyFilters();
+    showDiseaseFilterBanner();
     document.getElementById("loadingScreen").style.display="none";
     document.getElementById("app").style.display="flex";
     if(!isMobile()) document.getElementById("sidebar").classList.remove("hidden");
@@ -685,6 +693,7 @@ function applyFilters(){
   var now = Date.now();
 
   filtered = allQuestions.filter(function(q){
+    if(diseaseFilter && q.disease_id!==diseaseFilter) return false;
     if(subj  && q.subject!==subj)  return false;
     if(organ && q.organ_system!==organ) return false;
     if(topic && q.topic!==topic)   return false;
@@ -1037,6 +1046,28 @@ function selectOption(qid, realIdx){
   if(btn){ btn.disabled=false; btn.style.opacity="1"; }
 }
 
+async function showDiseaseFilterBanner(){
+  var existing = document.getElementById("dzFilterBanner");
+  if(existing) existing.remove();
+  if(!diseaseFilter) return;
+  var name = diseaseNameMap[diseaseFilter] || "指定疾病";
+  var n = filtered.length;
+  var bar = document.createElement("div");
+  bar.id = "dzFilterBanner";
+  bar.className = "dz-filter-banner";
+  bar.innerHTML = '<span><i class="ti ti-filter"></i> 只顯示「<b>'+esc(name)+'</b>」的題目（'+n+' 題）</span>'+
+    '<button onclick="clearDiseaseFilter()">顯示全部題目 ✕</button>';
+  var content = document.querySelector(".content");
+  if(content) content.insertBefore(bar, content.firstChild);
+}
+function clearDiseaseFilter(){
+  diseaseFilter = null;
+  try{ history.replaceState(null,null,location.pathname); }catch(e){}
+  var b = document.getElementById("dzFilterBanner"); if(b) b.remove();
+  applyFilters();
+  renderQuestion();
+}
+
 async function submitAnswer(){
   var q = activeList()[curIdx];
   if(!q) return;
@@ -1061,8 +1092,38 @@ async function submitAnswer(){
   };
   answers[q.id] = rec;
   await syncAnswer(q.id, rec, {alsoHistory:true});
+  // Cross-link: a wrong answer on a disease-linked question enrolls that disease's
+  // "題目" dimension into the main knowledge app's SRS review schedule.
+  if(!isCorrect && q.disease_id){
+    enrollDiseaseSrsFromWrong(q.disease_id);
+  }
   updateStats();
   renderQuestion();
+}
+
+// Write to the main system's user_marks table so the missed disease shows up
+// in the knowledge app's 今日複習 (SRS). tab="qbank", flag="weak", due today.
+async function enrollDiseaseSrsFromWrong(diseaseId){
+  if(!SB_USER || !SB_USER.id) return; // needs login (qbank uses magic link)
+  var today = new Date();
+  var todayStr = today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
+  var row = {
+    user_id: SB_USER.id,
+    disease_id: diseaseId,
+    tab: "qbank",
+    note: "",
+    flag: "weak",
+    srs: { due: todayStr, interval: 0, ease: 2.5, reps: 0, last: null },
+    updated_at: new Date().toISOString()
+  };
+  try{
+    // merge-duplicates: don't clobber an existing schedule if already enrolled
+    await sbFetch("user_marks?on_conflict=user_id,disease_id,tab", {
+      method: "POST",
+      headers: { "Prefer": "resolution=merge-duplicates" },
+      body: JSON.stringify(row)
+    });
+  }catch(e){}
 }
 
 function retryQ(qid){

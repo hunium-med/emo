@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>醫謀</title>
+<title>MedBase TW — 醫學知識庫</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons-webfont/3.5.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -250,6 +250,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .rv-done-title{font-size:var(--fs-h1);font-weight:var(--fw-bold);color:var(--text);margin-bottom:8px}
 .rv-done-sub{font-size:var(--fs-sm);color:var(--text2);margin-bottom:20px;line-height:var(--lh-normal)}
 .rv-done-btn{padding:11px 24px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:var(--fs-body);font-weight:var(--fw-semi);cursor:pointer;font-family:inherit}
+/* Related questions card (disease page → qbank) */
+.relq-card{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;padding:16px 18px;background:var(--green-bg);border:0.5px solid var(--border);border-left:3px solid var(--green);border-radius:12px;flex-wrap:wrap}
+.relq-left{display:flex;align-items:center;gap:13px}
+.relq-icon{font-size:26px;color:var(--green)}
+.relq-title{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--text)}
+.relq-sub{font-size:var(--fs-sm);color:var(--text2);margin-top:2px}
+.relq-btn{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;text-decoration:none;padding:9px 18px;border-radius:9px;font-size:var(--fs-body);font-weight:var(--fw-semi);white-space:nowrap}
+.relq-btn:hover{filter:brightness(0.93)}
 /* Related diseases (differential / same-class) */
 .rd-header{margin-top:18px;padding-top:16px;border-top:0.5px solid var(--border)}
 .rd-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
@@ -1287,6 +1295,12 @@ var categoryList = []; // [{name, color, sort_order}] from disease_categories ta
 var CAT_FILLS = {"呼吸系統":"#E6F1FB","心臟系統":"#FAECE7","內分泌":"#FAEEDA","腎臟系統":"#E1F5EE","消化系統":"#F0E8FB","神經系統":"#F8E8F0","血液系統":"#F5EDE4","免疫系統":"#E8F5EE","骨骼肌肉系統":"#F5EDE4","皮膚系統":"#FAEEDA"};
 var BADGE_COLORS = {blue:{bg:"#E6F1FB",fg:"#185FA5"},green:{bg:"#EAF3DE",fg:"#3B6D11"},amber:{bg:"#FAEEDA",fg:"#854F0B"}};
 var TABS = [{key:"def",label:"概論"},{key:"patho",label:"病生理"},{key:"sx",label:"症狀"},{key:"hx",label:"病史詢問"},{key:"pe",label:"理學檢查"},{key:"dx",label:"診斷檢查"},{key:"img",label:"影像學"},{key:"tx",label:"治療"},{key:"drug",label:"藥物"},{key:"prog",label:"預後"},{key:"pearls",label:"重點"},{key:"pattern",label:"題型"}];
+// Resolve a tab key to a label, including the cross-app "qbank" (做題) dimension.
+function tabLabel(key){
+  if(key === "qbank") return "題目練習";
+  var t = TABS.find(function(x){ return x.key === key; });
+  return t ? t.label : key;
+}
 
 var diseases = [], sectionMap = {}, drugMap = {}, compMap = {};
 var symptoms = [], mechanisms = [], mechBySxId = {}, mechById = {};
@@ -1301,6 +1315,8 @@ var exploreState = { mechId: null, anatId: null };
 var currentId = null, currentTab = "def", currentView = "entry";
 var compareIds = []; // diseases currently selected for differential comparison
 var quizMode = false; // 病生理 self-test mode: hide mechanism, reveal on click
+var qCountByDisease = {}; // disease_id → number of qbank questions
+var QBANK_URL = "https://hunium-med.github.io/emo/qbank.html"; // qbank app (for 相關考題 link)
 var expandedCat = null; // accordion: only one category open at a time, null = all collapsed
 var graphState = { focusedId: null, onlyConnected: false };
 var topics = [], topicSecMap = {}, currentTopicId = null;
@@ -1769,7 +1785,8 @@ async function init() {
       sb("disease_categories?select=*&order=sort_order").catch(function(){return []}),
       sb("knowledge_topics?select=*&order=sort_order,name").catch(function(){return []}),
       sb("knowledge_topic_sections?select=*&order=sort_order").catch(function(){return []}),
-      sb("topic_types?select=*&order=sort_order").catch(function(){return []})
+      sb("topic_types?select=*&order=sort_order").catch(function(){return []}),
+      sb("questions?select=disease_id").catch(function(){return []})
     ]);
     diseases = results[0] || [];
     (results[1] || []).forEach(function(s) {
@@ -1813,6 +1830,10 @@ async function init() {
       topicSecMap[s.topic_id][s.section_type] = s;
     });
     topicTypesList = Array.isArray(results[11]) ? results[11] : [];
+    // Count questions per disease (for "相關考題" on disease pages)
+    (Array.isArray(results[12]) ? results[12] : []).forEach(function(q){
+      if(q.disease_id) qCountByDisease[q.disease_id] = (qCountByDisease[q.disease_id]||0) + 1;
+    });
     buildTopicTypesMap();
     buildClueIndex();
     buildEntityIndex();
@@ -2069,7 +2090,7 @@ function renderEntry() {
   }
 
   var bodyHtml = renderSection(secs[currentTab], currentTab === "drug" ? drugs : null, currentTab === "prog" ? comps : null, secs[currentTab]);
-  document.getElementById("mainContent").innerHTML = '<div class="card"><div class="tabs">' + tabsHtml + '</div><div class="tc">' + bodyHtml + '</div></div>' + renderRelNav(currentId) + renderNotesPanel();
+  document.getElementById("mainContent").innerHTML = '<div class="card"><div class="tabs">' + tabsHtml + '</div><div class="tc">' + bodyHtml + '</div></div>' + renderRelatedQuestions(currentId) + renderRelNav(currentId) + renderNotesPanel();
   renderBreadcrumb(d, availTabs);
   scrollMainTop();
 }
@@ -2079,17 +2100,15 @@ function renderBreadcrumb(d, availTabs){
   var bc = document.getElementById("breadcrumb");
   if(!bc) return;
   if(currentView !== "entry" || !d){ bc.innerHTML = ""; bc.classList.remove("show"); return; }
-  var tabLabel = "";
-  var t = TABS.find(function(x){ return x.key === currentTab; });
-  if(t) tabLabel = t.label;
+  var tabLbl = currentTab ? tabLabel(currentTab) : "";
   var sep = '<i class="ti ti-chevron-right bc-sep"></i>';
   var html = '<a class="bc-item bc-home" onclick="showHome()"><i class="ti ti-home"></i></a>' + sep;
   if(d.category){
     html += '<a class="bc-item" onclick="goCategory(\''+encodeURIComponent(d.category)+'\')">'+escHtml(d.category)+'</a>' + sep;
   }
   html += '<span class="bc-item bc-current">'+escHtml(d.name)+'</span>';
-  if(tabLabel){
-    html += sep + '<span class="bc-item bc-tab">'+escHtml(tabLabel)+'</span>';
+  if(tabLbl){
+    html += sep + '<span class="bc-item bc-tab">'+escHtml(tabLbl)+'</span>';
   }
   bc.innerHTML = html;
   bc.classList.add("show");
@@ -3530,10 +3549,24 @@ function setStatus(s){
   saveStatus();renderEntry();filterList();
 }
 
+function renderRelatedQuestions(diseaseId){
+  var n = qCountByDisease[diseaseId] || 0;
+  if(!n) return ""; // no linked questions → omit
+  var d = diseases.find(function(x){ return x.id === diseaseId; });
+  var dzName = d ? d.name : "";
+  // Link to qbank filtered to this disease (qbank reads ?disease= from URL)
+  var url = QBANK_URL + "?disease=" + encodeURIComponent(diseaseId);
+  var h = '<div class="relq-card">';
+  h += '<div class="relq-left"><i class="ti ti-clipboard-text relq-icon"></i>';
+  h += '<div><div class="relq-title">相關考題</div>';
+  h += '<div class="relq-sub">這個疾病有 <b>' + n + '</b> 題練習，讀完馬上測驗自己</div></div></div>';
+  h += '<a class="relq-btn" href="' + url + '" target="_blank" rel="noopener">前往練習 <i class="ti ti-arrow-right"></i></a>';
+  h += '</div>';
+  return h;
+}
+
 function renderNotesPanel(){
-  var tabLabel = "";
-  var t = TABS.find(function(x){ return x.key === currentTab; });
-  if (t) tabLabel = t.label;
+  var tabLbl = currentTab ? tabLabel(currentTab) : "";
   var mark = getMark(currentId, currentTab) || { note:"", flag:null };
   var note = mark.note || "";
   var hasNote = note.trim().length > 0;
@@ -3543,7 +3576,7 @@ function renderNotesPanel(){
   h+='<div class="notes-header" onclick="toggleNotes()">';
   h+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:14px">📝</span>';
   h+='<span style="font-size:14px;font-weight:500;color:var(--blue)">我的標記</span>';
-  h+='<span style="font-size:11px;color:var(--text3)">· '+escHtml(tabLabel)+'</span>';
+  h+='<span style="font-size:11px;color:var(--text3)">· '+escHtml(tabLbl)+'</span>';
   if(hasNote)h+='<span style="font-size:11px;color:var(--green);background:var(--green-bg);padding:1px 8px;border-radius:10px">有筆記</span>';
   if(flag==="weak")h+='<span style="font-size:11px;color:var(--red);background:var(--red-bg);padding:1px 8px;border-radius:10px">易錯</span>';
   if(flag==="important")h+='<span style="font-size:11px;color:var(--amber);background:var(--amber-bg);padding:1px 8px;border-radius:10px">重點</span>';
@@ -3557,7 +3590,7 @@ function renderNotesPanel(){
   h+='<button class="mark-flag-btn'+(flag==="important"?" on-important":"")+'" onclick="toggleFlag(\'important\')"><i class="ti ti-star"></i> 重點</button>';
   h+='</div>';
   // Note textarea
-  h+='<textarea id="noteInput" placeholder="在這裡記錄這個 '+escHtml(tabLabel)+' 的助記、口訣、易錯原因..." oninput="autoSaveNote()">' + note.replace(/&/g,"&amp;").replace(/</g,"&lt;") + '</textarea>';
+  h+='<textarea id="noteInput" placeholder="在這裡記錄這個 '+escHtml(tabLbl)+' 的助記、口訣、易錯原因..." oninput="autoSaveNote()">' + note.replace(/&/g,"&amp;").replace(/</g,"&lt;") + '</textarea>';
   h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">';
   h+='<span style="font-size:11px;color:var(--text3)" id="noteSaved"></span>';
   h+='<a style="font-size:11px;color:var(--blue);cursor:pointer" onclick="showMyMarks()">查看所有標記 →</a>';
@@ -5656,22 +5689,27 @@ function showReviewCard(){
   var mark = getMark(item.disease_id, item.tab);
   if(!d || !mark){ reviewIdx++; showReviewCard(); return; }
 
-  var tabLabel = "";
-  var t = TABS.find(function(x){ return x.key === item.tab; });
-  if(t) tabLabel = t.label;
+  var tabLabelText = tabLabel(item.tab);
   var col = CAT_COLORS[d.category] || "#7ab3d9";
 
-  // Pull the actual tab content to show as the "answer"
-  var secs = sectionMap[d.id] || {};
-  var drugs = drugMap[d.id] || [];
-  var comps = compMap[d.id] || [];
-  var prevTab = currentTab;
-  currentTab = item.tab; // renderSection reads currentTab
+  // Pull the actual tab content to show as the "answer".
+  // The cross-app "qbank" dimension has no section content — link to the qbank instead.
   var answerHtml = "";
-  try{
-    answerHtml = renderSection(secs[item.tab], item.tab === "drug" ? drugs : null, item.tab === "prog" ? comps : null, secs[item.tab]);
-  }catch(e){ answerHtml = '<p style="color:var(--text3)">（此區段內容載入失敗）</p>'; }
-  currentTab = prevTab;
+  if(item.tab === "qbank"){
+    var qurl = QBANK_URL + "?disease=" + encodeURIComponent(d.id);
+    answerHtml = '<p style="color:var(--text2);line-height:var(--lh-normal)">這是你在題庫答錯的疾病。建議重做相關考題來複習。</p>'+
+      '<a class="relq-btn" href="'+qurl+'" target="_blank" rel="noopener" style="margin-top:10px">重做相關考題 <i class="ti ti-arrow-right"></i></a>';
+  } else {
+    var secs = sectionMap[d.id] || {};
+    var drugs = drugMap[d.id] || [];
+    var comps = compMap[d.id] || [];
+    var prevTab = currentTab;
+    currentTab = item.tab; // renderSection reads currentTab
+    try{
+      answerHtml = renderSection(secs[item.tab], item.tab === "drug" ? drugs : null, item.tab === "prog" ? comps : null, secs[item.tab]);
+    }catch(e){ answerHtml = '<p style="color:var(--text3)">（此區段內容載入失敗）</p>'; }
+    currentTab = prevTab;
+  }
 
   var prev = srsPreview(mark);
 
@@ -5684,11 +5722,11 @@ function showReviewCard(){
   h += '<div class="rv-card">';
   h += '<div class="rv-card-head"><span class="rv-dot" style="background:'+col+'"></span>'+
        '<span class="rv-dz">'+escHtml(d.name)+'</span>'+
-       '<span class="rv-tab-badge">'+escHtml(tabLabel)+'</span>';
+       '<span class="rv-tab-badge">'+escHtml(tabLabelText)+'</span>';
   if(mark.flag==="weak") h += '<span class="rv-flag rv-flag-weak">易錯</span>';
   if(mark.flag==="important") h += '<span class="rv-flag rv-flag-important">重點</span>';
   h += '</div>';
-  h += '<div class="rv-q">回想一下：<b>'+escHtml(d.name)+'</b> 的「'+escHtml(tabLabel)+'」</div>';
+  h += '<div class="rv-q">回想一下：<b>'+escHtml(d.name)+'</b> 的「'+escHtml(tabLabelText)+'」</div>';
   if(mark.note && mark.note.trim()){
     h += '<div class="rv-note"><span class="rv-note-label">你的筆記</span>'+escHtml(mark.note)+'</div>';
   }
@@ -5823,8 +5861,6 @@ function showHome(){
   pathsInner += '</div>';
 
   // Build the 今日複習 (SRS due) block as a reusable string
-  var TAB_LABEL_MAP = {};
-  TABS.forEach(function(t){ TAB_LABEL_MAP[t.key] = t.label; });
   var dueInner = "";
   if (dueMarks.length){
     dueInner = '<div class="hm-sect-head"><span class="hm-sect-zh">今日複習</span><span class="hm-sect-en">DUE · '+dueMarks.length+'</span>'+
@@ -5835,7 +5871,7 @@ function showHome(){
       if(!d) return;
       var col = CAT_COLORS[d.category] || "#7ab3d9";
       var items = dueByDisease[did];
-      var tabLabels = items.map(function(m){ return TAB_LABEL_MAP[m.tab] || m.tab; }).join("、");
+      var tabLabels = items.map(function(m){ return tabLabel(m.tab); }).join("、");
       dueInner += '<div class="hm-due-card" onclick="startReview(\''+did+'\')">'+
         '<span class="hm-card-dot" style="background:'+col+'"></span>'+
         '<span class="hm-card-body"><span class="hm-card-name">'+escHtml(d.name)+'</span>'+
@@ -5988,8 +6024,7 @@ function showMyMarks(){
 function mmRow(m, byId){
   var d = byId[m.disease_id];
   if(!d) return "";
-  var t = TABS.find(function(x){ return x.key === m.tab; });
-  var tabLabel = t ? t.label : m.tab;
+  var tabLabelText = tabLabel(m.tab);
   var col = CAT_COLORS[d.category] || "#7ab3d9";
   var flagCls = m.flag === "weak" ? "weak" : (m.flag === "important" ? "important" : "");
   var dataAttr = 'data-flag="'+(m.flag||"")+'" data-note="'+(m.note&&m.note.trim()?"1":"0")+'"';
@@ -5997,7 +6032,7 @@ function mmRow(m, byId){
   h += '<span class="mm-row-dot" style="background:'+col+'"></span>';
   h += '<div class="mm-row-body">';
   h += '<div class="mm-row-head"><span class="mm-row-dz">'+escHtml(d.name)+'</span>';
-  h += '<span class="mm-row-tab">'+escHtml(tabLabel)+'</span>';
+  h += '<span class="mm-row-tab">'+escHtml(tabLabelText)+'</span>';
   if(m.flag==="weak") h += '<span class="mm-row-flag mm-flag-weak">易錯</span>';
   if(m.flag==="important") h += '<span class="mm-row-flag mm-flag-important">重點</span>';
   h += '</div>';
