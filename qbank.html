@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedBase TW — 題庫 Qbank</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Noto Sans TC",sans-serif;background:#f0f5fb;color:#2c4a63}
+
+/* Layout */
+.layout{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:280px;min-width:280px;background:#f0f5fb;border-right:0.5px solid #B5D4F4;display:flex;flex-direction:column;transition:margin-left 0.25s ease,opacity 0.25s ease}
+.sidebar.hidden{margin-left:-280px;opacity:0;pointer-events:none}
+.sidebar-header{padding:14px;border-bottom:0.5px solid #B5D4F4;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:14px;font-weight:600;color:#185FA5}
+.logo small{font-weight:400;color:#4a7fa5;font-size:11px;display:block;letter-spacing:0.02em}
+.user-chip{font-size:11px;color:#4a7fa5;cursor:pointer}
+.user-chip:hover{color:#185FA5}
+
+.sidebar-list{flex:1;overflow-y:auto;padding:10px}
+.sb-section{margin-bottom:12px}
+.sb-section-title{font-size:10px;font-weight:600;color:#85B7EB;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;padding:0 2px}
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px}
+.mode-tab{padding:6px 4px;font-size:12px;border:0.5px solid #B5D4F4;border-radius:6px;background:#fff;color:#4a7fa5;cursor:pointer;text-align:center;transition:all 0.15s}
+.mode-tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.mode-tab:not(.active):hover{background:#E6F1FB;color:#185FA5}
+
+.filter-group{margin-bottom:8px}
+.filter-group label{display:block;font-size:11px;font-weight:500;color:#378ADD;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em}
+.filter-group select,.filter-group input{width:100%;padding:6px 8px;font-size:12.5px;border:0.5px solid #B5D4F4;border-radius:6px;background:#fff;color:#185FA5}
+
+.session-card{background:#fff;border:0.5px solid #B5D4F4;border-radius:8px;padding:10px;margin-bottom:8px}
+.session-card label{font-size:11px;color:#4a7fa5;display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer}
+
+.progress-bar{height:4px;background:#E6F1FB;border-radius:2px;margin:8px 0 4px}
+.progress-fill{height:100%;background:#185FA5;border-radius:2px;transition:width 0.3s}
+
+.stat-row{display:flex;gap:6px;margin-bottom:8px}
+.stat-card{flex:1;background:#fff;border:0.5px solid #B5D4F4;border-radius:8px;padding:8px 4px;text-align:center}
+.stat-val{font-size:18px;font-weight:600;color:#185FA5}
+.stat-lbl{font-size:10px;color:#4a7fa5;margin-top:2px;letter-spacing:0.02em}
+
+.sidebar-bottom{padding:10px;border-top:0.5px solid #B5D4F4;display:flex;flex-direction:column;gap:6px}
+
+/* Buttons */
+.btn{padding:8px 14px;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500;text-align:center;width:100%;font-family:inherit}
+.btn-primary{background:#185FA5;color:#fff}
+.btn-primary:hover{background:#0C447C}
+.btn-success{background:#3B6D11;color:#fff}
+.btn-success:hover{background:#2A5009}
+.btn-ghost{background:transparent;color:#4a7fa5;border:0.5px solid #B5D4F4}
+.btn-ghost:hover{background:rgba(24,95,165,0.05)}
+.btn-warning{background:#FAEEDA;color:#854F0B;border:0.5px solid #E8C982}
+.btn-warning:hover{background:#F5E0BC}
+.btn-danger{background:#E24B4A;color:#fff}
+.btn-sm{padding:5px 10px;font-size:12px}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;background:#f7fafd;overflow:hidden}
+.topbar{padding:10px 20px;border-bottom:0.5px solid #B5D4F4;background:#f0f5fb;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-title{font-size:15px;font-weight:500;color:#185FA5}
+.toggle-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid #B5D4F4;background:#f0f5fb;color:#185FA5;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.toggle-btn:hover{background:#E6F1FB}
+.timer{font-family:Menlo,Consolas,monospace;font-size:14px;color:#854F0B;padding:4px 10px;background:#FAEEDA;border-radius:6px}
+.timer.warn{background:#FCEBEB;color:#A32D2D}
+
+.content{flex:1;padding:20px;overflow-y:auto;display:flex;justify-content:center}
+.question-box{max-width:760px;width:100%}
+
+/* Question card */
+.q-card{background:#fff;border:0.5px solid #B5D4F4;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.q-header{padding:10px 16px;background:#f0f5fb;border-bottom:0.5px solid #B5D4F4;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.q-meta{display:flex;gap:6px;flex-wrap:wrap}
+.q-badge{padding:2px 9px;border-radius:10px;font-size:11px;font-weight:500;letter-spacing:0.02em}
+.q-badge-subj{background:#E6F1FB;color:#185FA5}
+.q-badge-organ{background:#EAE1F5;color:#5B3E91}
+.q-badge-topic{background:#E1F0EE;color:#1E6B66}
+.q-badge-year{background:#FAEEDA;color:#854F0B}
+.q-badge-paper{background:#EAF3DE;color:#3B6D11}
+.q-badge-diff{background:#F5E1E1;color:#A32D2D}
+.q-badge-dz{background:#E1EEFB;color:#0C447C;text-decoration:none;font-weight:600;cursor:pointer}
+.q-badge-dz:hover{background:#185FA5;color:#fff}
+.q-right{display:flex;align-items:center;gap:8px}
+.q-num{font-size:12px;color:#4a7fa5}
+.q-mark{cursor:pointer;font-size:18px;color:#B5D4F4;transition:color 0.15s;user-select:none}
+.q-mark.on{color:#E8A93B}
+.q-mark:hover{color:#854F0B}
+
+.q-body{padding:16px}
+.q-text{font-size:16.5px;line-height:1.75;color:#2c4a63;margin-bottom:16px}
+.q-img{max-width:100%;border-radius:8px;margin-bottom:14px;border:0.5px solid #B5D4F4;display:block}
+
+.q-options{display:flex;flex-direction:column;gap:8px}
+.q-opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:1.5px solid #B5D4F4;border-radius:10px;cursor:pointer;transition:background 0.12s,border-color 0.12s;font-size:15.5px;line-height:1.55;background:#fff}
+.q-opt:hover{background:#f8fbff;border-color:#85B7EB}
+.q-opt.selected{background:#E6F1FB;border-color:#185FA5}
+.q-opt.correct{background:#EAF3DE;border-color:#3B6D11}
+.q-opt.wrong{background:#FCEBEB;border-color:#E24B4A}
+.q-opt.disabled{cursor:default}
+.q-opt-label{min-width:28px;height:28px;border-radius:50%;background:#f0f5fb;border:1.5px solid #B5D4F4;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#4a7fa5;flex-shrink:0}
+.q-opt.selected .q-opt-label{background:#185FA5;color:#fff;border-color:#185FA5}
+.q-opt.correct .q-opt-label{background:#3B6D11;color:#fff;border-color:#3B6D11}
+.q-opt.wrong .q-opt-label{background:#E24B4A;color:#fff;border-color:#E24B4A}
+
+.q-explain{margin-top:16px;padding:14px;background:#f8fbff;border:0.5px solid #B5D4F4;border-radius:10px}
+.q-explain-title{font-size:14px;font-weight:500;color:#185FA5;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.q-explain-text{font-size:15px;line-height:1.75;color:#2c4a63}
+.q-explain-ref{margin-top:10px;padding-top:8px;border-top:0.5px solid #B5D4F4;font-size:12px;color:#7ab3d9}
+
+/* SRS rating bar */
+.srs-bar{margin-top:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.srs-btn{padding:9px 6px;border:1px solid #B5D4F4;border-radius:8px;background:#fff;cursor:pointer;text-align:center;transition:all 0.12s}
+.srs-btn:hover{border-color:#185FA5;background:#E6F1FB}
+.srs-label{font-size:13px;font-weight:500;color:#2c4a63}
+.srs-due{font-size:11px;color:#7ab3d9;margin-top:2px}
+.srs-btn[data-q="1"]:hover{border-color:#E24B4A}
+.srs-btn[data-q="3"]:hover{border-color:#854F0B}
+.srs-btn[data-q="4"]:hover{border-color:#185FA5}
+.srs-btn[data-q="5"]:hover{border-color:#3B6D11}
+
+/* Nav */
+.q-nav{display:flex;gap:10px;justify-content:space-between;margin-top:14px;align-items:center}
+.q-nav .btn{width:auto;padding:9px 18px}
+.kbd-hint{font-size:11px;color:#7ab3d9;text-align:center;margin-top:8px;letter-spacing:0.02em}
+kbd{background:#f0f5fb;border:0.5px solid #B5D4F4;border-radius:3px;padding:1px 5px;font-family:Menlo,Consolas,monospace;font-size:11px;color:#185FA5}
+
+/* Summary screen */
+.summary-card{background:#fff;border:0.5px solid #B5D4F4;border-radius:12px;padding:24px;margin-bottom:16px}
+.summary-h{font-size:20px;font-weight:600;color:#185FA5;margin-bottom:4px}
+.summary-sub{font-size:13px;color:#4a7fa5;margin-bottom:18px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.summary-stat{background:#f8fbff;border:0.5px solid #B5D4F4;border-radius:10px;padding:14px;text-align:center}
+.summary-stat-val{font-size:24px;font-weight:600;color:#185FA5}
+.summary-stat-val.bad{color:#E24B4A}
+.summary-stat-val.good{color:#3B6D11}
+.summary-stat-lbl{font-size:11px;color:#4a7fa5;margin-top:2px;letter-spacing:0.04em}
+.weak-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+.weak-table th{text-align:left;padding:6px 8px;color:#185FA5;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;border-bottom:0.5px solid #B5D4F4}
+.weak-table td{padding:8px;border-bottom:0.5px solid #f0f5fb}
+.weak-row-q{cursor:pointer;font-size:12.5px}
+.weak-row-q:hover{background:#f8fbff}
+
+/* Auth screen */
+.auth-screen{display:flex;align-items:center;justify-content:center;height:100vh;background:#f0f5fb}
+.auth-box{background:#fff;padding:32px;border-radius:14px;border:0.5px solid #B5D4F4;width:90%;max-width:380px;box-shadow:0 6px 30px rgba(24,95,165,0.08)}
+.auth-box h1{font-size:18px;color:#185FA5;margin-bottom:4px}
+.auth-box .sub{font-size:12px;color:#4a7fa5;margin-bottom:18px;letter-spacing:0.02em}
+.auth-tabs{display:flex;gap:4px;margin-bottom:14px;background:#f0f5fb;padding:3px;border-radius:8px}
+.auth-tab{flex:1;padding:7px;font-size:12px;border:none;background:transparent;cursor:pointer;border-radius:6px;color:#4a7fa5;font-family:inherit}
+.auth-tab.active{background:#fff;color:#185FA5;font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.auth-box input{width:100%;padding:9px 11px;font-size:13px;border:0.5px solid #B5D4F4;border-radius:8px;margin-bottom:10px;color:#2c4a63;font-family:inherit}
+.auth-box input:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 2px rgba(24,95,165,0.1)}
+.auth-err{font-size:12px;color:#A32D2D;background:#FCEBEB;border-radius:6px;padding:8px;margin-bottom:10px;display:none}
+
+/* Misc */
+.toast{position:fixed;bottom:20px;right:20px;padding:11px 18px;border-radius:8px;font-size:13px;color:#fff;z-index:999;animation:slideIn 0.25s;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+.toast-success{background:#3B6D11}
+.toast-error{background:#E24B4A}
+.toast-info{background:#185FA5}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.loading{display:flex;align-items:center;justify-content:center;height:100vh}
+.spinner{width:28px;height:28px;border:3px solid #B5D4F4;border-top-color:#185FA5;border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99}
+
+/* fmtText extras */
+.q-text mark,.q-explain-text mark{background:#FAEEDA;color:#854F0B;padding:0.05em 0.3em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.q-text code,.q-explain-text code{background:#f0f5fb;padding:1px 6px;border-radius:4px;font-family:Menlo,Consolas,monospace;font-size:0.92em;color:#0C447C}
+.q-text table,.q-explain-text table{border-collapse:collapse;margin:8px 0;font-size:14px}
+.q-text td,.q-text th,.q-explain-text td,.q-explain-text th{border:0.5px solid #B5D4F4;padding:6px 10px;text-align:left}
+.q-text th,.q-explain-text th{background:#f0f5fb;color:#185FA5;font-weight:500}
+
+/* Mobile */
+@media(max-width:768px){
+  .sidebar{position:fixed;left:0;top:0;height:100vh;z-index:100;box-shadow:4px 0 20px rgba(0,0,0,0.15)}
+  .sidebar.hidden{margin-left:-280px}
+  .sidebar-overlay.show{display:block}
+  .main{width:100%}
+  .topbar{padding:10px 12px}
+  .topbar-title{font-size:13px}
+  .content{padding:12px}
+  .q-text{font-size:15px}
+  .q-opt{font-size:14.5px;padding:10px 12px}
+  .q-explain-text{font-size:14px}
+  .q-nav .btn{padding:9px 14px;font-size:13px}
+  .toggle-btn{min-width:40px;min-height:40px}
+  .srs-bar{grid-template-columns:1fr 1fr}
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .kbd-hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="loading" id="loadingScreen">
+  <div style="text-align:center">
+    <div class="spinner" style="margin:0 auto 12px"></div>
+    <div style="font-size:13px;color:#185FA5;letter-spacing:0.02em">載入中...</div>
+  </div>
+</div>
+
+<!-- Auth screen -->
+<div class="auth-screen" id="authScreen" style="display:none">
+  <div class="auth-box">
+    <h1>MedBase Qbank</h1>
+    <div class="sub">題庫練習系統</div>
+    <div class="auth-err" id="authErr"></div>
+    <div id="authForm">
+      <input id="authEmail" type="email" placeholder="你的 Email" autocomplete="email" onkeydown="if(event.key==='Enter')sendMagicLink()">
+      <button class="btn btn-primary" style="margin-top:4px;width:100%" onclick="sendMagicLink()" id="authSubmit">寄送登入連結</button>
+      <div style="font-size:12px;color:#7ab3d9;margin-top:12px;line-height:1.6">免密碼。我們會寄一個登入連結到你的信箱，點了就完成登入。<br>用與 MedBase 知識庫相同的 Email，兩邊會是同一個帳號。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main app -->
+<div class="layout" id="app" style="display:none">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSB()"></div>
+  <div class="sidebar hidden" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">MedBase Qbank<small>題庫練習</small></div>
+      <div class="user-chip" id="userChip" onclick="logout()">登出</div>
+    </div>
+    <div class="sidebar-list">
+      <!-- Mode -->
+      <div class="sb-section">
+        <div class="sb-section-title">讀書模式</div>
+        <div class="mode-tabs">
+          <div class="mode-tab active" data-mode="tutor"   onclick="setMode('tutor')">練習</div>
+          <div class="mode-tab"        data-mode="review"  onclick="setMode('review')">複習</div>
+          <div class="mode-tab"        data-mode="test"    onclick="setMode('test')">測驗</div>
+          <div class="mode-tab"        data-mode="new"     onclick="setMode('new')">新題</div>
+        </div>
+        <div id="modeHint" style="font-size:11px;color:#7ab3d9;line-height:1.5">逐題作答，答題後立即顯示解析並評分。</div>
+      </div>
+
+      <!-- Filters -->
+      <div class="sb-section">
+        <div class="sb-section-title">篩選</div>
+        <div class="filter-group"><label>科目</label><select id="fSubject" onchange="applyFilters()"><option value="">全部</option></select></div>
+        <div class="filter-group"><label>系統</label><select id="fOrgan" onchange="applyFilters()"><option value="">全部</option></select></div>
+        <div class="filter-group"><label>主題</label><select id="fTopic" onchange="applyFilters()"><option value="">全部</option></select></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div class="filter-group"><label>年份</label><select id="fYear" onchange="applyFilters()"><option value="">全部</option></select></div>
+          <div class="filter-group"><label>試卷</label><select id="fPaper" onchange="applyFilters()"><option value="">全部</option></select></div>
+        </div>
+        <div class="filter-group"><label>狀態</label>
+          <select id="fStatus" onchange="applyFilters()">
+            <option value="">全部</option>
+            <option value="unanswered">未作答</option>
+            <option value="correct">答對</option>
+            <option value="wrong">答錯</option>
+            <option value="marked">已標記</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Session control -->
+      <div class="sb-section" id="sessionSection">
+        <div class="sb-section-title">本輪設定</div>
+        <div class="session-card">
+          <div class="filter-group" style="margin-bottom:6px"><label>題數</label>
+            <select id="sessLen"><option value="20">20</option><option value="40">40</option><option value="80">80</option><option value="0">全部</option></select>
+          </div>
+          <label><input type="checkbox" id="optShuffleQ" checked> 題目順序打亂</label>
+          <label><input type="checkbox" id="optShuffleOpt" checked> 選項順序打亂</label>
+          <label id="optTimerWrap" style="display:none"><input type="checkbox" id="optTimer" checked> 限時（每題 90 秒）</label>
+        </div>
+        <button class="btn btn-primary" onclick="startSession()">開始一輪</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="sb-section">
+        <div class="sb-section-title">統計</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:#4a7fa5;text-align:center;margin-bottom:8px" id="progressLabel">0 / 0 已作答</div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-val" id="statCorrect">0</div><div class="stat-lbl">答對</div></div>
+          <div class="stat-card"><div class="stat-val" id="statWrong">0</div><div class="stat-lbl">答錯</div></div>
+          <div class="stat-card"><div class="stat-val" id="statRate">-</div><div class="stat-lbl">正確率</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-val" id="statDue">0</div><div class="stat-lbl">到期複習</div></div>
+          <div class="stat-card"><div class="stat-val" id="statNew">0</div><div class="stat-lbl">未做</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-bottom">
+      <div style="font-size:11px;color:#7ab3d9;text-align:center;letter-spacing:0.02em" id="syncStatus">已同步</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="toggle-btn" onclick="toggleSB()">☰</button>
+        <div class="topbar-title" id="topTitle">題庫練習</div>
+      </div>
+      <div id="topRight" style="display:flex;align-items:center;gap:8px"></div>
+    </div>
+    <div class="content"><div class="question-box" id="mainContent"></div></div>
+  </div>
+</div>
+
+<script>
+// ===== Config =====
+var SB_URL="https://sbbpdithvhsgpcnqmofn.supabase.co";
+var SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiYnBkaXRodmhzZ3BjbnFtb2ZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjQ5NjIsImV4cCI6MjA5NTkwMDk2Mn0.YrN-pV-6aAgg6CW0-Mhw3XfkkXHiQ3i32H-bd8C_Axw";
+var LABELS=["A","B","C","D","E"];
+
+// ===== Auth state =====
+var SB_TOKEN=localStorage.getItem("qbank_token")||null;
+var SB_USER=null;
+// URL of the main MedBase knowledge app (for linking questions → disease pages)
+var MAIN_APP_URL="https://hunium-med.github.io/emo/medbase-standalone.html";
+var diseaseNameMap={}; // disease_id → name (loaded from diseases table)
+try{ var raw=localStorage.getItem("qbank_user"); if(raw)SB_USER=JSON.parse(raw); }catch(e){}
+
+function authHDRS(){
+  return {
+    "apikey": SB_KEY,
+    "Authorization": "Bearer " + (SB_TOKEN || SB_KEY),
+    "Content-Type": "application/json",
+    "Prefer": "return=representation"
+  };
+}
+function sbFetch(path, opts){
+  opts=opts||{};
+  opts.headers = Object.assign({}, authHDRS(), opts.headers||{});
+  return fetch(SB_URL+"/rest/v1/"+path, opts);
+}
+function sbGet(p){ return sbFetch(p).then(function(r){return r.json()}); }
+
+// ===== App state =====
+var allQuestions=[], filtered=[], curIdx=0;
+var answers={};       // {qid: {selected, correct, confidence, time_ms, ease, interval_days, due_at, attempt_num}}
+var marks={};         // {qid: true}
+var mode="tutor";     // tutor|review|test|new
+var session=null;     // {questions, idx, started_at, mode, timer_id, time_left, optionMap}
+var qStartTime=0;     // performance.now() of when current question shown
+var pendingSync=[];   // outbox for unsynced answer updates
+
+// ===== Utilities =====
+function esc(s){return(s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function toast(msg,type){var d=document.createElement("div");d.className="toast toast-"+(type||"success");d.textContent=msg;document.body.appendChild(d);setTimeout(function(){d.remove()},2500)}
+function isMobile(){return window.innerWidth<=768}
+function toggleSB(){var sb=document.getElementById("sidebar"),ov=document.getElementById("sidebarOverlay");sb.classList.toggle("hidden");if(sb.classList.contains("hidden"))ov.classList.remove("show");else ov.classList.add("show")}
+function shuffle(arr){ arr=arr.slice(); for(var i=arr.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=arr[i];arr[i]=arr[j];arr[j]=t; } return arr; }
+
+// ===== Markdown ===========
+// applyInline: takes RAW string, escapes HTML, then applies inline markdown.
+function applyInline(s){
+  s = esc(s);
+  s = s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function(_,a,u){
+    return '<img src="'+u+'" style="max-width:100%;border-radius:6px;margin:4px 0;border:0.5px solid #B5D4F4" alt="'+a+'">';
+  });
+  s = s.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+  s = s.replace(/__(.+?)__/g, "<u>$1</u>");
+  s = s.replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g, "$1<i>$2</i>");
+  s = s.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+  s = s.replace(/==([^=\n]+)==/g, "<mark>$1</mark>");
+  return s;
+}
+
+// fmtStem: for question stems / prose-style text. Lines that don't start with "- " are paragraphs.
+function fmtStem(text){
+  if(!text) return "";
+  var lines = text.split("\n");
+  var html = "", inList=false, tableRows=[], paraBuf=[];
+  function flushList(){ if(inList){ html+="</ul>"; inList=false; } }
+  function flushTable(){
+    if(!tableRows.length) return;
+    html += '<div style="overflow-x:auto"><table>';
+    tableRows.forEach(function(row,i){
+      var tag=i===0?"th":"td";
+      html += "<tr>";
+      row.forEach(function(c){ html += "<"+tag+">"+applyInline(c.trim())+"</"+tag+">"; });
+      html += "</tr>";
+    });
+    html += "</table></div>"; tableRows=[];
+  }
+  function flushPara(){
+    if(paraBuf.length){
+      html += '<p style="margin:0 0 8px 0">' + applyInline(paraBuf.join(" ")) + '</p>';
+      paraBuf = [];
+    }
+  }
+  for(var li=0;li<lines.length;li++){
+    var line = lines[li];
+    var trimmed = line.replace(/^\s+/,"").replace(/\s+$/,"");
+    if(!trimmed){ flushPara(); flushList(); flushTable(); continue; }
+    var imgMatch = line.match(/^!\[([^\]]*)\]\(([^)]+)\)\s*$/);
+    if(imgMatch){
+      flushPara(); flushList(); flushTable();
+      html += '<img src="'+esc(imgMatch[2])+'" style="max-width:100%;border-radius:6px;margin:8px 0;border:0.5px solid #B5D4F4">';
+      if(imgMatch[1]) html += '<div style="font-size:13px;color:#4a7fa5;margin-bottom:6px;text-align:center">'+esc(imgMatch[1])+'</div>';
+      continue;
+    }
+    if(/^\s*\|.+\|\s*$/.test(line)){
+      flushPara(); flushList();
+      if(/^\s*\|[\s\-:|]+\|\s*$/.test(line)) continue;
+      var cells = line.replace(/^\s*\|/,"").replace(/\|\s*$/,"").split("|");
+      tableRows.push(cells); continue;
+    } else { flushTable(); }
+    var bulletMatch = line.match(/^(\s*)[-*]\s+(.+)$/);
+    if(bulletMatch){
+      flushPara();
+      var indent = bulletMatch[1].length;
+      var level = indent>=4 ? 3 : indent>=2 ? 2 : 1;
+      var content = applyInline(bulletMatch[2]);
+      if(!inList){ html += '<ul style="list-style:none;padding:0;margin:4px 0">'; inList=true; }
+      var colors=["#378ADD","#85B7EB","#B5D4F4"], sizes=["7px","6px","5px"];
+      var pad=(level-1)*18+"px";
+      html += '<li style="display:flex;align-items:flex-start;gap:6px;padding:2px 0;padding-left:'+pad+';"><span style="width:'+sizes[level-1]+';height:'+sizes[level-1]+';border-radius:50%;background:'+colors[level-1]+';margin-top:7px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+content+'</span></li>';
+      continue;
+    }
+    flushList();
+    paraBuf.push(trimmed);
+  }
+  flushPara(); flushList(); flushTable();
+  return html;
+}
+
+// fmtText: for explanation-style text where every non-empty line becomes a bullet (legacy A's format).
+function fmtText(text){
+  if(!text) return "";
+  var lines = text.split("\n");
+  var html = "", inList=false, tableRows=[];
+  function flushList(){ if(inList){ html+="</ul>"; inList=false; } }
+  function flushTable(){
+    if(tableRows.length){
+      html += '<div style="overflow-x:auto"><table>';
+      tableRows.forEach(function(row,i){
+        var tag = i===0 ? "th" : "td";
+        html += "<tr>";
+        row.forEach(function(c){ html += "<"+tag+">"+applyInline(c.trim())+"</"+tag+">"; });
+        html += "</tr>";
+      });
+      html += "</table></div>";
+      tableRows=[];
+    }
+  }
+  for(var li=0; li<lines.length; li++){
+    var line = lines[li];
+    // Standalone image
+    var imgMatch = line.match(/^!\[([^\]]*)\]\(([^)]+)\)\s*$/);
+    if(imgMatch){
+      flushList(); flushTable();
+      html += '<img src="'+esc(imgMatch[2])+'" style="max-width:100%;border-radius:6px;margin:8px 0;border:0.5px solid #B5D4F4">';
+      if(imgMatch[1]) html += '<div style="font-size:13px;color:#4a7fa5;margin-bottom:6px;text-align:center">'+esc(imgMatch[1])+'</div>';
+      continue;
+    }
+    // Table row
+    if(/^\s*\|.+\|\s*$/.test(line)){
+      flushList();
+      if(/^\s*\|[\s\-:|]+\|\s*$/.test(line)) continue;
+      var cells = line.replace(/^\s*\|/,"").replace(/\|\s*$/,"").split("|");
+      tableRows.push(cells);
+      continue;
+    } else { flushTable(); }
+    var trimmed = line.replace(/^\s+/,"");
+    if(!trimmed){ flushList(); html += "<br>"; continue; }
+    var indent = line.length - line.replace(/^ +/,"").length;
+    var level = indent>=4 ? 3 : indent>=2 ? 2 : 1;
+    var formatted = applyInline(trimmed);
+    if(!inList){ html += '<ul style="list-style:none;padding:0;margin:4px 0">'; inList=true; }
+    var colors=["#378ADD","#85B7EB","#B5D4F4"];
+    var sizes=["7px","6px","5px"];
+    var pad=(level-1)*18+"px";
+    html += '<li style="display:flex;align-items:flex-start;gap:6px;padding:2px 0;padding-left:'+pad+';font-size:15px"><span style="width:'+sizes[level-1]+';height:'+sizes[level-1]+';border-radius:50%;background:'+colors[level-1]+';margin-top:7px;flex-shrink:0"></span><span style="flex:1;min-width:0">'+formatted+'</span></li>';
+  }
+  flushList(); flushTable();
+  return html;
+}
+
+// ===== Auth =====
+async function sendMagicLink(){
+  var email = document.getElementById("authEmail").value.trim();
+  var errEl = document.getElementById("authErr");
+  errEl.style.display="none";
+  if(!email || email.indexOf("@")<0){ errEl.textContent="請輸入有效的 Email"; errEl.style.display="block"; return; }
+  var btn = document.getElementById("authSubmit");
+  btn.disabled = true; btn.textContent = "寄送中…";
+  try{
+    var r = await fetch(SB_URL+"/auth/v1/otp", {
+      method:"POST",
+      headers:{"apikey":SB_KEY,"Content-Type":"application/json"},
+      body: JSON.stringify({ email:email, options:{ email_redirect_to: location.href.split("#")[0] } })
+    });
+    var d = await r.json();
+    if(!r.ok || d.error || d.msg){
+      errEl.textContent = d.error_description || d.msg || d.error || "寄送失敗 ("+r.status+")";
+      errEl.style.display="block";
+      btn.disabled=false; btn.textContent="寄送登入連結";
+      return;
+    }
+    document.getElementById("authForm").innerHTML =
+      '<div style="text-align:center;padding:10px 0">'+
+      '<div style="font-size:40px;margin-bottom:10px">📩</div>'+
+      '<div style="font-size:15px;font-weight:600;color:#185FA5;margin-bottom:6px">登入連結已寄出</div>'+
+      '<div style="font-size:13px;color:#4a7fa5;line-height:1.6">請到 <b>'+esc(email)+'</b> 的信箱點擊連結完成登入。</div></div>';
+  }catch(e){
+    errEl.textContent = "連線失敗："+(e.message||e);
+    errEl.style.display="block";
+    btn.disabled=false; btn.textContent="寄送登入連結";
+  }
+}
+
+// Parse magic-link callback tokens from the URL hash (#access_token=...&refresh_token=...)
+function parseAuthHash(){
+  var h = location.hash || "";
+  if(h.indexOf("access_token=")<0) return false;
+  var params = {};
+  h.replace(/^#/,"").split("&").forEach(function(kv){
+    var p = kv.split("="); params[decodeURIComponent(p[0])] = decodeURIComponent(p[1]||"");
+  });
+  if(params.access_token){
+    SB_TOKEN = params.access_token;
+    localStorage.setItem("qbank_token", SB_TOKEN);
+    if(params.refresh_token) localStorage.setItem("qbank_refresh", params.refresh_token);
+    // clean the hash so tokens don't linger in the URL
+    try{ history.replaceState(null,null,location.pathname+location.search); }catch(e){}
+    return true;
+  }
+  return false;
+}
+
+// Fetch the user object for the current token (magic-link callback doesn't include it)
+async function fetchAuthUser(){
+  try{
+    var r = await fetch(SB_URL+"/auth/v1/user", { headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_TOKEN} });
+    if(r.ok){ SB_USER = await r.json(); localStorage.setItem("qbank_user", JSON.stringify(SB_USER)); return true; }
+  }catch(e){}
+  return false;
+}
+async function refreshToken(){
+  var rt = localStorage.getItem("qbank_refresh");
+  if(!rt) return false;
+  try{
+    var r = await fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{
+      method:"POST",
+      headers:{"apikey":SB_KEY,"Content-Type":"application/json"},
+      body: JSON.stringify({refresh_token:rt})
+    });
+    var d = await r.json();
+    if(d.access_token){
+      SB_TOKEN = d.access_token;
+      localStorage.setItem("qbank_token", SB_TOKEN);
+      localStorage.setItem("qbank_refresh", d.refresh_token||rt);
+      if(d.user){ SB_USER=d.user; localStorage.setItem("qbank_user", JSON.stringify(d.user)); }
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+function logout(){
+  if(!confirm("確定登出？本機未同步的紀錄會嘗試上傳。")) return;
+  flushSync().finally(function(){
+    localStorage.removeItem("qbank_token");
+    localStorage.removeItem("qbank_refresh");
+    localStorage.removeItem("qbank_user");
+    location.reload();
+  });
+}
+
+// ===== Boot =====
+async function bootStart(){
+  // Magic-link callback: tokens arrive in the URL hash
+  if(parseAuthHash()){
+    document.getElementById("authScreen").style.display="none";
+    document.getElementById("loadingScreen").style.display="flex";
+    await fetchAuthUser();
+    bootApp();
+    return;
+  }
+  if(SB_TOKEN && SB_USER){
+    document.getElementById("authScreen").style.display="none";
+    document.getElementById("loadingScreen").style.display="flex";
+    bootApp();
+  } else {
+    document.getElementById("loadingScreen").style.display="none";
+    document.getElementById("authScreen").style.display="flex";
+  }
+}
+async function bootApp(){
+  try{
+    // Verify token
+    var r = await sbFetch("questions?select=*&order=created_at");
+    if(r.status===401){
+      var ok = await refreshToken();
+      if(!ok){
+        localStorage.removeItem("qbank_token");
+        location.reload(); return;
+      }
+      r = await sbFetch("questions?select=*&order=created_at");
+    }
+    allQuestions = await r.json();
+    if(!Array.isArray(allQuestions)) allQuestions = [];
+
+    // Load disease names for linked questions (disease_id → name)
+    try{
+      var dz = await sbGet("diseases?select=id,name");
+      if(Array.isArray(dz)) dz.forEach(function(d){ diseaseNameMap[d.id] = d.name; });
+      allQuestions.forEach(function(q){
+        if(q.disease_id && diseaseNameMap[q.disease_id]) q.disease_name = diseaseNameMap[q.disease_id];
+      });
+    }catch(e){}
+
+    // Load per-user state
+    var ua = await sbGet("qbank_answers?select=*");
+    if(Array.isArray(ua)){
+      ua.forEach(function(a){
+        answers[a.question_id] = {
+          selected: a.selected, is_correct: a.is_correct, confidence: a.confidence,
+          time_taken_ms: a.time_taken_ms, ease: a.srs_ease,
+          interval_days: a.srs_interval_days, due_at: a.srs_due_at, attempt_num: a.attempt_num
+        };
+      });
+    }
+    var mk = await sbGet("qbank_marks?select=question_id,marked");
+    if(Array.isArray(mk)) mk.forEach(function(m){ if(m.marked) marks[m.question_id] = true; });
+
+    document.getElementById("userChip").textContent = (SB_USER&&SB_USER.email) ? SB_USER.email.split("@")[0]+" · 登出" : "登出";
+
+    buildFilters();
+    applyFilters();
+    document.getElementById("loadingScreen").style.display="none";
+    document.getElementById("app").style.display="flex";
+    if(!isMobile()) document.getElementById("sidebar").classList.remove("hidden");
+  }catch(e){
+    document.getElementById("loadingScreen").innerHTML='<div style="text-align:center;padding:20px;max-width:400px"><div style="color:#A32D2D;background:#FCEBEB;border-radius:12px;padding:16px;font-size:13px">連線失敗：'+esc(e.message||"")+'<br><br><button class="btn btn-ghost" onclick="location.reload()">重試</button></div></div>';
+  }
+}
+
+// ===== Filters / Mode =====
+function buildFilters(){
+  var s={},o={},t={},y={},p={};
+  allQuestions.forEach(function(q){
+    if(q.subject)       s[q.subject]=true;
+    if(q.organ_system)  o[q.organ_system]=true;
+    if(q.topic)         t[q.topic]=true;
+    if(q.year)          y[q.year]=true;
+    if(q.paper)         p[q.paper]=true;
+  });
+  fillSelect("fSubject", s, false);
+  fillSelect("fOrgan",   o, false);
+  fillSelect("fTopic",   t, false);
+  fillSelect("fYear",    y, true);
+  fillSelect("fPaper",   p, false);
+}
+function fillSelect(id, dict, reverse){
+  var el = document.getElementById(id);
+  var cur = el.value;
+  el.innerHTML = '<option value="">全部</option>';
+  var keys = Object.keys(dict).sort();
+  if(reverse) keys.reverse();
+  keys.forEach(function(k){ el.innerHTML += '<option>'+esc(k)+'</option>'; });
+  el.value = cur;
+}
+
+function setMode(m){
+  mode = m;
+  document.querySelectorAll(".mode-tab").forEach(function(el){
+    el.classList.toggle("active", el.dataset.mode===m);
+  });
+  var hint = "";
+  if(m==="tutor")  hint="逐題作答，答題後立即顯示解析並評分（SRS）。";
+  if(m==="review") hint="只顯示到期複習的題目，依間隔重複算法排序。";
+  if(m==="test")   hint="模擬考試：先全部作答，最後一次看結果與解析。";
+  if(m==="new")    hint="只顯示從未作答過的題目。";
+  document.getElementById("modeHint").textContent = hint;
+  document.getElementById("optTimerWrap").style.display = (m==="test") ? "flex" : "none";
+  applyFilters();
+}
+
+function applyFilters(){
+  var subj=val("fSubject"), organ=val("fOrgan"), topic=val("fTopic");
+  var year=val("fYear"), paper=val("fPaper"), status=val("fStatus");
+  var now = Date.now();
+
+  filtered = allQuestions.filter(function(q){
+    if(subj  && q.subject!==subj)  return false;
+    if(organ && q.organ_system!==organ) return false;
+    if(topic && q.topic!==topic)   return false;
+    if(year  && q.year!==year)     return false;
+    if(paper && q.paper!==paper)   return false;
+
+    var a = answers[q.id];
+    var hasAns = a && a.selected != null;
+    if(mode==="new"    && hasAns) return false;
+    if(mode==="review"){
+      if(!a) return false;
+      if(!a.due_at) return false;
+      if(new Date(a.due_at).getTime() > now) return false;
+    }
+
+    if(status==="unanswered" && hasAns) return false;
+    if(status==="correct"    && (!hasAns || !a.is_correct)) return false;
+    if(status==="wrong"      && (!hasAns || a.is_correct)) return false;
+    if(status==="marked"     && !marks[q.id]) return false;
+
+    return true;
+  });
+
+  if(mode==="review"){
+    filtered.sort(function(a,b){
+      var da = answers[a.id].due_at, db = answers[b.id].due_at;
+      return new Date(da) - new Date(db);
+    });
+  }
+
+  curIdx = 0;
+  session = null;
+  updateStats();
+  document.getElementById("topRight").innerHTML = "";
+  renderQuestion();
+}
+function val(id){ return document.getElementById(id).value; }
+
+function updateStats(){
+  var answered=0, correct=0, due=0, newq=0;
+  var now = Date.now();
+  allQuestions.forEach(function(q){
+    var a = answers[q.id];
+    if(a && a.selected != null){ answered++; if(a.is_correct) correct++; }
+    if(a && a.due_at && new Date(a.due_at).getTime()<=now) due++;
+    if(!a || a.selected == null) newq++;
+  });
+  var wrong = answered - correct;
+  document.getElementById("statCorrect").textContent = correct;
+  document.getElementById("statWrong").textContent   = wrong;
+  document.getElementById("statRate").textContent    = answered>0 ? Math.round(correct/answered*100)+"%" : "-";
+  document.getElementById("statDue").textContent     = due;
+  document.getElementById("statNew").textContent     = newq;
+  var pct = allQuestions.length>0 ? Math.round(answered/allQuestions.length*100) : 0;
+  document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent = answered + " / " + allQuestions.length + " 已作答";
+  document.getElementById("topTitle").textContent = "題庫練習（" + filtered.length + " 題）";
+}
+
+// ===== Session =====
+function startSession(){
+  var len = parseInt(document.getElementById("sessLen").value) || 0;
+  var shufQ = document.getElementById("optShuffleQ").checked;
+  var shufO = document.getElementById("optShuffleOpt").checked;
+  var withTimer = mode==="test" && document.getElementById("optTimer").checked;
+
+  if(!filtered.length){ toast("沒有符合的題目","error"); return; }
+
+  var queue = filtered.slice();
+  if(shufQ) queue = shuffle(queue);
+  if(len>0) queue = queue.slice(0, len);
+
+  // Pre-compute option permutation for each question (display index -> real index)
+  var optionMaps = {};
+  queue.forEach(function(q){
+    var n = q.num_options || 5;
+    if(q.num_options==null){
+      n = q.option4 ? 5 : 4;
+    }
+    var arr = [];
+    for(var i=0;i<n;i++) if(q["option"+i]) arr.push(i);
+    optionMaps[q.id] = shufO ? shuffle(arr) : arr;
+  });
+
+  session = {
+    questions: queue,
+    idx: 0,
+    started_at: Date.now(),
+    mode: mode,
+    optionMaps: optionMaps,
+    testAnswers: {},          // for test mode: {qid: realIdxSelected}
+    timer: null,
+    timeLeftMs: withTimer ? queue.length * 90 * 1000 : 0,
+    withTimer: withTimer
+  };
+  curIdx = 0;
+  if(isMobile()) toggleSB();
+  if(withTimer) startTimer();
+  document.getElementById("topRight").innerHTML = (session.mode==="test"
+    ? '<button class="btn btn-ghost btn-sm" onclick="endSession(true)">結束測驗</button>'
+    : '<button class="btn btn-ghost btn-sm" onclick="endSession(false)">結束本輪</button>');
+  renderQuestion();
+}
+
+function startTimer(){
+  var el;
+  var topRight = document.getElementById("topRight");
+  if(!document.getElementById("timerEl")){
+    var t = document.createElement("div");
+    t.className="timer"; t.id="timerEl";
+    topRight.insertBefore(t, topRight.firstChild);
+  }
+  el = document.getElementById("timerEl");
+  var last = Date.now();
+  session.timer = setInterval(function(){
+    var now = Date.now();
+    session.timeLeftMs -= (now - last);
+    last = now;
+    if(session.timeLeftMs<=0){ session.timeLeftMs=0; clearInterval(session.timer); endSession(true); return; }
+    var s = Math.ceil(session.timeLeftMs/1000);
+    var mm = String(Math.floor(s/60)).padStart(2,"0");
+    var ss = String(s%60).padStart(2,"0");
+    el.textContent = mm+":"+ss;
+    el.classList.toggle("warn", s<60);
+  }, 250);
+}
+
+function endSession(showSummary){
+  if(!session) return;
+  if(session.timer){ clearInterval(session.timer); session.timer=null; }
+  if(showSummary){ renderSummary(); }
+  else { session=null; document.getElementById("topRight").innerHTML=""; var t=document.getElementById("timerEl"); if(t)t.remove(); renderQuestion(); }
+}
+
+// ===== Render question =====
+function activeList(){ return session ? session.questions : filtered; }
+
+function renderQuestion(){
+  var el = document.getElementById("mainContent");
+  var list = activeList();
+  if(!list.length){
+    el.innerHTML = '<div style="text-align:center;padding:60px;color:#7ab3d9"><div style="font-size:32px;margin-bottom:12px">📋</div><div style="font-size:15px">'+(allQuestions.length===0?"題庫為空":"沒有符合條件的題目")+'</div></div>';
+    return;
+  }
+  if(curIdx>=list.length) curIdx=list.length-1;
+  if(curIdx<0) curIdx=0;
+  var q = list[curIdx];
+
+  // Record question start time (for time tracking)
+  qStartTime = performance.now();
+
+  // Resolve option order: in session use map, else identity
+  var optOrder;
+  if(session && session.optionMaps[q.id]) optOrder = session.optionMaps[q.id];
+  else {
+    optOrder = [];
+    var n = q.num_options || (q.option4 ? 5 : 4);
+    for(var i=0;i<n;i++) if(q["option"+i]) optOrder.push(i);
+  }
+
+  var inTest = session && session.mode==="test";
+  var ans = answers[q.id];
+  var testSelectedReal = session && session.testAnswers[q.id];
+  // In test mode, "answered" means user picked in this session but explanation hidden until summary.
+  var answered, selectedReal, isCorrect;
+  if(inTest){
+    answered = testSelectedReal != null;
+    selectedReal = testSelectedReal;
+    isCorrect = answered && selectedReal === q.correct_answer;
+  } else {
+    answered = !!(ans && ans.selected != null);
+    selectedReal = ans ? ans.selected : null;
+    isCorrect = ans ? ans.is_correct : false;
+  }
+  var correctReal = q.correct_answer != null ? parseInt(q.correct_answer) : 0;
+  var isMarked = !!marks[q.id];
+
+  // Header
+  var h = '<div class="q-card"><div class="q-header"><div class="q-meta">';
+  if(q.subject)      h += '<span class="q-badge q-badge-subj">'+esc(q.subject)+'</span>';
+  if(q.organ_system) h += '<span class="q-badge q-badge-organ">'+esc(q.organ_system)+'</span>';
+  if(q.topic)        h += '<span class="q-badge q-badge-topic">'+esc(q.topic)+'</span>';
+  if(q.year)         h += '<span class="q-badge q-badge-year">'+esc(q.year)+'</span>';
+  if(q.paper)        h += '<span class="q-badge q-badge-paper">'+esc(q.paper)+'</span>';
+  if(q.difficulty)   h += '<span class="q-badge q-badge-diff">★'+esc(q.difficulty)+'</span>';
+  if(q.disease_id && q.disease_name) h += '<a class="q-badge q-badge-dz" href="'+MAIN_APP_URL+'#'+esc(q.disease_id)+'" title="查看疾病知識">📖 '+esc(q.disease_name)+'</a>';
+  h += '</div><div class="q-right">';
+  h += '<span class="q-mark '+(isMarked?"on":"")+'" onclick="toggleMark(\''+q.id+'\')" title="標記/取消標記 (M)">'+(isMarked?"★":"☆")+'</span>';
+  h += '<span class="q-num">'+(curIdx+1)+' / '+list.length+'</span>';
+  h += '</div></div>';
+
+  // Body
+  h += '<div class="q-body">';
+  h += '<div class="q-text">' + fmtStem(q.text) + '</div>';
+  if(q.image_url) h += '<img class="q-img" src="'+esc(q.image_url)+'">';
+
+  // Options (display order via optOrder)
+  h += '<div class="q-options">';
+  for(var di=0; di<optOrder.length; di++){
+    var realIdx = optOrder[di];
+    var optText = q["option"+realIdx];
+    if(!optText) continue;
+    var cls = "q-opt";
+    if(answered){
+      if(!inTest){
+        if(realIdx === correctReal) cls += " correct";
+        else if(realIdx === selectedReal && realIdx !== correctReal) cls += " wrong";
+      } else {
+        if(realIdx === selectedReal) cls += " selected";
+      }
+      cls += " disabled";
+    } else if(selectedReal===realIdx){
+      cls += " selected";
+    }
+    h += '<div class="'+cls+'" onclick="selectOption(\''+q.id+'\','+realIdx+')">';
+    h += '<div class="q-opt-label">'+LABELS[di]+'</div>';
+    h += '<div>'+applyInline(optText)+'</div></div>';
+  }
+  h += '</div>';
+
+  // Explanation (only outside test mode, after answer)
+  if(answered && !inTest){
+    h += '<div class="q-explain"><div class="q-explain-title">';
+    h += '<span>' + (isCorrect ? '✅ 答對了！' : '❌ 答錯了') + '　正確答案：' + LABELS[optOrder.indexOf(correctReal)] + '</span>';
+    h += '<button class="btn btn-ghost btn-sm" style="width:auto" onclick="retryQ(\''+q.id+'\')">重新作答</button>';
+    h += '</div>';
+    if(q.explanation) h += '<div class="q-explain-text">' + fmtText(q.explanation) + '</div>';
+    if(q.explanation_image_url) h += '<img class="q-img" src="'+esc(q.explanation_image_url)+'" style="margin-top:10px">';
+    if(q.reference) h += '<div class="q-explain-ref">📚 '+esc(q.reference)+'</div>';
+    h += '</div>';
+
+    // SRS rating bar
+    var proj = projectSrs(ans||{}, q.id);
+    h += '<div class="srs-bar">';
+    h += srsBtn(q.id, 1, "再來", proj[1]);
+    h += srsBtn(q.id, 3, "困難", proj[3]);
+    h += srsBtn(q.id, 4, "良好", proj[4]);
+    h += srsBtn(q.id, 5, "簡單", proj[5]);
+    h += '</div>';
+  }
+
+  h += '</div></div>';
+
+  // Nav
+  h += '<div class="q-nav">';
+  h += '<button class="btn btn-ghost" onclick="prevQ()" '+(curIdx<=0?'disabled style="opacity:0.4"':'')+'>← 上一題</button>';
+  if(!answered) h += '<button class="btn btn-primary" onclick="submitAnswer()" id="submitBtn" style="opacity:0.4" disabled>確認作答</button>';
+  if(inTest && curIdx===list.length-1){
+    h += '<button class="btn btn-success" onclick="endSession(true)">交卷</button>';
+  } else {
+    h += '<button class="btn btn-ghost" onclick="nextQ()" '+(curIdx>=list.length-1?'disabled style="opacity:0.4"':'')+'>下一題 →</button>';
+  }
+  h += '</div>';
+  h += '<div class="kbd-hint">快速鍵：<kbd>1-5</kbd> 選項　<kbd>Enter</kbd> 確認/下一題　<kbd>←/→</kbd> 換題　<kbd>M</kbd> 標記　<kbd>R</kbd> 重做</div>';
+
+  el.innerHTML = h;
+}
+
+function srsBtn(qid, q, label, dueLabel){
+  return '<div class="srs-btn" data-q="'+q+'" onclick="rateSrs(\''+qid+'\','+q+')">' +
+    '<div class="srs-label">'+label+'</div>' +
+    '<div class="srs-due">'+dueLabel+'</div></div>';
+}
+
+// ===== SRS =====
+function projectSrs(prev, qid){
+  var labels = {};
+  [1,3,4,5].forEach(function(quality){
+    var n = computeSrs(prev, quality);
+    labels[quality] = formatDue(n);
+  });
+  return labels;
+}
+function computeSrs(prev, quality){
+  var ease = prev.ease || 2.5;
+  var interval = prev.interval_days || 0;
+  var dueMs;
+  if(quality < 3){
+    interval = 0;
+    dueMs = Date.now() + 10*60*1000; // 10 min
+  } else {
+    if(interval === 0) interval = 1;
+    else if(interval === 1) interval = quality === 5 ? 4 : 3;
+    else interval = Math.round(interval * ease * (quality === 5 ? 1.3 : 1));
+    dueMs = Date.now() + interval * 86400000;
+  }
+  ease = Math.max(1.3, ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+  return {
+    ease: ease,
+    interval_days: interval,
+    due_at: new Date(dueMs).toISOString(),
+    quality: quality
+  };
+}
+function formatDue(n){
+  if(n.interval_days===0) return "10 分鐘";
+  if(n.interval_days===1) return "1 天";
+  if(n.interval_days<30)  return n.interval_days+" 天";
+  if(n.interval_days<365) return Math.round(n.interval_days/30)+" 個月";
+  return (n.interval_days/365).toFixed(1)+" 年";
+}
+
+async function rateSrs(qid, quality){
+  var prev = answers[qid] || {};
+  var srs = computeSrs(prev, quality);
+  // Merge into existing answer record
+  var rec = {
+    selected: prev.selected,
+    is_correct: prev.is_correct,
+    confidence: quality,
+    time_taken_ms: prev.time_taken_ms,
+    ease: srs.ease,
+    interval_days: srs.interval_days,
+    due_at: srs.due_at,
+    attempt_num: prev.attempt_num || 1
+  };
+  answers[qid] = rec;
+  toast(quality<3?"已安排短期重做":"已安排 "+formatDue(srs)+" 後複習", "info");
+  await syncAnswer(qid, rec);
+  // Auto-advance
+  setTimeout(function(){ if(curIdx<activeList().length-1) nextQ(); else renderQuestion(); }, 200);
+}
+
+// ===== Answer flow =====
+function selectOption(qid, realIdx){
+  var q = activeList()[curIdx];
+  if(!q || q.id!==qid) return;
+  var inTest = session && session.mode==="test";
+  if(inTest){
+    session.testAnswers[qid] = realIdx;
+    renderQuestion();
+    return;
+  }
+  // tutor / review / new: highlight then wait for confirm
+  var existing = answers[qid];
+  if(existing && existing.selected != null) return; // already answered (use retry to clear)
+  var els = document.querySelectorAll(".q-opt");
+  var list = activeList();
+  var qq = list[curIdx];
+  var optOrder;
+  if(session && session.optionMaps[qq.id]) optOrder = session.optionMaps[qq.id];
+  else { optOrder=[]; var n=qq.num_options||(qq.option4?5:4); for(var i=0;i<n;i++) if(qq["option"+i]) optOrder.push(i); }
+  var dispIdx = optOrder.indexOf(realIdx);
+  els.forEach(function(o,i){
+    o.classList.remove("selected");
+    if(i===dispIdx) o.classList.add("selected");
+  });
+  document.getElementById("mainContent").dataset.pending = realIdx;
+  var btn = document.getElementById("submitBtn");
+  if(btn){ btn.disabled=false; btn.style.opacity="1"; }
+}
+
+async function submitAnswer(){
+  var q = activeList()[curIdx];
+  if(!q) return;
+  var pend = document.getElementById("mainContent").dataset.pending;
+  if(pend==null||pend==="") return;
+  var realIdx = parseInt(pend);
+  var correctReal = parseInt(q.correct_answer);
+  var isCorrect = realIdx === correctReal;
+  var time_ms = Math.round(performance.now() - qStartTime);
+
+  // First-attempt SRS state: prev ease/interval (if any); quality not yet rated
+  var prev = answers[q.id] || {};
+  var rec = {
+    selected: realIdx,
+    is_correct: isCorrect,
+    confidence: null,
+    time_taken_ms: time_ms,
+    ease: prev.ease || 2.5,
+    interval_days: prev.interval_days || 0,
+    due_at: prev.due_at || null,
+    attempt_num: (prev.attempt_num || 0) + 1
+  };
+  answers[q.id] = rec;
+  await syncAnswer(q.id, rec, {alsoHistory:true});
+  updateStats();
+  renderQuestion();
+}
+
+function retryQ(qid){
+  if(!confirm("重做此題？SRS 排程會保留。")) return;
+  var prev = answers[qid];
+  if(prev){
+    prev.selected = null;
+    prev.is_correct = null;
+    prev.confidence = null;
+  }
+  var mc = document.getElementById("mainContent");
+  if(mc) mc.dataset.pending = "";
+  renderQuestion();
+}
+
+function prevQ(){ if(curIdx>0){ curIdx--; renderQuestion(); } }
+function nextQ(){ if(curIdx<activeList().length-1){ curIdx++; renderQuestion(); } }
+
+async function toggleMark(qid){
+  var now = !marks[qid];
+  marks[qid] = now;
+  if(!now) delete marks[qid];
+  try{
+    if(now){
+      await sbFetch("qbank_marks?on_conflict=user_id,question_id", {
+        method:"POST",
+        headers:{"Prefer":"resolution=merge-duplicates,return=representation"},
+        body: JSON.stringify({user_id: SB_USER.id, question_id: qid, marked:true, updated_at: new Date().toISOString()})
+      });
+    } else {
+      await sbFetch("qbank_marks?user_id=eq."+SB_USER.id+"&question_id=eq."+qid, {method:"DELETE"});
+    }
+  }catch(e){ /* offline ok */ }
+  renderQuestion();
+}
+
+// ===== Sync =====
+async function syncAnswer(qid, rec, opts){
+  opts = opts || {};
+  var payload = {
+    user_id: SB_USER.id,
+    question_id: qid,
+    selected: rec.selected,
+    is_correct: rec.is_correct,
+    confidence: rec.confidence,
+    time_taken_ms: rec.time_taken_ms,
+    srs_ease: rec.ease,
+    srs_interval_days: rec.interval_days,
+    srs_due_at: rec.due_at,
+    attempt_num: rec.attempt_num,
+    answered_at: new Date().toISOString()
+  };
+  try{
+    document.getElementById("syncStatus").textContent = "同步中…";
+    var r = await sbFetch("qbank_answers?on_conflict=user_id,question_id", {
+      method:"POST",
+      headers:{"Prefer":"resolution=merge-duplicates,return=representation"},
+      body: JSON.stringify(payload)
+    });
+    if(r.status===401){
+      var ok = await refreshToken();
+      if(ok) r = await sbFetch("qbank_answers?on_conflict=user_id,question_id", {
+        method:"POST",
+        headers:{"Prefer":"resolution=merge-duplicates,return=representation"},
+        body: JSON.stringify(payload)
+      });
+    }
+    if(opts.alsoHistory){
+      sbFetch("user_answer_history", {
+        method:"POST",
+        body: JSON.stringify({
+          user_id: SB_USER.id, question_id: qid,
+          selected: rec.selected, is_correct: rec.is_correct,
+          confidence: rec.confidence, time_taken_ms: rec.time_taken_ms,
+          answered_at: payload.answered_at
+        })
+      }).catch(function(){});
+    }
+    document.getElementById("syncStatus").textContent = "已同步 · "+new Date().toLocaleTimeString();
+  }catch(e){
+    pendingSync.push({qid:qid, payload:payload});
+    document.getElementById("syncStatus").textContent = "離線："+pendingSync.length+" 待同步";
+  }
+}
+async function flushSync(){
+  while(pendingSync.length){
+    var p = pendingSync.shift();
+    try{
+      await sbFetch("qbank_answers?on_conflict=user_id,question_id", {
+        method:"POST",
+        headers:{"Prefer":"resolution=merge-duplicates,return=representation"},
+        body: JSON.stringify(p.payload)
+      });
+    }catch(e){ pendingSync.unshift(p); throw e; }
+  }
+}
+window.addEventListener("online", function(){ flushSync().catch(function(){}); });
+
+// ===== Test mode summary =====
+function renderSummary(){
+  if(!session) return;
+  var qs = session.questions;
+  var picks = session.testAnswers;
+  var correct=0, wrong=0, unanswered=0;
+  var bySubj = {};
+  var totalTimeMs = Date.now() - session.started_at;
+
+  qs.forEach(function(q){
+    var sel = picks[q.id];
+    var key = q.subject || "(未分類)";
+    bySubj[key] = bySubj[key] || {n:0, c:0};
+    bySubj[key].n++;
+    if(sel==null){ unanswered++; return; }
+    if(sel === q.correct_answer){ correct++; bySubj[key].c++; }
+    else wrong++;
+  });
+
+  // Record answers + history for completed picks
+  for(var qid in picks){
+    var realSel = picks[qid];
+    var q = qs.find(function(x){return x.id===qid});
+    if(!q) continue;
+    var isCorrect = realSel === q.correct_answer;
+    var prev = answers[qid] || {};
+    var rec = {
+      selected: realSel, is_correct: isCorrect, confidence: null,
+      time_taken_ms: null,
+      ease: prev.ease || 2.5,
+      interval_days: prev.interval_days || 0,
+      due_at: prev.due_at || null,
+      attempt_num: (prev.attempt_num || 0) + 1
+    };
+    answers[qid] = rec;
+    syncAnswer(qid, rec, {alsoHistory:true});
+  }
+  updateStats();
+
+  // Build summary HTML
+  var rate = qs.length ? Math.round(correct/qs.length*100) : 0;
+  var mins = Math.floor(totalTimeMs/60000), secs = Math.floor((totalTimeMs%60000)/1000);
+  var h = '<div class="summary-card">';
+  h += '<div class="summary-h">本輪結束</div>';
+  h += '<div class="summary-sub">'+qs.length+' 題 · 用時 '+mins+' 分 '+secs+' 秒</div>';
+  h += '<div class="summary-grid">';
+  h += statBox(correct, "答對", "good");
+  h += statBox(wrong, "答錯", "bad");
+  h += statBox(unanswered, "未答", "");
+  h += statBox(rate+"%", "正確率", rate>=70?"good":(rate<50?"bad":""));
+  h += '</div>';
+
+  // Weakest subjects
+  var subjArr = Object.keys(bySubj).map(function(k){
+    var b=bySubj[k]; return {k:k,n:b.n,c:b.c,r:b.n?b.c/b.n:0};
+  }).sort(function(a,b){ return a.r-b.r; });
+  if(subjArr.length){
+    h += '<div style="font-size:13px;color:#185FA5;margin-bottom:8px;font-weight:500">按科目表現</div>';
+    h += '<table class="weak-table">';
+    h += '<tr><th>科目</th><th style="text-align:right">對/題</th><th style="text-align:right">正確率</th></tr>';
+    subjArr.forEach(function(s){
+      h += '<tr><td>'+esc(s.k)+'</td><td style="text-align:right">'+s.c+' / '+s.n+'</td><td style="text-align:right">'+Math.round(s.r*100)+'%</td></tr>';
+    });
+    h += '</table>';
+  }
+  h += '</div>';
+
+  // Per-question review
+  h += '<div class="summary-card"><div class="summary-h" style="font-size:15px">逐題檢視</div><div class="summary-sub">點題進入解析</div>';
+  h += '<table class="weak-table">';
+  qs.forEach(function(q,i){
+    var sel = picks[q.id];
+    var mark = sel==null ? '⚪' : (sel === q.correct_answer ? '🟢' : '🔴');
+    var preview = (q.text||"").substring(0,60);
+    h += '<tr class="weak-row-q" onclick="reviewFromSummary('+i+')"><td style="width:30px">'+mark+'</td><td>'+(i+1)+'.</td><td>'+esc(preview)+(q.text&&q.text.length>60?"…":"")+'</td></tr>';
+  });
+  h += '</table></div>';
+
+  h += '<div style="text-align:center"><button class="btn btn-ghost" style="width:auto;padding:9px 24px" onclick="closeSession()">關閉本輪</button></div>';
+
+  // Hide top right action / timer
+  var t = document.getElementById("timerEl"); if(t) t.remove();
+  document.getElementById("topRight").innerHTML='';
+
+  document.getElementById("mainContent").innerHTML = h;
+  // Mark session done (allow reviewing individual questions in test mode)
+  session.completed = true;
+}
+function statBox(val, lbl, tone){
+  return '<div class="summary-stat"><div class="summary-stat-val '+(tone||"")+'">'+esc(val)+'</div><div class="summary-stat-lbl">'+lbl+'</div></div>';
+}
+function reviewFromSummary(i){
+  if(!session) return;
+  curIdx = i;
+  // Convert to tutor-style display: mark this question as "answered" via answers map (we already did in renderSummary)
+  // Temporarily flip session.mode so explanation shows
+  session.mode = "tutor";
+  renderQuestion();
+}
+function closeSession(){
+  session = null;
+  document.getElementById("topRight").innerHTML='';
+  applyFilters();
+}
+
+// ===== Keyboard =====
+document.addEventListener("keydown", function(e){
+  if(document.getElementById("app").style.display==="none") return;
+  if(["INPUT","TEXTAREA","SELECT"].indexOf(e.target.tagName)>=0) return;
+  var list = activeList(); if(!list || !list.length) return;
+  var q = list[curIdx]; if(!q) return;
+  var ans = answers[q.id];
+  var inTest = session && session.mode==="test";
+  var answered = inTest ? (session.testAnswers[q.id]!=null) : !!(ans && ans.selected != null);
+
+  // 1-5 select option (display position)
+  if(/^[1-5]$/.test(e.key) && !answered){
+    var di = parseInt(e.key)-1;
+    var optOrder;
+    if(session && session.optionMaps[q.id]) optOrder = session.optionMaps[q.id];
+    else { optOrder=[]; var n=q.num_options||(q.option4?5:4); for(var i=0;i<n;i++) if(q["option"+i]) optOrder.push(i); }
+    if(di<optOrder.length){
+      e.preventDefault();
+      selectOption(q.id, optOrder[di]);
+    }
+    return;
+  }
+  // 1-4 for SRS rating when explanation shown
+  if(/^[1-4]$/.test(e.key) && answered && !inTest && ans && ans.confidence==null){
+    var map = {1:1, 2:3, 3:4, 4:5};
+    e.preventDefault();
+    rateSrs(q.id, map[e.key]);
+    return;
+  }
+  if(e.key==="Enter"){
+    e.preventDefault();
+    if(!answered){
+      var btn = document.getElementById("submitBtn");
+      if(btn && !btn.disabled) submitAnswer();
+    } else {
+      if(curIdx<list.length-1) nextQ();
+      else if(inTest) endSession(true);
+    }
+    return;
+  }
+  if(e.key==="ArrowLeft"){ e.preventDefault(); prevQ(); return; }
+  if(e.key==="ArrowRight"){ e.preventDefault(); nextQ(); return; }
+  if(e.key==="m"||e.key==="M"){ e.preventDefault(); toggleMark(q.id); return; }
+  if(e.key==="r"||e.key==="R"){ if(answered && !inTest){ e.preventDefault(); retryQ(q.id); } return; }
+});
+
+// ===== Init =====
+bootStart();
+</script>
+</body>
+</html>

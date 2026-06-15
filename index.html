@@ -64,6 +64,19 @@ body.dark .topbar{background:var(--bg);border-bottom-color:var(--border)}
 body.dark .topbar-title{color:var(--blue)}
 body.dark .toggle-btn{background:var(--bg3);color:var(--blue);border-color:var(--border)}
 body.dark .dark-toggle{color:var(--text2)}
+/* Dark-mode toggle: circular icon button with animated sun/moon swap */
+.dark-toggle{position:relative;width:38px;height:38px;border-radius:50%;border:0.5px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.18s,border-color 0.18s,color 0.18s;padding:0}
+.dark-toggle:hover{background:var(--bg3);border-color:var(--border2);color:var(--blue)}
+.dark-toggle:active{transform:scale(0.92)}
+.dt-icon{position:absolute;transition:opacity 0.28s ease,transform 0.4s cubic-bezier(.4,.1,.3,1.3)}
+/* Light mode: sun visible, moon hidden (rotated out) */
+.dt-sun{opacity:1;transform:rotate(0) scale(1)}
+.dt-moon{opacity:0;transform:rotate(-90deg) scale(0.5)}
+/* Dark mode: moon visible, sun hidden */
+body.dark .dt-sun{opacity:0;transform:rotate(90deg) scale(0.5)}
+body.dark .dt-moon{opacity:1;transform:rotate(0) scale(1)}
+body.dark .dark-toggle{background:var(--card);border-color:var(--border)}
+body.dark .dark-toggle:hover{color:#7FB3E8}
 body.dark .badge{background:var(--blue-bg);color:var(--blue)}
 body.dark .card{background:var(--card);border-color:var(--border)}
 body.dark .tabs{background:var(--bg3);border-bottom-color:var(--border)}
@@ -192,6 +205,69 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .auth-sent-title{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--text);margin-bottom:6px}
 .auth-sent-sub{font-size:var(--fs-sm);color:var(--text2);line-height:var(--lh-normal);margin-bottom:14px}
 .auth-error{font-size:var(--fs-sm);color:var(--red);margin-top:10px;display:flex;align-items:center;gap:6px;justify-content:center}
+/* Home: due-review section */
+.hm-due-sect .hm-sect-head{align-items:center}
+.hm-review-start{margin-left:auto;display:inline-flex;align-items:center;gap:5px;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:var(--fs-sm);font-weight:var(--fw-semi);cursor:pointer;font-family:inherit}
+.hm-review-start:hover{background:#0C447C}
+.hm-review-start i{font-size:14px}
+.hm-due-list{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:720px){.hm-due-list{grid-template-columns:1fr}}
+.hm-due-card{display:flex;align-items:center;gap:10px;padding:10px 11px;background:var(--amber-bg);border:0.5px solid var(--border);border-left:3px solid var(--amber);border-radius:9px;cursor:pointer;transition:border-color 0.12s}
+.hm-due-card:hover{border-color:var(--amber)}
+/* Review session */
+.rv{max-width:680px;margin:0 auto;padding:8px 4px 40px}
+.rv-progress{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.rv-progress-bar{height:100%;background:var(--blue);border-radius:3px;transition:width 0.3s}
+.rv-count{text-align:right;font-size:var(--fs-xs);color:var(--text3);margin-bottom:16px}
+.rv-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:16px}
+.rv-card-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.rv-dot{width:9px;height:9px;border-radius:50%}
+.rv-dz{font-size:var(--fs-h2);font-weight:var(--fw-bold);color:var(--text)}
+.rv-tab-badge{font-size:var(--fs-label);color:var(--blue);background:var(--blue-bg);padding:2px 9px;border-radius:6px;font-weight:var(--fw-medium)}
+.rv-flag{font-size:var(--fs-label);padding:2px 8px;border-radius:6px;font-weight:var(--fw-medium)}
+.rv-flag-weak{color:var(--red);background:var(--red-bg)}
+.rv-flag-important{color:var(--amber);background:var(--amber-bg)}
+.rv-q{font-size:var(--fs-body);color:var(--text2);margin-bottom:12px;line-height:var(--lh-normal)}
+.rv-note{background:var(--amber-bg);border-radius:8px;padding:10px 14px;font-size:var(--fs-sm);color:var(--text);line-height:var(--lh-normal);margin-bottom:14px;white-space:pre-wrap}
+.rv-note-label{display:block;font-size:var(--fs-label);color:var(--amber);font-weight:var(--fw-semi);text-transform:uppercase;letter-spacing:var(--ls-label);margin-bottom:4px}
+.rv-reveal{width:100%;padding:14px;border:1px dashed var(--border2);border-radius:10px;background:var(--bg2);color:var(--blue);font-size:var(--fs-body);font-weight:var(--fw-medium);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+.rv-reveal:hover{background:var(--blue-bg);border-style:solid}
+.rv-answer{border-top:1px solid var(--border);padding-top:16px;margin-top:4px;animation:stepReveal 0.22s ease-out}
+.rv-rate{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+@media(max-width:560px){.rv-rate{grid-template-columns:1fr 1fr}}
+.rv-rate-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 8px;border:0.5px solid var(--border);border-radius:10px;background:var(--card);cursor:pointer;font-family:inherit;font-size:var(--fs-body);font-weight:var(--fw-semi);color:var(--text);transition:all 0.12s}
+.rv-rate-btn span{font-size:var(--fs-label);font-weight:var(--fw-normal);color:var(--text3)}
+.rv-rate-btn:hover{transform:translateY(-1px)}
+.rv-again{border-color:#E2A8A8}.rv-again:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.rv-hard{border-color:#E6C79A}.rv-hard:hover{background:var(--amber-bg);border-color:var(--amber);color:var(--amber)}
+.rv-good{border-color:#9AC79A}.rv-good:hover{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.rv-easy{border-color:#9AB8E0}.rv-easy:hover{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.rv-actions{display:flex;justify-content:space-between;font-size:var(--fs-sm)}
+.rv-actions a{color:var(--blue);cursor:pointer}
+.rv-actions .rv-exit{color:var(--text3)}
+.rv-done{text-align:center;padding:60px 20px}
+.rv-done i{font-size:48px;color:var(--green);display:block;margin-bottom:14px}
+.rv-done-title{font-size:var(--fs-h1);font-weight:var(--fw-bold);color:var(--text);margin-bottom:8px}
+.rv-done-sub{font-size:var(--fs-sm);color:var(--text2);margin-bottom:20px;line-height:var(--lh-normal)}
+.rv-done-btn{padding:11px 24px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:var(--fs-body);font-weight:var(--fw-semi);cursor:pointer;font-family:inherit}
+/* Related diseases (differential / same-class) */
+.rd-header{margin-top:18px;padding-top:16px;border-top:0.5px solid var(--border)}
+.rd-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+@media(max-width:640px){.rd-list{grid-template-columns:1fr}}
+.rd-item{display:flex;align-items:stretch;gap:0;border:0.5px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color 0.12s}
+.rd-item:hover{border-color:var(--border2)}
+.rd-item-main{flex:1;display:flex;align-items:center;gap:9px;padding:11px 12px;cursor:pointer;min-width:0}
+.rd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rd-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.rd-name{font-size:var(--fs-body);font-weight:var(--fw-medium);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd-en{font-size:var(--fs-label);color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd-reason{font-size:var(--fs-label);padding:2px 8px;border-radius:5px;flex-shrink:0;font-weight:var(--fw-medium)}
+.rd-manual{background:var(--red-bg);color:var(--red)}
+.rd-symptom{background:var(--blue-bg);color:var(--blue)}
+.rd-cat{background:var(--bg3);color:var(--text2)}
+.rd-cmp{background:var(--amber-bg);color:var(--amber)}
+.rd-cmp-btn{flex-shrink:0;width:40px;border:none;border-left:0.5px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
+.rd-cmp-btn:hover{background:var(--blue);color:#fff}
 body.dark .btn-home{background:var(--blue-bg);color:var(--blue);border-color:var(--border2)}
 body.dark .btn-home:hover{background:var(--blue);color:#fff}
 /* ===== Differential comparison ===== */
@@ -422,8 +498,11 @@ body.dark .step-quiz .step-q:not(.revealed) .step-num{background:var(--bg);color
 .hm-card-en{font-size:var(--fs-label);color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-card-sub{font-size:var(--fs-label);color:var(--text2);margin-top:1px}
 .hm-card-chev{font-size:15px;color:var(--text3);flex-shrink:0}
-.hm-card-x{font-size:15px;color:var(--text3);flex-shrink:0;border-radius:5px;padding:2px;transition:color 0.12s,background 0.12s;opacity:0.6}
-.hm-card-x:hover{color:var(--red);background:var(--red-bg);opacity:1}
+.hm-card-x{display:flex;align-items:center;justify-content:center;width:26px;height:26px;flex-shrink:0;border:none;background:transparent;color:var(--text3);border-radius:6px;cursor:pointer;padding:0;opacity:0.45;transition:opacity 0.12s,color 0.12s,background 0.12s}
+.hm-card-x svg{display:block}
+.hm-card:hover .hm-card-x{opacity:0.9}
+.hm-card-x:hover{color:var(--red)!important;background:var(--red-bg);opacity:1!important}
+@media(hover:none){.hm-card-x{opacity:0.6}}
 .hm-sect-clear{margin-left:auto;font-size:var(--fs-xs);color:var(--text3);cursor:pointer;padding:2px 8px;border-radius:6px}
 .hm-sect-clear:hover{color:var(--red);background:var(--red-bg)}
 .hm-sect-wide{margin-top:0}
@@ -1168,7 +1247,10 @@ body.dark .clue-badge-xref{color:var(--text3)}
       <div class="topbar-row1">
         <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
         <div class="topbar-title" id="topTitle">選擇一個條目</div>
-        <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" title="切換深色模式">☀</button>
+        <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" title="切換深色模式" aria-label="切換深色模式">
+          <svg class="dt-icon dt-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path></svg>
+          <svg class="dt-icon dt-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.2 6.2 0 0 0 10.5 10.5z"></path></svg>
+        </button>
       </div>
       <div class="topbar-row2" id="topbarRow2">
         <div id="topBadges" class="badges"></div>
@@ -1374,6 +1456,88 @@ function setMark(diseaseId, tab, fields){
 function getAllMarks(){
   return Object.keys(marks).map(function(k){ return marks[k]; });
 }
+
+/* ===== Spaced repetition (SRS, simplified SM-2) =====
+   Attached to the existing tab-level marks. srs = { due, interval, ease, reps, last }
+   - due: ISO date (YYYY-MM-DD) the card is next due
+   - interval: days until next review
+   - ease: ease factor (default 2.5, min 1.3)
+   - reps: successful reps in a row
+   Ratings: 0=忘記 1=困難 2=普通 3=簡單
+*/
+function _todayStr(){
+  var d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function _addDays(dateStr, n){
+  var d = dateStr ? new Date(dateStr+"T00:00:00") : new Date();
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+// Enroll a mark into SRS if not already (due today)
+function enrollSrs(diseaseId, tab){
+  var k = _markKey(diseaseId, tab);
+  var m = marks[k];
+  if(!m) return;
+  if(!m.srs){
+    m.srs = { due: _todayStr(), interval: 0, ease: 2.5, reps: 0, last: null };
+    m.updated_at = new Date().toISOString();
+    _marksPersist();
+    if(isLoggedIn()) cloudUpsertMark(m);
+  }
+}
+// Apply a review rating and reschedule (SM-2 simplified)
+function reviewSrs(diseaseId, tab, rating){
+  var k = _markKey(diseaseId, tab);
+  var m = marks[k];
+  if(!m) return;
+  if(!m.srs) m.srs = { due: _todayStr(), interval: 0, ease: 2.5, reps: 0, last: null };
+  var s = m.srs;
+  if(rating === 0){
+    // 忘記 → reset
+    s.reps = 0; s.interval = 1;
+    s.ease = Math.max(1.3, s.ease - 0.2);
+  } else {
+    s.reps += 1;
+    if(s.reps === 1) s.interval = (rating === 1) ? 1 : (rating === 2 ? 2 : 4);
+    else if(s.reps === 2) s.interval = (rating === 1) ? 3 : (rating === 2 ? 4 : 7);
+    else s.interval = Math.round(s.interval * s.ease * (rating === 1 ? 0.7 : (rating === 3 ? 1.3 : 1)));
+    // ease adjust
+    if(rating === 1) s.ease = Math.max(1.3, s.ease - 0.15);
+    else if(rating === 3) s.ease = s.ease + 0.15;
+    if(s.interval < 1) s.interval = 1;
+  }
+  s.last = _todayStr();
+  s.due = _addDays(_todayStr(), s.interval);
+  m.updated_at = new Date().toISOString();
+  _marksPersist();
+  if(isLoggedIn()) cloudUpsertMark(m);
+}
+// Marks due for review today (or overdue), among those enrolled in SRS
+function getDueMarks(){
+  var today = _todayStr();
+  return getAllMarks().filter(function(m){
+    return m.srs && m.srs.due && m.srs.due <= today;
+  });
+}
+// Count of due marks (for badges)
+function dueCount(){ return getDueMarks().length; }
+// Preview of next interval for each rating (for button labels)
+function srsPreview(m){
+  var base = (m && m.srs) ? m.srs : { interval:0, ease:2.5, reps:0 };
+  function fmtDays(n){ return n < 1 ? "<1天" : (n === 1 ? "1天" : n + "天"); }
+  // mirror reviewSrs intervals (without mutating)
+  var reps = base.reps, ivl = base.interval, ease = base.ease;
+  function calc(rating){
+    if(rating === 0) return 1;
+    var r = reps + 1, v;
+    if(r === 1) v = (rating === 1) ? 1 : (rating === 2 ? 2 : 4);
+    else if(r === 2) v = (rating === 1) ? 3 : (rating === 2 ? 4 : 7);
+    else v = Math.round(ivl * ease * (rating === 1 ? 0.7 : (rating === 3 ? 1.3 : 1)));
+    return Math.max(1, v);
+  }
+  return { again: fmtDays(1), hard: fmtDays(calc(1)), good: fmtDays(calc(2)), easy: fmtDays(calc(3)) };
+}
 // Disease-level summary across all its tabs (for bookmark list / home indicators)
 function diseaseMarkSummary(diseaseId){
   var hasNote = false, hasWeak = false, hasImportant = false;
@@ -1398,7 +1562,8 @@ function _authHeaders(){
 function cloudUpsertMark(m){
   if(!isLoggedIn()) return Promise.resolve();
   var row = { user_id: currentUser.id, disease_id: m.disease_id, tab: m.tab,
-              note: m.note || "", flag: m.flag || null, updated_at: m.updated_at };
+              note: m.note || "", flag: m.flag || null,
+              srs: m.srs || null, updated_at: m.updated_at };
   return fetch(SUPABASE_URL + "/rest/v1/user_marks?on_conflict=user_id,disease_id,tab", {
     method: "POST",
     headers: Object.assign({ Prefer: "resolution=merge-duplicates" }, _authHeaders()),
@@ -1440,7 +1605,7 @@ function syncMarksOnLogin(){
       var k = _markKey(c.disease_id, c.tab);
       var m = marks[k];
       if(!m || (c.updated_at || "") > (m.updated_at || "")){
-        marks[k] = { disease_id: c.disease_id, tab: c.tab, note: c.note || "", flag: c.flag || null, updated_at: c.updated_at };
+        marks[k] = { disease_id: c.disease_id, tab: c.tab, note: c.note || "", flag: c.flag || null, srs: c.srs || null, updated_at: c.updated_at };
       }
     });
     _marksPersist();
@@ -1590,7 +1755,7 @@ async function init() {
   loadUserData();
   initAuthClient();
   // Load dark mode preference
-  try{var dm=localStorage.getItem("mb_dark");if(dm==="1"){document.body.classList.add("dark");document.getElementById("darkBtn").textContent="☾"}}catch(e){}
+  try{var dm=localStorage.getItem("mb_dark");if(dm==="1"){document.body.classList.add("dark")}}catch(e){}
   try {
     var results = await Promise.all([
       sb("diseases?select=*&order=category,sort_order,name"),
@@ -1671,6 +1836,8 @@ async function init() {
       showCompare();
     } else if (hash === "mymarks") {
       showMyMarks();
+    } else if (hash === "review") {
+      showHome();
     } else if (hash.indexOf("sx:") === 0) {
       var sxId = hash.slice(3);
       if (symptoms.find(function(s){ return s.id === sxId; })) {
@@ -1827,8 +1994,10 @@ function hasContent(data) {
   return false;
 }
 
-function selectDisease(id, startTab) {
+function selectDisease(id, startTab, fromHistory) {
   hideEntityPreview();
+  var prevId = currentId;
+  var prevView = currentView;
   currentId = id;
   currentTab = startTab || "def";
   currentView = "entry";
@@ -1836,13 +2005,17 @@ function selectDisease(id, startTab) {
   // Sync sidebar accordion to the disease's category
   var d = diseases.find(function(x){ return x.id === id; });
   if (d && d.category) expandedCat = d.category;
-  try{
-    if(currentView === "entry" && currentId === id){
-      history.replaceState(null,null,"#"+id);
-    } else {
-      history.pushState(null,null,"#"+id);
-    }
-  }catch(e){}
+  if (!fromHistory){
+    try{
+      // Same disease already open (e.g. tab switch) → replace; navigating to a different
+      // disease (or coming from another view) → push a new history entry so Back works.
+      if(prevView === "entry" && prevId === id){
+        history.replaceState(null,null,"#"+id);
+      } else {
+        history.pushState(null,null,"#"+id);
+      }
+    }catch(e){}
+  }
   closeSidebarMobile();
   // Smooth: DOM-only updates to keep CSS transitions alive (no innerHTML rebuild)
   applyAccordion();
@@ -1953,9 +2126,87 @@ function getDiseaseRelations(id){
   return { incoming: incoming, outgoing: outgoing };
 }
 
+/* ===== Related diseases (differential / same-class), auto-derived + manual ===== */
+// Build a map: disease_id → set of disease_ids that share at least one symptom.
+var _symptomSharedCache = null;
+function _buildSymptomShared(){
+  if(_symptomSharedCache) return _symptomSharedCache;
+  var map = {}; // diseaseId -> { otherId: count }
+  // Walk every symptom → mechanism → anatomy → diseases, collecting co-occurring diseases.
+  (symptoms || []).forEach(function(sx){
+    var dset = {};
+    (mechBySxId[sx.id] || []).forEach(function(m){
+      (anatomyByMechId[m.id] || []).forEach(function(a){
+        (anatomyDxMap[a.id] || []).forEach(function(ad){
+          if(ad.disease_id) dset[ad.disease_id] = true;
+        });
+      });
+    });
+    var ids = Object.keys(dset);
+    ids.forEach(function(a){
+      ids.forEach(function(b){
+        if(a === b) return;
+        if(!map[a]) map[a] = {};
+        map[a][b] = (map[a][b] || 0) + 1;
+      });
+    });
+  });
+  _symptomSharedCache = map;
+  return map;
+}
+
+// Parse manual related ids from the disease record (supports array or comma string)
+function _manualRelatedIds(d){
+  if(!d) return [];
+  var raw = d.related_ids || d.related_diseases || null;
+  if(!raw) return [];
+  if(Array.isArray(raw)) return raw.filter(Boolean);
+  if(typeof raw === "string"){
+    return raw.split(/[,\s]+/).map(function(x){ return x.trim(); }).filter(Boolean);
+  }
+  return [];
+}
+
+// Returns related diseases grouped/ranked: manual first, then same-category, then symptom-shared.
+// Each item: { disease, reason: "manual"|"category"|"symptom"|"compare", score }
+function getRelatedDiseases(id){
+  var self = diseases.find(function(x){ return x.id === id; });
+  if(!self) return [];
+  var seen = {}; seen[id] = true;
+  var out = [];
+  function add(d, reason, score){
+    if(!d || seen[d.id]) return;
+    seen[d.id] = true;
+    out.push({ disease: d, reason: reason, score: score });
+  }
+  // 1) Manual (highest priority — explicit differential)
+  _manualRelatedIds(self).forEach(function(rid){
+    var d = diseases.find(function(x){ return x.id === rid; });
+    add(d, "manual", 100);
+  });
+  // 2) Symptom-shared (differential-by-presentation), ranked by # shared symptoms
+  var shared = _buildSymptomShared()[id] || {};
+  Object.keys(shared).sort(function(a,b){ return shared[b]-shared[a]; }).forEach(function(oid){
+    var d = diseases.find(function(x){ return x.id === oid; });
+    // prefer those that also share category (stronger "same-class" signal)
+    var score = 50 + shared[oid] + (d && d.category === self.category ? 5 : 0);
+    add(d, "symptom", score);
+  });
+  // 3) Same category (same-class learning), only if we still have few
+  if(out.length < 6){
+    diseases.forEach(function(d){
+      if(d.category && d.category === self.category) add(d, "category", 20);
+    });
+  }
+  // cap and sort by score
+  out.sort(function(a,b){ return b.score - a.score; });
+  return out.slice(0, 8);
+}
+
 function renderRelNav(id){
   var rel = getDiseaseRelations(id);
-  if (!rel.incoming.length && !rel.outgoing.length) return ""; // nothing to show → omit entirely
+  var related = getRelatedDiseases(id);
+  if (!rel.incoming.length && !rel.outgoing.length && !related.length) return ""; // nothing → omit
   var cur = diseases.find(function(x){ return x.id === id; });
   if (!cur) return "";
   var curColor = CAT_COLORS[cur.category] || "#7ab3d9";
@@ -1995,15 +2246,42 @@ function renderRelNav(id){
     '</div></div>';
 
   var html = '<div class="relnav-card">';
-  html += '<div class="relnav-header"><span class="relnav-header-zh">疾病關係</span>' +
-    '<span class="relnav-header-en">· DISEASE RELATIONSHIPS</span></div>';
-  html += '<div class="relnav-flow">';
-  html += colHtml("致病病因", "CAUSED BY", rel.incoming, "in");
-  html += '<div class="relnav-arrow relnav-arrow-1"><i class="ti ti-arrow-right"></i></div>';
-  html += centerHtml;
-  html += '<div class="relnav-arrow relnav-arrow-2"><i class="ti ti-arrow-right"></i></div>';
-  html += colHtml("併發疾病", "LEADS TO", rel.outgoing, "out");
-  html += '</div></div>';
+  // Causal flow (only if there are causal links)
+  if (rel.incoming.length || rel.outgoing.length){
+    html += '<div class="relnav-header"><span class="relnav-header-zh">疾病關係</span>' +
+      '<span class="relnav-header-en">· DISEASE RELATIONSHIPS</span></div>';
+    html += '<div class="relnav-flow">';
+    html += colHtml("致病病因", "CAUSED BY", rel.incoming, "in");
+    html += '<div class="relnav-arrow relnav-arrow-1"><i class="ti ti-arrow-right"></i></div>';
+    html += centerHtml;
+    html += '<div class="relnav-arrow relnav-arrow-2"><i class="ti ti-arrow-right"></i></div>';
+    html += colHtml("併發疾病", "LEADS TO", rel.outgoing, "out");
+    html += '</div>';
+  }
+  // Related (differential / same-class) diseases
+  if (related.length){
+    var reasonLabel = { manual: "重點鑑別", symptom: "表現相似", category: "同類", compare: "可比較" };
+    var reasonCls = { manual: "rd-manual", symptom: "rd-symptom", category: "rd-cat", compare: "rd-cmp" };
+    html += '<div class="relnav-header rd-header"><span class="relnav-header-zh">相關疾病</span>' +
+      '<span class="relnav-header-en">· 鑑別 / 同類</span></div>';
+    html += '<div class="rd-list">';
+    related.forEach(function(it){
+      var d = it.disease;
+      var col = CAT_COLORS[d.category] || "#7ab3d9";
+      var lbl = reasonLabel[it.reason] || "相關";
+      var rcls = reasonCls[it.reason] || "rd-cat";
+      html += '<div class="rd-item">' +
+        '<a class="rd-item-main" onclick="selectDisease(\'' + d.id + '\')">' +
+        '<span class="rd-dot" style="background:' + col + '"></span>' +
+        '<span class="rd-body"><span class="rd-name">' + escHtml(d.name) + '</span>' +
+        (d.name_en ? '<span class="rd-en">' + escHtml(d.name_en) + '</span>' : '') + '</span>' +
+        '<span class="rd-reason ' + rcls + '">' + lbl + '</span></a>' +
+        '<button class="rd-cmp-btn" title="加入鑑別比較" onclick="startCompareWith(\'' + id + '\',\'' + d.id + '\')"><i class="ti ti-arrows-left-right"></i></button>' +
+        '</div>';
+    });
+    html += '</div>';
+  }
+  html += '</div>';
   return html;
 }
 
@@ -2580,6 +2858,8 @@ window.addEventListener("popstate", function(){
     showCompare();
   } else if (hash === "mymarks") {
     showMyMarks();
+  } else if (hash === "review") {
+    if(currentView !== "review") showHome();
   } else if (hash.indexOf("sx:") === 0) {
     var sxId = hash.slice(3);
     if (symptoms.find(function(s){ return s.id === sxId; })){
@@ -2590,12 +2870,12 @@ window.addEventListener("popstate", function(){
   } else if (hash.indexOf("topic:") === 0) {
     var topicId = hash.slice(6);
     if (topics.find(function(t){ return t.id === topicId; })){
-      selectTopic(topicId);
+      selectTopic(topicId, true);
     } else {
       showTopics();
     }
   } else if (hash && diseases.find(function(d){ return d.id === hash; })) {
-    selectDisease(hash);
+    selectDisease(hash, null, true);
   } else if (hash === "home" || !hash) {
     showHome();
   } else if (diseases.length > 0) {
@@ -3235,7 +3515,6 @@ function syncTopbarRow2(){
 function toggleDark(){
   document.body.classList.toggle("dark");
   var isDark=document.body.classList.contains("dark");
-  document.getElementById("darkBtn").textContent=isDark?"☾":"☀";
   try{localStorage.setItem("mb_dark",isDark?"1":"0")}catch(e){}
 }
 
@@ -3291,9 +3570,11 @@ function toggleFlag(which){
   var curFlag = cur ? cur.flag : null;
   var newFlag = (curFlag === which) ? null : which; // toggle off if same
   setMark(currentId, currentTab, { flag: newFlag });
+  // Flagging 易錯/重點 enrolls the tab into the spaced-repetition schedule (due today)
+  if(newFlag) enrollSrs(currentId, currentTab);
   // re-render just the panel area by re-rendering the entry
   renderEntry();
-  if(newFlag) ensureSyncOffered("登入後，這些易錯/重點標記會跨裝置同步，換電腦也不會不見。");
+  if(newFlag) ensureSyncOffered("登入後，這些易錯/重點標記與複習排程會跨裝置同步，換電腦也不會不見。");
 }
 
 var noteTimer=null;
@@ -3529,13 +3810,13 @@ function renderTopicList(query){
   scrollMainTop();
 }
 
-function selectTopic(id){
+function selectTopic(id, fromHistory){
   var t = topics.find(function(x){ return x.id === id; });
   if (!t) return;
   currentTopicId = id;
   currentView = "topic-detail";
   clearBreadcrumb();
-  try{history.pushState(null,null,"#topic:"+id)}catch(e){}
+  if(!fromHistory){ try{history.pushState(null,null,"#topic:"+id)}catch(e){} }
   document.getElementById("topTitle").textContent = t.name;
   var meta = TOPIC_TYPES[t.topic_type] || { zh: t.topic_type, icon: "ti-circle" };
   var badges = '<span class="badge" style="background:#F0E8FB;color:#6B3FA0"><i class="ti ' + meta.icon + '"></i> ' + escHtml(meta.zh) + '</span>';
@@ -5170,6 +5451,10 @@ function startCompare(id){
   compareIds = id ? [id] : [];
   showCompare();
 }
+function startCompareWith(idA, idB){
+  compareIds = [idA, idB];
+  showCompare();
+}
 
 function addToCompare(id){
   if (compareIds.indexOf(id) < 0 && compareIds.length < 4) compareIds.push(id);
@@ -5323,6 +5608,132 @@ function cmpAddKey(e){
   }
 }
 
+/* ===== SRS review session ===== */
+var reviewQueue = [];   // array of {disease_id, tab}
+var reviewIdx = 0;
+var reviewRevealed = false;
+var reviewDone = 0;
+
+function startReview(onlyDiseaseId){
+  var due = getDueMarks();
+  if(onlyDiseaseId) due = due.filter(function(m){ return m.disease_id === onlyDiseaseId; });
+  if(!due.length){ toast("目前沒有到期的複習項目"); return; }
+  // order: overdue first, then by due date
+  due.sort(function(a,b){ return (a.srs.due||"").localeCompare(b.srs.due||""); });
+  reviewQueue = due.map(function(m){ return { disease_id: m.disease_id, tab: m.tab }; });
+  reviewIdx = 0;
+  reviewRevealed = false;
+  reviewDone = 0;
+  currentView = "review";
+  clearBreadcrumb();
+  try{ history.pushState(null,null,"#review"); }catch(e){}
+  closeSidebarMobile();
+  renderSidebar(diseases);
+  showReviewCard();
+}
+
+function showReviewCard(){
+  document.getElementById("topTitle").textContent = "複習";
+  document.getElementById("topBadges").innerHTML = "";
+  document.getElementById("topStatus").innerHTML = "";
+  syncTopbarRow2();
+
+  if(reviewIdx >= reviewQueue.length){
+    // Session complete
+    var h0 = '<div class="rv"><div class="rv-done">'+
+      '<i class="ti ti-circle-check"></i>'+
+      '<div class="rv-done-title">複習完成！</div>'+
+      '<div class="rv-done-sub">這輪複習了 '+reviewDone+' 個項目。下次到期時會再出現。</div>'+
+      '<button class="rv-done-btn" onclick="showHome()">回首頁</button>'+
+      '</div></div>';
+    document.getElementById("mainContent").innerHTML = h0;
+    scrollMainTop();
+    return;
+  }
+
+  var item = reviewQueue[reviewIdx];
+  var d = diseases.find(function(x){ return x.id === item.disease_id; });
+  var mark = getMark(item.disease_id, item.tab);
+  if(!d || !mark){ reviewIdx++; showReviewCard(); return; }
+
+  var tabLabel = "";
+  var t = TABS.find(function(x){ return x.key === item.tab; });
+  if(t) tabLabel = t.label;
+  var col = CAT_COLORS[d.category] || "#7ab3d9";
+
+  // Pull the actual tab content to show as the "answer"
+  var secs = sectionMap[d.id] || {};
+  var drugs = drugMap[d.id] || [];
+  var comps = compMap[d.id] || [];
+  var prevTab = currentTab;
+  currentTab = item.tab; // renderSection reads currentTab
+  var answerHtml = "";
+  try{
+    answerHtml = renderSection(secs[item.tab], item.tab === "drug" ? drugs : null, item.tab === "prog" ? comps : null, secs[item.tab]);
+  }catch(e){ answerHtml = '<p style="color:var(--text3)">（此區段內容載入失敗）</p>'; }
+  currentTab = prevTab;
+
+  var prev = srsPreview(mark);
+
+  var h = '<div class="rv">';
+  // progress
+  h += '<div class="rv-progress"><div class="rv-progress-bar" style="width:'+Math.round(reviewIdx/reviewQueue.length*100)+'%"></div></div>';
+  h += '<div class="rv-count">'+(reviewIdx+1)+' / '+reviewQueue.length+'</div>';
+
+  // prompt card (always visible)
+  h += '<div class="rv-card">';
+  h += '<div class="rv-card-head"><span class="rv-dot" style="background:'+col+'"></span>'+
+       '<span class="rv-dz">'+escHtml(d.name)+'</span>'+
+       '<span class="rv-tab-badge">'+escHtml(tabLabel)+'</span>';
+  if(mark.flag==="weak") h += '<span class="rv-flag rv-flag-weak">易錯</span>';
+  if(mark.flag==="important") h += '<span class="rv-flag rv-flag-important">重點</span>';
+  h += '</div>';
+  h += '<div class="rv-q">回想一下：<b>'+escHtml(d.name)+'</b> 的「'+escHtml(tabLabel)+'」</div>';
+  if(mark.note && mark.note.trim()){
+    h += '<div class="rv-note"><span class="rv-note-label">你的筆記</span>'+escHtml(mark.note)+'</div>';
+  }
+
+  if(!reviewRevealed){
+    h += '<button class="rv-reveal" onclick="revealReview()"><i class="ti ti-eye"></i> 顯示內容</button>';
+  } else {
+    h += '<div class="rv-answer">'+answerHtml+'</div>';
+  }
+  h += '</div>'; // rv-card
+
+  // rating buttons (only after reveal)
+  if(reviewRevealed){
+    h += '<div class="rv-rate">';
+    h += '<button class="rv-rate-btn rv-again" onclick="rateReview(0)">忘記<span>'+prev.again+'</span></button>';
+    h += '<button class="rv-rate-btn rv-hard" onclick="rateReview(1)">困難<span>'+prev.hard+'</span></button>';
+    h += '<button class="rv-rate-btn rv-good" onclick="rateReview(2)">普通<span>'+prev.good+'</span></button>';
+    h += '<button class="rv-rate-btn rv-easy" onclick="rateReview(3)">簡單<span>'+prev.easy+'</span></button>';
+    h += '</div>';
+  }
+
+  // open full disease link
+  h += '<div class="rv-actions"><a onclick="openMark(\''+d.id+'\',\''+item.tab+'\')">開啟完整頁面 →</a>'+
+       '<a onclick="showHome()" class="rv-exit">結束複習</a></div>';
+
+  h += '</div>';
+  document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
+}
+
+function revealReview(){
+  reviewRevealed = true;
+  showReviewCard();
+}
+function rateReview(rating){
+  var item = reviewQueue[reviewIdx];
+  if(item){
+    reviewSrs(item.disease_id, item.tab, rating);
+    reviewDone++;
+  }
+  reviewIdx++;
+  reviewRevealed = false;
+  showReviewCard();
+}
+
 function showHome(){
   currentView = "home";
   currentId = null;
@@ -5340,8 +5751,14 @@ function showHome(){
 
   // ----- Continue reading (recent) -----
   var recent = recentIds.map(function(id){ return byId[id]; }).filter(Boolean).slice(0, 6);
-  // ----- Today's review -----
-  var review = diseases.filter(function(d){ return dStatus[d.id] === "review"; });
+  // ----- Today's review (SRS due) -----
+  var dueMarks = getDueMarks();
+  // group due marks by disease for display
+  var dueByDisease = {};
+  dueMarks.forEach(function(m){
+    if(!dueByDisease[m.disease_id]) dueByDisease[m.disease_id] = [];
+    dueByDisease[m.disease_id].push(m);
+  });
   // ----- Progress by category -----
   var catAgg = {};
   diseases.forEach(function(d){
@@ -5361,7 +5778,7 @@ function showHome(){
       (d.name_en?'<span class="hm-card-en">'+escHtml(d.name_en)+'</span>':'')+
       (sub?'<span class="hm-card-sub">'+sub+'</span>':'')+'</span>'+
       (removable
-        ? '<i class="ti ti-x hm-card-x" title="從繼續閱讀移除" onclick="event.stopPropagation();removeRecent(\''+d.id+'\')"></i>'
+        ? '<button class="hm-card-x" title="從繼續閱讀移除" aria-label="移除" onclick="event.stopPropagation();removeRecent(\''+d.id+'\')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>'
         : '<i class="ti ti-chevron-right hm-card-chev"></i>')+
       '</div>';
   }
@@ -5405,6 +5822,29 @@ function showHome(){
   });
   pathsInner += '</div>';
 
+  // Build the 今日複習 (SRS due) block as a reusable string
+  var TAB_LABEL_MAP = {};
+  TABS.forEach(function(t){ TAB_LABEL_MAP[t.key] = t.label; });
+  var dueInner = "";
+  if (dueMarks.length){
+    dueInner = '<div class="hm-sect-head"><span class="hm-sect-zh">今日複習</span><span class="hm-sect-en">DUE · '+dueMarks.length+'</span>'+
+      '<button class="hm-review-start" onclick="startReview()"><i class="ti ti-player-play"></i> 開始複習</button></div>';
+    dueInner += '<div class="hm-due-list">';
+    Object.keys(dueByDisease).slice(0, 8).forEach(function(did){
+      var d = byId[did];
+      if(!d) return;
+      var col = CAT_COLORS[d.category] || "#7ab3d9";
+      var items = dueByDisease[did];
+      var tabLabels = items.map(function(m){ return TAB_LABEL_MAP[m.tab] || m.tab; }).join("、");
+      dueInner += '<div class="hm-due-card" onclick="startReview(\''+did+'\')">'+
+        '<span class="hm-card-dot" style="background:'+col+'"></span>'+
+        '<span class="hm-card-body"><span class="hm-card-name">'+escHtml(d.name)+'</span>'+
+        '<span class="hm-card-sub">'+escHtml(tabLabels)+' · '+items.length+' 項待複習</span></span>'+
+        '<i class="ti ti-chevron-right hm-card-chev"></i></div>';
+    });
+    dueInner += '</div>';
+  }
+
   // Build the 繼續閱讀 (continue) block as a reusable string
   var continueInner = "";
   if (recent.length){
@@ -5423,17 +5863,13 @@ function showHome(){
     h += '<div class="hm-sect">' + continueInner + '</div>';
     h += '<div class="hm-sect hm-paths-col">' + pathsInner + '</div>';
     h += '</div>';
-    if (review.length){
-      h += '<div class="hm-sect hm-sect-wide"><div class="hm-sect-head"><span class="hm-sect-zh">今日複習</span><span class="hm-sect-en">REVIEW · '+review.length+'</span></div><div class="hm-list hm-list-grid">';
-      review.slice(0, 8).forEach(function(d){ h += dzCard(d, "標記為需複習"); });
-      h += '</div></div>';
+    if (dueInner){
+      h += '<div class="hm-sect hm-sect-wide hm-due-sect">' + dueInner + '</div>';
     }
   } else {
     // 沒有繼續閱讀 → 今日複習（若有）+ 學習路徑全寬（維持原樣）
-    if (review.length){
-      h += '<div class="hm-sect hm-sect-wide"><div class="hm-sect-head"><span class="hm-sect-zh">今日複習</span><span class="hm-sect-en">REVIEW · '+review.length+'</span></div><div class="hm-list hm-list-grid">';
-      review.slice(0, 8).forEach(function(d){ h += dzCard(d, "標記為需複習"); });
-      h += '</div></div>';
+    if (dueInner){
+      h += '<div class="hm-sect hm-sect-wide hm-due-sect">' + dueInner + '</div>';
     }
     h += '<div class="hm-sect hm-sect-wide">' + pathsInner + '</div>';
   }
