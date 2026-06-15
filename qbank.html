@@ -485,10 +485,13 @@ async function sendMagicLink(){
   var btn = document.getElementById("authSubmit");
   btn.disabled = true; btn.textContent = "寄送中…";
   try{
-    var r = await fetch(SB_URL+"/auth/v1/otp", {
+    // Supabase REST: redirect target goes in the URL query string as redirect_to,
+    // NOT in the body (body.options.* is the supabase-js client format and is ignored here).
+    var redirectTo = location.href.split("#")[0].split("?")[0];
+    var r = await fetch(SB_URL+"/auth/v1/otp?redirect_to="+encodeURIComponent(redirectTo), {
       method:"POST",
       headers:{"apikey":SB_KEY,"Content-Type":"application/json"},
-      body: JSON.stringify({ email:email, options:{ email_redirect_to: location.href.split("#")[0] } })
+      body: JSON.stringify({ email:email, create_user:true })
     });
     var d = await r.json();
     if(!r.ok || d.error || d.msg){
