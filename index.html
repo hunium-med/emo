@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MedBase TW — 醫學知識庫</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons-webfont/3.5.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#f0f5fb;--bg2:#f7fafd;--bg3:#f8fbff;--card:#fff;--border:#B5D4F4;--border2:#85B7EB;--text:#2c4a63;--text2:#4a7fa5;--text3:#7ab3d9;--blue:#185FA5;--blue-bg:#E6F1FB;--green:#3B6D11;--green-bg:#EAF3DE;--amber:#854F0B;--amber-bg:#FAEEDA;--red:#E24B4A;--red-bg:#FBE9E9;--step-bg:#f8fbff;--hover:rgba(24,95,165,0.08);--active:rgba(24,95,165,0.15);--img-bg:#1a1a2e;
@@ -161,6 +162,116 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .btn-primary{background:#185FA5;color:#fff}
 .btn-primary:hover{background:#0C447C}
 .btn-ghost{background:transparent;color:#4a7fa5;border:0.5px solid #B5D4F4}
+.btn-home{background:var(--blue-bg);color:var(--blue);border:1px solid var(--border2);font-weight:600}
+.btn-home:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+/* Auth button + modal */
+.btn-auth{background:var(--card);color:var(--text2);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-auth:hover{border-color:var(--border2);color:var(--blue)}
+.btn-auth.on{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+.btn-auth .auth-btn-email{font-size:12px;overflow:hidden;text-overflow:ellipsis}
+.auth-overlay{position:fixed;inset:0;background:rgba(20,30,45,0.55);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.auth-modal{position:relative;background:var(--card);border-radius:16px;max-width:400px;width:100%;padding:28px 26px;box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:authIn 0.2s ease-out}
+@keyframes authIn{from{opacity:0;transform:translateY(10px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.auth-close{position:absolute;top:14px;right:14px;background:transparent;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px;border-radius:6px}
+.auth-close:hover{background:var(--bg3);color:var(--text)}
+.auth-icon{text-align:center;font-size:34px;color:var(--blue);margin-bottom:10px}
+.auth-title{text-align:center;font-size:var(--fs-h1);font-weight:var(--fw-bold);color:var(--text);margin-bottom:6px}
+.auth-sub{text-align:center;font-size:var(--fs-sm);color:var(--text2);line-height:var(--lh-normal);margin-bottom:20px}
+.auth-input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:var(--fs-body);background:var(--bg2);color:var(--text);margin-bottom:10px}
+.auth-input:focus{outline:none;border-color:var(--blue)}
+.auth-btn{width:100%;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-size:var(--fs-body);font-weight:var(--fw-semi);cursor:pointer;font-family:inherit}
+.auth-btn:hover{background:#0C447C}
+.auth-btn-ghost{background:var(--bg3);color:var(--blue);margin-top:10px}
+.auth-btn-ghost:hover{background:var(--blue-bg)}
+.auth-hint{font-size:var(--fs-xs);color:var(--text3);text-align:center;margin-top:12px;line-height:var(--lh-normal)}
+.auth-guest{font-size:var(--fs-sm);color:var(--text3);text-align:center;margin-top:16px;cursor:pointer;text-decoration:underline}
+.auth-guest:hover{color:var(--text2)}
+.auth-loading{text-align:center;padding:20px;color:var(--text2);font-size:var(--fs-sm)}
+.auth-sent{text-align:center;padding:8px 0}
+.auth-sent i{font-size:40px;color:var(--green);display:block;margin-bottom:10px}
+.auth-sent-title{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--text);margin-bottom:6px}
+.auth-sent-sub{font-size:var(--fs-sm);color:var(--text2);line-height:var(--lh-normal);margin-bottom:14px}
+.auth-error{font-size:var(--fs-sm);color:var(--red);margin-top:10px;display:flex;align-items:center;gap:6px;justify-content:center}
+body.dark .btn-home{background:var(--blue-bg);color:var(--blue);border-color:var(--border2)}
+body.dark .btn-home:hover{background:var(--blue);color:#fff}
+/* ===== Differential comparison ===== */
+.cmp{max-width:1000px;margin:0 auto;padding:8px 4px 40px}
+.cmp-head{margin-bottom:16px}
+.cmp-title{font-size:var(--fs-h1);font-weight:var(--fw-bold);color:var(--text)}
+.cmp-sub{font-size:var(--fs-sm);color:var(--text2);margin-top:3px}
+.cmp-picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px;padding:14px;background:var(--card);border:0.5px solid var(--border);border-radius:12px}
+.cmp-chip{display:inline-flex;align-items:center;gap:7px;background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:var(--fs-sm);font-weight:var(--fw-medium)}
+.cmp-chip-dot{width:8px;height:8px;border-radius:50%}
+.cmp-chip-x{font-size:15px;cursor:pointer;color:var(--text3);margin-left:2px}
+.cmp-chip-x:hover{color:var(--red)}
+.cmp-add-wrap{position:relative;min-width:160px;flex:1}
+.cmp-add{width:100%;padding:7px 12px;border:1px dashed var(--border2);border-radius:8px;font-size:var(--fs-sm);background:transparent;color:var(--text);font-family:inherit}
+.cmp-add:focus{outline:none;border-style:solid;border-color:var(--blue)}
+.cmp-add-results{position:absolute;top:100%;left:0;right:0;margin-top:4px;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:none;z-index:50;box-shadow:0 8px 24px rgba(20,30,50,0.12)}
+.cmp-add-results.show{display:block}
+.cmp-add-item{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;font-size:var(--fs-sm);color:var(--text);border-bottom:0.5px solid var(--border);text-decoration:none}
+.cmp-add-item:last-child{border-bottom:none}
+.cmp-add-item:hover{background:var(--blue-bg)}
+.cmp-add-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cmp-add-nofacts{font-size:var(--fs-label);color:var(--text3);margin-left:auto}
+.cmp-add-empty{padding:10px 12px;font-size:var(--fs-sm);color:var(--text3)}
+.cmp-empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.cmp-empty i{font-size:34px;display:block;margin-bottom:10px;opacity:0.5}
+.cmp-suggest-label{font-size:var(--fs-xs);color:var(--text2);margin:20px 0 8px}
+.cmp-suggest{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.cmp-suggest-btn{font-size:var(--fs-sm);padding:6px 14px;border:0.5px solid var(--border);border-radius:8px;background:var(--card);color:var(--blue);cursor:pointer;font-family:inherit}
+.cmp-suggest-btn:hover{background:var(--blue-bg);border-color:var(--border2)}
+.cmp-table-wrap{overflow-x:auto;border:0.5px solid var(--border);border-radius:12px;background:var(--card)}
+.cmp-table{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+.cmp-table thead th{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--border)}
+.cmp-th-key{width:130px;min-width:110px}
+.cmp-th{padding:12px 14px;text-align:left;vertical-align:bottom}
+.cmp-th a{display:flex;align-items:center;gap:6px;font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--blue);cursor:pointer}
+.cmp-th-dot{width:9px;height:9px;border-radius:50%}
+.cmp-th-en{display:block;font-size:var(--fs-label);color:var(--text3);font-weight:var(--fw-normal);margin-top:2px}
+.cmp-group-row td{background:var(--bg3);font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--text2);text-transform:uppercase;letter-spacing:var(--ls-label);padding:7px 14px;border-bottom:0.5px solid var(--border);border-top:0.5px solid var(--border)}
+.cmp-key{padding:11px 14px;font-weight:var(--fw-medium);color:var(--text2);background:var(--bg3);border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);vertical-align:top;white-space:nowrap}
+.cmp-key-star{font-size:12px;color:var(--amber)}
+.cmp-cell{padding:11px 14px;color:var(--text);border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);vertical-align:top;line-height:var(--lh-normal)}
+.cmp-cell:last-child{border-right:none}
+.cmp-cell-empty{color:var(--text3);text-align:center}
+.cmp-row-hl .cmp-key{background:var(--amber-bg);color:var(--amber)}
+.cmp-cell-hl{background:var(--amber-bg)}
+body.dark .cmp-table thead th{background:var(--bg3)}
+/* Mark flags in notes panel */
+.mark-flags{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.mark-flags-label{font-size:var(--fs-xs);color:var(--text2)}
+.mark-flag-btn{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-sm);padding:5px 12px;border:0.5px solid var(--border);border-radius:8px;background:var(--card);color:var(--text2);cursor:pointer;font-family:inherit;transition:all 0.12s}
+.mark-flag-btn:hover{border-color:var(--border2)}
+.mark-flag-btn i{font-size:14px}
+.mark-flag-btn.on-weak{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+.mark-flag-btn.on-important{background:var(--amber-bg);color:var(--amber);border-color:var(--amber)}
+/* My marks aggregation view */
+.mm{max-width:820px;margin:0 auto;padding:8px 4px 40px}
+.mm-head{margin-bottom:16px}
+.mm-title{font-size:var(--fs-h1);font-weight:var(--fw-bold);color:var(--text)}
+.mm-sub{font-size:var(--fs-sm);color:var(--text2);margin-top:3px}
+.mm-empty{text-align:center;padding:46px 20px;color:var(--text3)}
+.mm-empty i{font-size:36px;display:block;margin-bottom:10px;opacity:0.5}
+.mm-empty-hint{font-size:var(--fs-sm);color:var(--text3);max-width:380px;margin:8px auto 0;line-height:var(--lh-normal)}
+.mm-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.mm-tab{font-size:var(--fs-sm);padding:6px 14px;border:0.5px solid var(--border);border-radius:20px;background:var(--card);color:var(--text2);cursor:pointer;font-family:inherit;font-weight:var(--fw-medium)}
+.mm-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.mm-list{display:flex;flex-direction:column;gap:8px}
+.mm-row{display:flex;align-items:flex-start;gap:10px;padding:13px 15px;background:var(--card);border:0.5px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color 0.12s,background 0.12s}
+.mm-row:hover{border-color:var(--border2);background:var(--bg3)}
+.mm-row.weak{border-left:3px solid var(--red)}
+.mm-row.important{border-left:3px solid var(--amber)}
+.mm-row-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.mm-row-body{flex:1;min-width:0}
+.mm-row-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mm-row-dz{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--text)}
+.mm-row-tab{font-size:var(--fs-label);color:var(--text2);background:var(--bg2);padding:2px 8px;border-radius:6px}
+.mm-row-flag{font-size:var(--fs-label);padding:2px 8px;border-radius:6px;font-weight:var(--fw-medium)}
+.mm-flag-weak{color:var(--red);background:var(--red-bg)}
+.mm-flag-important{color:var(--amber);background:var(--amber-bg)}
+.mm-row-note{font-size:var(--fs-sm);color:var(--text);line-height:var(--lh-normal);margin-top:6px;white-space:pre-wrap}
+.mm-row-chev{font-size:16px;color:var(--text3);flex-shrink:0;margin-top:4px}
 .main{flex:1;display:flex;flex-direction:column;background:#f7fafd;overflow:hidden}
 .topbar{padding:12px 20px;border-bottom:0.5px solid #B5D4F4;background:#f0f5fb;display:flex;flex-direction:column;gap:6px}
 .topbar-row1{display:flex;align-items:center;gap:10px}
@@ -215,6 +326,37 @@ body.dark .cl li.cl-key{background:var(--blue-bg)}
 .step-num{min-width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:var(--fs-xs);font-weight:var(--fw-semi);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 .step-title{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--blue);margin-bottom:var(--sp-1)}
 .step-content{font-size:var(--fs-body);line-height:var(--lh-normal);color:var(--text)}
+/* Step timeline — Option 2: borderless rows on a single connecting thread (病生理 causal chain) */
+.step-seq{position:relative}
+.step-chain{position:relative;padding-left:6px}
+/* one continuous thread behind all step numbers; starts/ends at first/last number centre */
+.step-chain::before{content:"";position:absolute;left:19px;top:18px;bottom:16px;width:2px;background:var(--border2);opacity:0.5;z-index:0}
+.step-chain .step{position:relative;border:none;background:transparent;padding:3px 0 16px 0;margin:0;z-index:1}
+.step-chain .step.step-last{padding-bottom:2px}
+.step-chain .step-num{position:relative;z-index:1}
+.step-chain .step.step-last .step-num{background:var(--blue);box-shadow:0 0 0 3px var(--card)}
+body.dark .step-chain::before{opacity:0.6}
+/* 病生理 self-test (quiz) mode */
+.quiz-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding:10px 14px;background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;flex-wrap:wrap}
+.quiz-bar-label{font-size:var(--fs-sm);font-weight:var(--fw-medium);color:var(--text2);display:flex;align-items:center;gap:6px}
+.quiz-bar-label i{color:var(--amber);font-size:16px}
+.quiz-toggle{display:flex;background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:2px;gap:2px}
+.quiz-opt{padding:5px 14px;border:none;background:transparent;border-radius:6px;font-size:var(--fs-sm);color:var(--text2);cursor:pointer;font-family:inherit;font-weight:var(--fw-medium);transition:all 0.12s}
+.quiz-opt.on{background:var(--blue);color:#fff}
+.quiz-reveal-all{margin-left:auto;font-size:var(--fs-xs);color:var(--blue);background:transparent;border:0.5px solid var(--border);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:inherit}
+.quiz-reveal-all:hover{background:var(--blue-bg);border-color:var(--border2)}
+/* quiz step: prompt shown, answer hidden until revealed */
+.step-q{cursor:pointer;transition:background 0.12s}
+.step-q .step-q-answer{display:none}
+.step-q .step-q-prompt{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:var(--fs-sm);color:var(--amber);background:var(--amber-bg);border:1px dashed var(--amber);border-radius:8px;padding:9px 12px;line-height:var(--lh-snug)}
+.step-q .step-q-prompt i{font-size:15px;flex-shrink:0}
+.step-q-hint{margin-left:auto;font-size:var(--fs-label);color:var(--text3);white-space:nowrap}
+.step-q.revealed{cursor:default}
+.step-q.revealed .step-q-prompt{display:none}
+.step-q.revealed .step-q-answer{display:block;animation:stepReveal 0.22s ease-out}
+@keyframes stepReveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.step-quiz .step-q:not(.revealed) .step-num{background:var(--bg2);color:var(--text3);border:1.5px solid var(--border2)}
+body.dark .step-quiz .step-q:not(.revealed) .step-num{background:var(--bg);color:var(--text3)}
 .pill{background:var(--blue-bg);border:0.5px solid var(--border);border-radius:20px;padding:3px 12px;font-size:var(--fs-sm);color:var(--blue);display:inline-block;margin:2px}
 /* Cross-link entity links + hover preview */
 .ent-link{color:var(--blue);cursor:pointer;border-bottom:1px solid var(--border2);text-decoration:none;transition:background 0.12s,border-color 0.12s;border-radius:2px;padding:0 1px}
@@ -231,6 +373,82 @@ body.dark .cl li.cl-key{background:var(--blue-bg)}
 .ent-preview-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:var(--fs-xs);color:var(--text2);margin-bottom:10px}
 .ent-preview-cat{font-weight:var(--fw-semi)}
 .ent-preview-cta{font-size:var(--fs-xs);color:var(--blue);font-weight:var(--fw-medium);border-top:0.5px solid var(--border);padding-top:8px;display:flex;align-items:center;gap:4px}
+/* ===== Home / landing view ===== */
+.home{max-width:880px;margin:0 auto;padding:8px 4px 40px}
+.hm-hero{text-align:center;padding:28px 0 20px;position:relative}
+.hm-hero-title{font-size:30px;font-weight:var(--fw-bold);color:var(--text);letter-spacing:-0.01em}
+.hm-hero-title span{color:var(--blue)}
+.hm-hero-sub{font-size:var(--fs-sm);color:var(--text2);margin-top:6px}
+.hm-search{position:relative;max-width:560px;margin:22px auto 0;display:flex;align-items:center}
+.hm-search i{position:absolute;left:16px;color:var(--text3);font-size:19px}
+.hm-search input{width:100%;padding:14px 16px 14px 46px;font-size:var(--fs-body);border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);box-shadow:0 2px 10px rgba(20,30,50,0.04);transition:border-color 0.15s,box-shadow 0.15s}
+.hm-search input:focus{outline:none;border-color:var(--blue);box-shadow:0 2px 14px rgba(24,95,165,0.12)}
+.hm-search-results{max-width:560px;margin:6px auto 0;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none;box-shadow:0 8px 24px rgba(20,30,50,0.1)}
+.hm-search-results.show{display:block}
+.hm-sr-item{display:flex;align-items:center;gap:9px;padding:11px 14px;cursor:pointer;border-bottom:0.5px solid var(--border);text-decoration:none}
+.hm-sr-item:last-child{border-bottom:none}
+.hm-sr-item:hover{background:var(--blue-bg)}
+.hm-sr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.hm-sr-name{font-size:var(--fs-sm);font-weight:var(--fw-medium);color:var(--text)}
+.hm-sr-en{font-size:var(--fs-xs);color:var(--text3)}
+.hm-sr-cat{margin-left:auto;font-size:var(--fs-label);color:var(--text2);background:var(--bg2);padding:2px 8px;border-radius:6px}
+.hm-sr-cat-sx{color:var(--green);background:var(--green-bg)}
+.hm-sr-empty{padding:14px;text-align:center;font-size:var(--fs-sm);color:var(--text3)}
+.hm-quick{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:22px 0 28px}
+.hm-quick-btn{display:flex;align-items:center;gap:7px;padding:9px 16px;border:0.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-size:var(--fs-sm);font-weight:var(--fw-medium);cursor:pointer;transition:border-color 0.12s,background 0.12s;font-family:inherit}
+.hm-quick-btn:hover{border-color:var(--border2);background:var(--blue-bg)}
+.hm-quick-btn i{font-size:17px;color:var(--blue)}
+.hm-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:720px){.hm-grid{grid-template-columns:1fr}}
+/* 繼續閱讀 + 學習路徑 並排 */
+.hm-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:720px){.hm-cols{grid-template-columns:1fr}}
+/* 並排時學習路徑欄位較窄 → 改單欄堆疊 */
+.hm-paths-col .hm-paths{grid-template-columns:1fr}
+/* 今日複習全寬時，卡片用網格排 */
+.hm-list-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:720px){.hm-list-grid{grid-template-columns:1fr}}
+.hm-sect{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px}
+.hm-sect-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.hm-sect-zh{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--blue)}
+.hm-sect-en{font-size:var(--fs-label);color:var(--text3);text-transform:uppercase;letter-spacing:var(--ls-label)}
+.hm-sect-meta{margin-left:auto;font-size:var(--fs-xs);color:var(--text2)}
+.hm-list{display:flex;flex-direction:column;gap:6px}
+.hm-card{display:flex;align-items:center;gap:10px;padding:10px 11px;background:var(--bg3);border:0.5px solid var(--border);border-radius:9px;cursor:pointer;transition:border-color 0.12s,background 0.12s;text-decoration:none}
+.hm-card:hover{border-color:var(--border2);background:var(--blue-bg)}
+.hm-card-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.hm-card-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.hm-card-name{font-size:var(--fs-sm);font-weight:var(--fw-medium);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-card-en{font-size:var(--fs-label);color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-card-sub{font-size:var(--fs-label);color:var(--text2);margin-top:1px}
+.hm-card-chev{font-size:15px;color:var(--text3);flex-shrink:0}
+.hm-card-x{font-size:15px;color:var(--text3);flex-shrink:0;border-radius:5px;padding:2px;transition:color 0.12s,background 0.12s;opacity:0.6}
+.hm-card-x:hover{color:var(--red);background:var(--red-bg);opacity:1}
+.hm-sect-clear{margin-left:auto;font-size:var(--fs-xs);color:var(--text3);cursor:pointer;padding:2px 8px;border-radius:6px}
+.hm-sect-clear:hover{color:var(--red);background:var(--red-bg)}
+.hm-sect-wide{margin-top:0}
+.hm-paths{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:720px){.hm-paths{grid-template-columns:1fr}}
+.hm-path{text-align:left;background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color 0.12s,background 0.12s;font-family:inherit}
+.hm-path:hover{border-color:var(--border2);background:var(--blue-bg)}
+.hm-path-top{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.hm-path-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.hm-path-name{font-size:var(--fs-sm);font-weight:var(--fw-semi);color:var(--text)}
+.hm-path-count{margin-left:auto;font-size:var(--fs-xs);color:var(--text2)}
+.hm-path-bar{display:block;height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.hm-path-fill{display:block;height:100%;border-radius:3px;transition:width 0.3s}
+body.dark .hm-path-bar{background:var(--bg)}
+/* Location breadcrumb */
+.breadcrumb{display:none;align-items:center;flex-wrap:wrap;gap:2px;padding:8px 20px;background:var(--bg2);border-bottom:0.5px solid var(--border);font-size:var(--fs-xs);min-height:34px}
+.breadcrumb.show{display:flex}
+.bc-item{color:var(--text2);text-decoration:none;padding:2px 4px;border-radius:4px;white-space:nowrap;line-height:1.4}
+a.bc-item{cursor:pointer;transition:color 0.12s,background 0.12s}
+a.bc-item:hover{color:var(--blue);background:var(--hover)}
+.bc-home i{font-size:14px;vertical-align:-2px}
+.bc-sep{font-size:13px;color:var(--text3);margin:0 1px;flex-shrink:0}
+.bc-current{color:var(--text);font-weight:var(--fw-medium)}
+.bc-tab{color:var(--blue);font-weight:var(--fw-medium);background:var(--blue-bg);padding:2px 9px;border-radius:6px}
+@media(max-width:600px){.breadcrumb{padding:7px 14px}.bc-item{max-width:120px;overflow:hidden;text-overflow:ellipsis}}
 /* One-level disease relationship navigator */
 .relnav-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;margin-top:14px;padding:16px 18px 18px}
 .relnav-header{display:flex;align-items:baseline;gap:6px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
@@ -301,6 +519,20 @@ body.dark .cl li.cl-key{background:var(--blue-bg)}
 .inline-img-frame img{display:block;width:100%;max-height:420px;object-fit:contain}
 .inline-img-cap{padding:10px 14px;font-size:var(--fs-xs);color:var(--text2);line-height:var(--lh-snug)}
 .inline-img-missing{font-size:var(--fs-xs);color:var(--text3);padding:10px 12px;border:1px dashed var(--border);border-radius:8px;margin:12px 0;text-align:center}
+/* Broken-image placeholder (onerror fallback) */
+.img-broken{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:120px;width:100%;background:var(--bg3);color:var(--text3);font-size:var(--fs-sm);border-radius:8px}
+.img-broken i{font-size:30px;opacity:0.6}
+/* Multiple inline images on one line → horizontal row (wraps on narrow screens) */
+.inline-img-row{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0;align-items:stretch}
+.inline-img-row .inline-img{margin:0;flex:1 1 0;min-width:180px;max-width:none;display:flex;flex-direction:column}
+.inline-img-row .inline-img-frame{flex:1;display:flex;align-items:center;justify-content:center;background:#10131c}
+/* uniform height, full image kept (no crop); letterboxed on dark backdrop */
+.inline-img-row .inline-img-frame img{height:260px;width:100%;object-fit:contain}
+@media(max-width:560px){
+  .inline-img-row{flex-direction:column}
+  .inline-img-row .inline-img{flex:1 1 100%}
+  .inline-img-row .inline-img-frame img{height:auto;max-height:340px}
+}
 /* Drug entries — editorial style, grouped by treatment line */
 .drug-list{margin-top:4px}
 .drug-group{margin-bottom:28px}
@@ -455,6 +687,8 @@ body.dark .comp-link{color:var(--text);border-bottom-color:var(--border)}
 .iv-panel{width:340px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;align-self:stretch}
 .iv-panel-title{font-size:18px;font-weight:600;color:var(--text);margin-top:6px;line-height:1.4}
 .iv-panel-desc{font-size:14px;color:var(--text);line-height:1.7;margin-top:4px}
+.iv-desc-p{margin:0 0 10px}
+.iv-desc-p:last-child{margin-bottom:0}
 .iv-findings{margin-top:8px;display:flex;flex-direction:column;gap:7px}
 .iv-finding{font-size:14px;color:var(--text);padding:1px 0 1px 22px;position:relative;line-height:1.55}
 .iv-finding::before{content:"→";color:#378ADD;position:absolute;left:0;top:1px;font-weight:500;line-height:1.55}
@@ -914,14 +1148,18 @@ body.dark .clue-badge-xref{color:var(--text3)}
 <div class="layout" id="app" style="display:none">
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <div class="sidebar hidden" id="sidebar">
-    <div class="sidebar-header"><div class="logo"><i class="ti ti-stethoscope"></i>MedBase TW</div><button class="sidebar-close" onclick="toggleSidebar()">✕</button></div>
+    <div class="sidebar-header"><div class="logo" onclick="showHome()" style="cursor:pointer"><i class="ti ti-stethoscope"></i>MedBase TW</div><button class="sidebar-close" onclick="toggleSidebar()">✕</button></div>
     <div class="sidebar-search"><input id="searchInput" placeholder="搜尋疾病..." oninput="filterList()"></div>
     <div class="sidebar-section" id="countLabel">知識庫</div>
     <div class="sidebar-list" id="sidebarList"></div>
     <div class="sidebar-bottom">
+      <button class="btn btn-auth" id="authBtn" onclick="openLoginModal()"><i class="ti ti-cloud"></i> 登入 / 同步</button>
+      <button class="btn btn-home" onclick="showHome()">🏠 首頁</button>
       <button class="btn btn-primary" onclick="showSymptoms()" style="background:#2E8B57">🧠 症狀導向學習</button>
       <button class="btn btn-primary" onclick="showTopics()" style="background:#6B3FA0">📚 知識專題</button>
       <button class="btn btn-primary" onclick="showGraph()">🔗 疾病關係圖</button>
+      <button class="btn btn-primary" onclick="showCompare()" style="background:#B5651D">⇄ 鑑別比較</button>
+      <button class="btn btn-ghost" onclick="showMyMarks()">📝 我的標記</button>
       <button class="btn btn-ghost" onclick="showBookmarks()">⭐ 書籤列表</button>
     </div>
   </div>
@@ -939,6 +1177,7 @@ body.dark .clue-badge-xref{color:var(--text3)}
         </div>
       </div>
     </div>
+    <div class="breadcrumb" id="breadcrumb"></div>
     <div class="content" id="mainContent">
       <div class="empty">← 從左側選擇一個疾病條目</div>
     </div>
@@ -948,6 +1187,18 @@ body.dark .clue-badge-xref{color:var(--text3)}
 <script>
 var SUPABASE_URL = "https://sbbpdithvhsgpcnqmofn.supabase.co";
 var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiYnBkaXRodmhzZ3BjbnFtb2ZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjQ5NjIsImV4cCI6MjA5NTkwMDk2Mn0.YrN-pV-6aAgg6CW0-Mhw3XfkkXHiQ3i32H-bd8C_Axw";
+
+/* ===== Auth (Supabase, email magic link) ===== */
+var sbAuth = null;        // supabase-js client (auth only)
+var currentUser = null;   // null = guest
+function initAuthClient(){
+  try{
+    if (window.supabase && window.supabase.createClient){
+      sbAuth = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+  }catch(e){ sbAuth = null; }
+}
+function isLoggedIn(){ return !!currentUser; }
 
 var CAT_COLORS = {"其他":"#7ab3d9"};
 var categoryList = []; // [{name, color, sort_order}] from disease_categories table
@@ -966,6 +1217,8 @@ var detectiveState = { selected: [] };
 var compareState = { selected: [] };
 var exploreState = { mechId: null, anatId: null };
 var currentId = null, currentTab = "def", currentView = "entry";
+var compareIds = []; // diseases currently selected for differential comparison
+var quizMode = false; // 病生理 self-test mode: hide mechanism, reveal on click
 var expandedCat = null; // accordion: only one category open at a time, null = all collapsed
 var graphState = { focusedId: null, onlyConnected: false };
 var topics = [], topicSecMap = {}, currentTopicId = null;
@@ -1015,16 +1268,317 @@ var SECTION_LABELS = {
   assessment:"評估", intervention:"介入方法", progression:"進程",
   definition:"定義", criteria:"標準", clinical_significance:"臨床意義"
 };
-var bookmarks = {}, notes = {}, dStatus = {};
+var bookmarks = {}, dStatus = {};
+var recentIds = [];
+function loadRecent(){ try{var r=localStorage.getItem("mb_recent");if(r)recentIds=JSON.parse(r)}catch(e){recentIds=[]} }
+// Reset the content pane (and window) to the top after navigating to a new view
+function scrollMainTop(){
+  var mc = document.getElementById("mainContent");
+  if(mc) mc.scrollTop = 0;
+  try{ window.scrollTo(0, 0); }catch(e){}
+}
+// Broken-image fallback: replace a failed <img> with a labelled placeholder
+function imgErr(el){
+  if(!el || el.dataset.failed) return;
+  el.dataset.failed = "1";
+  var ph = document.createElement("div");
+  ph.className = "img-broken";
+  ph.innerHTML = '<i class="ti ti-photo-off"></i><span>圖片載入失敗</span>';
+  if(el.parentNode) el.parentNode.replaceChild(ph, el);
+}
+function pushRecent(id){
+  if(!id)return;
+  recentIds = recentIds.filter(function(x){return x!==id});
+  recentIds.unshift(id);
+  if(recentIds.length>12)recentIds=recentIds.slice(0,12);
+  try{localStorage.setItem("mb_recent",JSON.stringify(recentIds))}catch(e){}
+}
+function removeRecent(id){
+  recentIds = recentIds.filter(function(x){return x!==id});
+  try{localStorage.setItem("mb_recent",JSON.stringify(recentIds))}catch(e){}
+  if(currentView === "home") showHome();
+}
+function clearAllRecent(){
+  if(!confirm("確定清空整個「繼續閱讀」清單？（不影響已讀/書籤標記）"))return;
+  recentIds = [];
+  try{localStorage.setItem("mb_recent",JSON.stringify(recentIds))}catch(e){}
+  if(currentView === "home") showHome();
+}
 
 function loadUserData(){
   try{var b=localStorage.getItem("mb_bookmarks");if(b)bookmarks=JSON.parse(b)}catch(e){}
-  try{var n=localStorage.getItem("mb_notes");if(n)notes=JSON.parse(n)}catch(e){}
   try{var s=localStorage.getItem("mb_status");if(s)dStatus=JSON.parse(s)}catch(e){}
+  loadRecent();
+  _marksLoad();
+  migrateLegacyNotes();
+}
+// One-time migration: old disease-level notes (mb_notes) → marks under the "def" tab.
+function migrateLegacyNotes(){
+  var legacy = null;
+  try{ var n=localStorage.getItem("mb_notes"); if(n) legacy=JSON.parse(n); }catch(e){ return; }
+  if(!legacy || typeof legacy !== "object") return;
+  var migrated = false;
+  Object.keys(legacy).forEach(function(did){
+    var txt = legacy[did];
+    if(txt && txt.trim()){
+      var existing = getMark(did, "def");
+      // Don't overwrite a newer tab-level note if one already exists
+      if(!existing || !existing.note){
+        setMark(did, "def", { note: txt });
+        migrated = true;
+      }
+    }
+  });
+  // Clear the legacy store so migration runs only once
+  if(migrated){ try{ localStorage.removeItem("mb_notes"); }catch(e){} }
 }
 function saveBookmarks(){try{localStorage.setItem("mb_bookmarks",JSON.stringify(bookmarks))}catch(e){}}
-function saveNotes(){try{localStorage.setItem("mb_notes",JSON.stringify(notes))}catch(e){}}
 function saveStatus(){try{localStorage.setItem("mb_status",JSON.stringify(dStatus))}catch(e){}}
+
+/* ===== Tab-level study marks (margin note + flag) =====
+   Data layer is abstracted so a future swap to Supabase only touches
+   _marksLoad / _marksPersist / getMark / setMark — the UI never reads storage directly.
+   Shape (matches a future table 1:1):
+     marks["<diseaseId>::<tab>"] = { disease_id, tab, note, flag, updated_at }
+     flag ∈ "weak" (易錯) | "important" (重點) | null
+*/
+var marks = {};
+function _markKey(diseaseId, tab){ return diseaseId + "::" + tab; }
+function _marksLoad(){ try{ var m=localStorage.getItem("mb_marks"); if(m) marks=JSON.parse(m); }catch(e){ marks={}; } }
+function _marksPersist(){ try{ localStorage.setItem("mb_marks", JSON.stringify(marks)); }catch(e){} }
+
+function getMark(diseaseId, tab){
+  return marks[_markKey(diseaseId, tab)] || null;
+}
+function setMark(diseaseId, tab, fields){
+  var k = _markKey(diseaseId, tab);
+  var cur = marks[k] || { disease_id: diseaseId, tab: tab, note: "", flag: null };
+  if (typeof fields.note !== "undefined") cur.note = fields.note;
+  if (typeof fields.flag !== "undefined") cur.flag = fields.flag;
+  cur.updated_at = new Date().toISOString();
+  var deleted = false;
+  // If empty (no note + no flag) → delete the record entirely
+  if ((!cur.note || !cur.note.trim()) && !cur.flag){
+    delete marks[k];
+    deleted = true;
+  } else {
+    marks[k] = cur;
+  }
+  _marksPersist();
+  // Cloud sync when logged in (fire-and-forget; local copy is source of truth offline)
+  if (isLoggedIn()){
+    if (deleted) cloudDeleteMark(diseaseId, tab);
+    else cloudUpsertMark(cur);
+  }
+}
+function getAllMarks(){
+  return Object.keys(marks).map(function(k){ return marks[k]; });
+}
+// Disease-level summary across all its tabs (for bookmark list / home indicators)
+function diseaseMarkSummary(diseaseId){
+  var hasNote = false, hasWeak = false, hasImportant = false;
+  Object.keys(marks).forEach(function(k){
+    var m = marks[k];
+    if (m.disease_id !== diseaseId) return;
+    if (m.note && m.note.trim()) hasNote = true;
+    if (m.flag === "weak") hasWeak = true;
+    if (m.flag === "important") hasImportant = true;
+  });
+  return { hasNote: hasNote, hasWeak: hasWeak, hasImportant: hasImportant };
+}
+
+/* ===== Cloud sync for marks (Supabase table: user_marks) ===== */
+// Table columns: user_id (uuid, auth.uid()), disease_id (text), tab (text),
+//                note (text), flag (text), updated_at (timestamptz)
+// Primary key: (user_id, disease_id, tab). RLS: user can only see/edit their own rows.
+function _authHeaders(){
+  var token = (currentUser && currentUser.token) ? currentUser.token : SUPABASE_KEY;
+  return { apikey: SUPABASE_KEY, Authorization: "Bearer " + token, "Content-Type": "application/json" };
+}
+function cloudUpsertMark(m){
+  if(!isLoggedIn()) return Promise.resolve();
+  var row = { user_id: currentUser.id, disease_id: m.disease_id, tab: m.tab,
+              note: m.note || "", flag: m.flag || null, updated_at: m.updated_at };
+  return fetch(SUPABASE_URL + "/rest/v1/user_marks?on_conflict=user_id,disease_id,tab", {
+    method: "POST",
+    headers: Object.assign({ Prefer: "resolution=merge-duplicates" }, _authHeaders()),
+    body: JSON.stringify(row)
+  }).catch(function(){});
+}
+function cloudDeleteMark(diseaseId, tab){
+  if(!isLoggedIn()) return Promise.resolve();
+  var q = "user_marks?user_id=eq." + currentUser.id +
+          "&disease_id=eq." + encodeURIComponent(diseaseId) +
+          "&tab=eq." + encodeURIComponent(tab);
+  return fetch(SUPABASE_URL + "/rest/v1/" + q, { method: "DELETE", headers: _authHeaders() }).catch(function(){});
+}
+function cloudFetchMarks(){
+  if(!isLoggedIn()) return Promise.resolve([]);
+  return fetch(SUPABASE_URL + "/rest/v1/user_marks?user_id=eq." + currentUser.id + "&select=*", {
+    headers: _authHeaders()
+  }).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; });
+}
+
+// On login: merge local marks into cloud, then pull cloud → local (newest wins)
+function syncMarksOnLogin(){
+  if(!isLoggedIn()) return Promise.resolve();
+  var localList = getAllMarks();
+  return cloudFetchMarks().then(function(cloud){
+    var cloudMap = {};
+    cloud.forEach(function(c){ cloudMap[_markKey(c.disease_id, c.tab)] = c; });
+    var uploads = [];
+    // Local marks not in cloud, or newer than cloud → upload
+    localList.forEach(function(m){
+      var k = _markKey(m.disease_id, m.tab);
+      var c = cloudMap[k];
+      if(!c || (m.updated_at || "") > (c.updated_at || "")){
+        uploads.push(cloudUpsertMark(m));
+      }
+    });
+    // Cloud marks newer than local (or missing locally) → bring into local
+    cloud.forEach(function(c){
+      var k = _markKey(c.disease_id, c.tab);
+      var m = marks[k];
+      if(!m || (c.updated_at || "") > (m.updated_at || "")){
+        marks[k] = { disease_id: c.disease_id, tab: c.tab, note: c.note || "", flag: c.flag || null, updated_at: c.updated_at };
+      }
+    });
+    _marksPersist();
+    return Promise.all(uploads);
+  });
+}
+
+/* ===== Auth session lifecycle ===== */
+function _setUserFromSession(session){
+  if(session && session.user){
+    currentUser = { id: session.user.id, email: session.user.email, token: session.access_token };
+  } else {
+    currentUser = null;
+  }
+}
+async function restoreSession(){
+  if(!sbAuth) return;
+  try{
+    var res = await sbAuth.auth.getSession();
+    var session = res && res.data ? res.data.session : null;
+    _setUserFromSession(session);
+    // React to magic-link callback / future sign-in/out
+    sbAuth.auth.onAuthStateChange(function(_event, sess){
+      var was = isLoggedIn();
+      _setUserFromSession(sess);
+      updateAuthUI();
+      if(!was && isLoggedIn()){
+        syncMarksOnLogin().then(function(){ if(currentView==="mymarks"||currentView==="home") refreshCurrentView(); });
+      }
+    });
+    if(isLoggedIn()){ await syncMarksOnLogin(); }
+  }catch(e){}
+}
+
+async function sendMagicLink(email){
+  if(!sbAuth) return { ok:false, error:"驗證系統尚未就緒" };
+  if(!email || email.indexOf("@")<0) return { ok:false, error:"請輸入有效的 email" };
+  try{
+    var res = await sbAuth.auth.signInWithOtp({
+      email: email,
+      options: { emailRedirectTo: window.location.href.split("#")[0] }
+    });
+    if(res.error) return { ok:false, error: res.error.message };
+    return { ok:true };
+  }catch(e){ return { ok:false, error: e.message || "寄送失敗" }; }
+}
+
+async function signOut(){
+  if(sbAuth){ try{ await sbAuth.auth.signOut(); }catch(e){} }
+  currentUser = null;
+  updateAuthUI();
+  toast("已登出（本機標記仍保留）");
+}
+
+function refreshCurrentView(){
+  if(currentView === "home") showHome();
+  else if(currentView === "mymarks") showMyMarks();
+  else if(currentView === "bookmarks") showBookmarks();
+  else if(currentView === "entry" && currentId) renderEntry();
+}
+
+/* ===== Auth UI: login modal + sidebar account state ===== */
+// Gate a personal feature behind login. Returns true if allowed to proceed.
+// In 方案 C, guests CAN use features locally — so this only *offers* login, never blocks.
+function ensureSyncOffered(context){
+  // Show a gentle one-time prompt suggesting login for cross-device sync.
+  if(isLoggedIn()) return true;
+  if(localStorage.getItem("mb_sync_dismissed") === "1") return true;
+  openLoginModal(context || "登入後，你的標記與筆記會跨裝置同步，換電腦也不會不見。");
+  return true; // guest still proceeds; their action is saved locally
+}
+
+function openLoginModal(subtitle){
+  if(document.getElementById("authModal")) return;
+  var sub = subtitle || "登入後，你的標記、筆記、進度會跨裝置同步。";
+  var m = document.createElement("div");
+  m.id = "authModal";
+  m.className = "auth-overlay";
+  m.innerHTML =
+    '<div class="auth-modal" onclick="event.stopPropagation()">'+
+      '<button class="auth-close" onclick="closeLoginModal()"><i class="ti ti-x"></i></button>'+
+      '<div class="auth-icon"><i class="ti ti-cloud-lock"></i></div>'+
+      '<div class="auth-title">登入 MedBase TW</div>'+
+      '<div class="auth-sub">'+escHtml(sub)+'</div>'+
+      '<div id="authBody">'+
+        '<input id="authEmail" class="auth-input" type="email" placeholder="你的 email" autocomplete="email" onkeydown="if(event.key===\'Enter\')submitMagicLink()">'+
+        '<button class="auth-btn" onclick="submitMagicLink()">寄送登入連結</button>'+
+        '<div class="auth-hint">免密碼。我們會寄一個登入連結到你的信箱，點了就完成登入。</div>'+
+        '<div class="auth-guest" onclick="dismissAuth()">先不要，繼續以訪客使用</div>'+
+      '</div>'+
+    '</div>';
+  m.onclick = closeLoginModal;
+  document.body.appendChild(m);
+  setTimeout(function(){ var e=document.getElementById("authEmail"); if(e) e.focus(); }, 50);
+}
+function closeLoginModal(){
+  var m = document.getElementById("authModal");
+  if(m) m.remove();
+}
+function dismissAuth(){
+  try{ localStorage.setItem("mb_sync_dismissed", "1"); }catch(e){}
+  closeLoginModal();
+}
+async function submitMagicLink(){
+  var emailEl = document.getElementById("authEmail");
+  var body = document.getElementById("authBody");
+  if(!emailEl || !body) return;
+  var email = emailEl.value.trim();
+  body.innerHTML = '<div class="auth-loading"><div class="spinner" style="margin:0 auto 12px"></div>寄送中…</div>';
+  var res = await sendMagicLink(email);
+  if(res.ok){
+    body.innerHTML = '<div class="auth-sent"><i class="ti ti-mail-check"></i><div class="auth-sent-title">登入連結已寄出</div>'+
+      '<div class="auth-sent-sub">請到 <b>'+escHtml(email)+'</b> 的信箱點擊連結完成登入。可關閉此視窗。</div>'+
+      '<button class="auth-btn auth-btn-ghost" onclick="closeLoginModal()">關閉</button></div>';
+  } else {
+    body.innerHTML = '<input id="authEmail" class="auth-input" type="email" value="'+escAttr(email)+'" onkeydown="if(event.key===\'Enter\')submitMagicLink()">'+
+      '<button class="auth-btn" onclick="submitMagicLink()">重新寄送</button>'+
+      '<div class="auth-error"><i class="ti ti-alert-circle"></i> '+escHtml(res.error)+'</div>'+
+      '<div class="auth-guest" onclick="dismissAuth()">先以訪客使用</div>';
+  }
+}
+
+// Renders the account button in the sidebar (login state aware)
+function updateAuthUI(){
+  var el = document.getElementById("authBtn");
+  if(!el) return;
+  if(isLoggedIn()){
+    var email = currentUser.email || "已登入";
+    var short = email.length > 18 ? email.slice(0,16)+"…" : email;
+    el.innerHTML = '<i class="ti ti-user-check"></i> <span class="auth-btn-email">'+escHtml(short)+'</span>';
+    el.onclick = function(){ if(confirm("要登出嗎？（本機標記仍會保留）")) signOut(); };
+    el.classList.add("on");
+  } else {
+    el.innerHTML = '<i class="ti ti-cloud"></i> 登入 / 同步';
+    el.onclick = function(){ openLoginModal(); };
+    el.classList.remove("on");
+  }
+}
 
 function sb(path) {
   return fetch(SUPABASE_URL + "/rest/v1/" + path, {
@@ -1034,6 +1588,7 @@ function sb(path) {
 
 async function init() {
   loadUserData();
+  initAuthClient();
   // Load dark mode preference
   try{var dm=localStorage.getItem("mb_dark");if(dm==="1"){document.body.classList.add("dark");document.getElementById("darkBtn").textContent="☾"}}catch(e){}
   try {
@@ -1101,6 +1656,8 @@ async function init() {
     if(!isMobile())document.getElementById("sidebar").classList.remove("hidden");
     document.getElementById("countLabel").textContent = "知識庫（" + diseases.length + "）";
     renderSidebar(diseases);
+    updateAuthUI();
+    restoreSession().then(function(){ updateAuthUI(); });
     var hash = location.hash.replace("#","");
     if (hash === "graph") {
       showGraph();
@@ -1110,6 +1667,10 @@ async function init() {
       showTopics();
     } else if (hash === "bookmarks") {
       showBookmarks();
+    } else if (hash === "compare") {
+      showCompare();
+    } else if (hash === "mymarks") {
+      showMyMarks();
     } else if (hash.indexOf("sx:") === 0) {
       var sxId = hash.slice(3);
       if (symptoms.find(function(s){ return s.id === sxId; })) {
@@ -1126,8 +1687,10 @@ async function init() {
       }
     } else if (hash && diseases.find(function(d){return d.id===hash})) {
       selectDisease(hash);
+    } else if (hash === "home" || !hash) {
+      showHome();
     } else if (diseases.length > 0) {
-      selectDisease(diseases[0].id);
+      showHome();
     }
   } catch(e) {
     document.getElementById("loadingScreen").innerHTML = '<div style="text-align:center;padding:20px"><div style="color:#A32D2D;font-size:14px;background:#FCEBEB;border:0.5px solid #F09595;border-radius:12px;padding:16px 20px"><b>連線失敗</b><br>' + (e.message || "請檢查網路") + '</div></div>';
@@ -1264,11 +1827,12 @@ function hasContent(data) {
   return false;
 }
 
-function selectDisease(id) {
+function selectDisease(id, startTab) {
   hideEntityPreview();
   currentId = id;
-  currentTab = "def";
+  currentTab = startTab || "def";
   currentView = "entry";
+  pushRecent(id);
   // Sync sidebar accordion to the disease's category
   var d = diseases.find(function(x){ return x.id === id; });
   if (d && d.category) expandedCat = d.category;
@@ -1301,6 +1865,7 @@ function renderEntry() {
   statusHtml += '<button class="icon-btn' + (isBm ? ' active' : '') + '" onclick="toggleBookmark()" title="' + (isBm ? '取消書籤' : '加入書籤') + '">★</button>';
   statusHtml += '<button class="status-btn' + (st === 'read' ? ' s-read' : '') + '" onclick="setStatus(\'read\')">' + (st === 'read' ? '✓ 已讀' : '已讀') + '</button>';
   statusHtml += '<button class="status-btn' + (st === 'review' ? ' s-review' : '') + '" onclick="setStatus(\'review\')">' + (st === 'review' ? '⟳ 複習' : '複習') + '</button>';
+  statusHtml += '<button class="status-btn" onclick="startCompare(currentId)" title="與其他疾病比較">⇄ 比較</button>';
   statusHtml += '</div>';
   document.getElementById("topStatus").innerHTML = statusHtml;
   document.getElementById("topBadges").innerHTML = badges.map(function(b) { return '<span class="badge">' + b + '</span>'; }).join("");
@@ -1332,6 +1897,34 @@ function renderEntry() {
 
   var bodyHtml = renderSection(secs[currentTab], currentTab === "drug" ? drugs : null, currentTab === "prog" ? comps : null, secs[currentTab]);
   document.getElementById("mainContent").innerHTML = '<div class="card"><div class="tabs">' + tabsHtml + '</div><div class="tc">' + bodyHtml + '</div></div>' + renderRelNav(currentId) + renderNotesPanel();
+  renderBreadcrumb(d, availTabs);
+  scrollMainTop();
+}
+
+/* Lightweight location breadcrumb: 首頁 › 分類 › 疾病 › 當前tab */
+function renderBreadcrumb(d, availTabs){
+  var bc = document.getElementById("breadcrumb");
+  if(!bc) return;
+  if(currentView !== "entry" || !d){ bc.innerHTML = ""; bc.classList.remove("show"); return; }
+  var tabLabel = "";
+  var t = TABS.find(function(x){ return x.key === currentTab; });
+  if(t) tabLabel = t.label;
+  var sep = '<i class="ti ti-chevron-right bc-sep"></i>';
+  var html = '<a class="bc-item bc-home" onclick="showHome()"><i class="ti ti-home"></i></a>' + sep;
+  if(d.category){
+    html += '<a class="bc-item" onclick="goCategory(\''+encodeURIComponent(d.category)+'\')">'+escHtml(d.category)+'</a>' + sep;
+  }
+  html += '<span class="bc-item bc-current">'+escHtml(d.name)+'</span>';
+  if(tabLabel){
+    html += sep + '<span class="bc-item bc-tab">'+escHtml(tabLabel)+'</span>';
+  }
+  bc.innerHTML = html;
+  bc.classList.add("show");
+}
+
+function clearBreadcrumb(){
+  var bc = document.getElementById("breadcrumb");
+  if(bc){ bc.innerHTML = ""; bc.classList.remove("show"); }
 }
 
 /* ===== One-level disease relationship navigator (subway-line view) ===== */
@@ -1494,6 +2087,18 @@ function switchTab(key) {
   renderEntry();
 }
 
+function setQuizMode(on){
+  quizMode = !!on;
+  renderEntry();
+}
+function revealStep(si){
+  var el = document.getElementById("stepq-" + si);
+  if (el) el.classList.add("revealed");
+}
+function revealAllSteps(){
+  document.querySelectorAll(".step-q").forEach(function(el){ el.classList.add("revealed"); });
+}
+
 function chipify(text){
   if(!text) return text;
   // B1. Explicit token: [stat:VALUE] or [stat:VALUE|label]
@@ -1530,17 +2135,27 @@ function renderRichText(text){
       if(inTable){html+="</tbody></table>";inTable=false}
       return;
     }
-    // Inline image reference [img:N] — renders a block figure from the section's images array
-    var imgm = trimmed.match(/^\[img:(\d+)\]$/);
-    if(imgm){
+    // Inline image reference: a line that is one or more [img:N] tokens (space-separated) → image row
+    if(/^(\[img:\d+\]\s*)+$/.test(trimmed)){
       if(inList){html+="</ul>";inList=false}
       if(inTable){html+="</tbody></table>";inTable=false}
-      var idx = parseInt(imgm[1],10) - 1;
-      var im = _sectionInlineImages[idx];
-      if(im && im.url){
-        html += renderInlineImage(im);
+      var refs = trimmed.match(/\[img:\d+\]/g) || [];
+      if(refs.length === 1){
+        // single image — full-width figure (unchanged behaviour)
+        var idx0 = parseInt(refs[0].match(/\d+/)[0],10) - 1;
+        var im0 = _sectionInlineImages[idx0];
+        if(im0 && im0.url){ html += renderInlineImage(im0); }
+        else { html += '<div class="inline-img-missing">[img:' + (idx0+1) + ' 找不到圖片]</div>'; }
       } else {
-        html += '<div class="inline-img-missing">[img:' + (idx+1) + ' 找不到圖片]</div>';
+        // multiple images — horizontal row
+        html += '<div class="inline-img-row">';
+        refs.forEach(function(r){
+          var idx = parseInt(r.match(/\d+/)[0],10) - 1;
+          var im = _sectionInlineImages[idx];
+          if(im && im.url){ html += renderInlineImage(im, true); }
+          else { html += '<div class="inline-img-missing">[img:' + (idx+1) + ' 找不到圖片]</div>'; }
+        });
+        html += '</div>';
       }
       return;
     }
@@ -1665,7 +2280,7 @@ function buildIvHtml(){
   h += '<div class="' + canvasCls + '" id="iv-canvas" onmousedown="ivStartDrag(event)" onmousemove="ivDrag(event)" onmouseup="ivEndDrag()" onmouseleave="ivEndDrag()" onwheel="ivWheel(event)" ondblclick="ivFit()">';
   if (img.url){
     h += '<div class="iv-img-wrap" id="iv-img-wrap">';
-    h += '<img class="iv-img" id="iv-img" src="' + escAttr(img.url) + '" alt="' + escAttr(img.title || "") + '" draggable="false">';
+    h += '<img class="iv-img" id="iv-img" src="' + escAttr(img.url) + '" alt="' + escAttr(img.title || "") + '" draggable="false" onerror="imgErr(this)">';
     if (hasAnnot){
       h += renderAnnotSvg(img.annotations);
     }
@@ -1696,7 +2311,7 @@ function buildIvHtml(){
   h += '<div class="iv-panel">';
   h += '<div><span class="img-modality img-modality-' + mod + '">' + escHtml(modLabel) + '</span></div>';
   if (img.title) h += '<div class="iv-panel-title">' + fmtTerms(img.title) + '</div>';
-  if (img.description) h += '<div class="iv-panel-desc">' + fmtTerms(img.description) + '</div>';
+  if (img.description) h += '<div class="iv-panel-desc">' + fmtTermsParas(img.description) + '</div>';
   if (img.findings && img.findings.length){
     h += '<div class="iv-findings">';
     img.findings.forEach(function(f){
@@ -1718,7 +2333,7 @@ function buildIvHtml(){
       var active = i === ivState.idx ? ' active' : '';
       h += '<div class="iv-thumb' + active + '" onclick="ivSwitch(' + i + ')">';
       if (im.url){
-        h += '<img src="' + escAttr(im.url) + '" alt="" draggable="false">';
+        h += '<img src="' + escAttr(im.url) + '" alt="" draggable="false" loading="lazy" onerror="imgErr(this)">';
       } else {
         h += '<div style="height:78px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:11px">無圖</div>';
       }
@@ -1845,6 +2460,22 @@ function fmtTerms(text){
   });
 }
 
+// Like fmtTerms but converts newlines into paragraphs/line breaks.
+// Normalises literal backslash-n (Postgres single-quoted) first.
+function fmtTermsParas(text){
+  if (!text) return "";
+  var norm = String(text).replace(/\\n/g, "\n");
+  // Split on blank lines → paragraphs; single newlines within a paragraph → <br>
+  var paras = norm.split(/\n\s*\n+/).map(function(p){ return p.trim(); }).filter(Boolean);
+  if (paras.length <= 1){
+    // single paragraph: still honour single newlines as line breaks
+    return fmtTerms(norm.trim()).replace(/\n/g, "<br>");
+  }
+  return paras.map(function(p){
+    return '<p class="iv-desc-p">' + fmtTerms(p).replace(/\n/g, "<br>") + '</p>';
+  }).join("");
+}
+
 function showTerm(el, key){
   hideTerm();
   var term = (ivState.terms || {})[key];
@@ -1945,6 +2576,10 @@ window.addEventListener("popstate", function(){
     showTopics();
   } else if (hash === "bookmarks") {
     showBookmarks();
+  } else if (hash === "compare") {
+    showCompare();
+  } else if (hash === "mymarks") {
+    showMyMarks();
   } else if (hash.indexOf("sx:") === 0) {
     var sxId = hash.slice(3);
     if (symptoms.find(function(s){ return s.id === sxId; })){
@@ -1961,8 +2596,10 @@ window.addEventListener("popstate", function(){
     }
   } else if (hash && diseases.find(function(d){ return d.id === hash; })) {
     selectDisease(hash);
+  } else if (hash === "home" || !hash) {
+    showHome();
   } else if (diseases.length > 0) {
-    selectDisease(diseases[0].id);
+    showHome();
   }
 });
 
@@ -2001,7 +2638,7 @@ function renderSection(data, drugs, comps, raw) {
           var mod = (img.modality || "other").toLowerCase();
           var modLabel = {xr:"X-Ray",ct:"CT",mri:"MRI",usg:"Ultrasound"}[mod] || img.modality || "Other";
           html += '<div class="img-card">';
-          if (img.url) html += '<img src="' + img.url + '" alt="' + (img.title || "") + '">';
+          if (img.url) html += '<img src="' + img.url + '" alt="' + (img.title || "") + '" loading="lazy" onerror="imgErr(this)">';
           html += '<div class="img-body">';
           html += '<span class="img-modality img-modality-' + mod + '">' + modLabel + '</span>';
           if (img.title) html += '<div class="img-title">' + fmt(img.title) + '</div>';
@@ -2019,9 +2656,35 @@ function renderSection(data, drugs, comps, raw) {
       content.paragraphs.forEach(function(p) { html += renderRichText(p); });
     }
     if (content.steps) {
-      content.steps.forEach(function(s) {
-        html += '<div class="step"><div class="step-num">' + s.step + '</div><div style="flex:1"><div class="step-title">' + fmt(s.title) + '</div><div class="step-content">' + renderRichText(s.content) + '</div></div></div>';
+      var isChain = (currentTab === "patho"); // 病生理 steps form a causal chain → timeline thread
+      // Self-test toggle (病生理 only)
+      if (isChain && content.steps.length) {
+        html += '<div class="quiz-bar">';
+        html += '<span class="quiz-bar-label"><i class="ti ti-bulb"></i> 學習模式</span>';
+        html += '<div class="quiz-toggle">';
+        html += '<button class="quiz-opt' + (!quizMode ? ' on' : '') + '" onclick="setQuizMode(false)">閱讀</button>';
+        html += '<button class="quiz-opt' + (quizMode ? ' on' : '') + '" onclick="setQuizMode(true)">自我測驗</button>';
+        html += '</div>';
+        if (quizMode) html += '<button class="quiz-reveal-all" onclick="revealAllSteps()">全部展開</button>';
+        html += '</div>';
+      }
+      html += '<div class="step-seq' + (isChain ? " step-chain" : "") + (isChain && quizMode ? " step-quiz" : "") + '">';
+      content.steps.forEach(function(s, si) {
+        var lastCls = (si === content.steps.length - 1) ? " step-last" : "";
+        if (isChain && quizMode) {
+          // Quiz: hide content behind a prompt; reveal on click
+          var prompt = s.prompt ? s.prompt : ("為什麼？想想看「" + (s.title || ("第 " + s.step + " 步")) + "」的機轉");
+          html += '<div class="step' + lastCls + ' step-q" id="stepq-' + si + '" onclick="revealStep(' + si + ')">';
+          html += '<div class="step-num">' + s.step + '</div>';
+          html += '<div style="flex:1"><div class="step-title">' + fmt(s.title) + '</div>';
+          html += '<div class="step-q-prompt"><i class="ti ti-help-circle"></i> ' + escHtml(prompt) + '　<span class="step-q-hint">點擊揭曉</span></div>';
+          html += '<div class="step-content step-q-answer">' + renderRichText(s.content) + '</div>';
+          html += '</div></div>';
+        } else {
+          html += '<div class="step' + lastCls + '"><div class="step-num">' + s.step + '</div><div style="flex:1"><div class="step-title">' + fmt(s.title) + '</div><div class="step-content">' + renderRichText(s.content) + '</div></div></div>';
+        }
       });
+      html += '</div>';
     }
     if (content.lists) {
       content.lists.forEach(function(l) {
@@ -2178,6 +2841,7 @@ function renderSection(data, drugs, comps, raw) {
 
 function showGraph() {
   currentView = "graph";
+  clearBreadcrumb();
   try{history.pushState(null,null,"#graph")}catch(e){}
   closeSidebarMobile();
   renderSidebar(diseases);
@@ -2588,20 +3252,48 @@ function setStatus(s){
 }
 
 function renderNotesPanel(){
-  var note=notes[currentId]||"";
-  var hasNote=note.trim().length>0;
+  var tabLabel = "";
+  var t = TABS.find(function(x){ return x.key === currentTab; });
+  if (t) tabLabel = t.label;
+  var mark = getMark(currentId, currentTab) || { note:"", flag:null };
+  var note = mark.note || "";
+  var hasNote = note.trim().length > 0;
+  var flag = mark.flag || null;
+
   var h='<div class="notes-panel">';
   h+='<div class="notes-header" onclick="toggleNotes()">';
-  h+='<div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px">📝</span><span style="font-size:14px;font-weight:500;color:#185FA5">個人筆記</span>';
-  if(hasNote)h+='<span style="font-size:11px;color:#3B6D11;background:#EAF3DE;padding:1px 8px;border-radius:10px">已有筆記</span>';
-  h+='</div><span style="font-size:12px;color:#7ab3d9" id="notesArrow">▾</span></div>';
+  h+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:14px">📝</span>';
+  h+='<span style="font-size:14px;font-weight:500;color:var(--blue)">我的標記</span>';
+  h+='<span style="font-size:11px;color:var(--text3)">· '+escHtml(tabLabel)+'</span>';
+  if(hasNote)h+='<span style="font-size:11px;color:var(--green);background:var(--green-bg);padding:1px 8px;border-radius:10px">有筆記</span>';
+  if(flag==="weak")h+='<span style="font-size:11px;color:var(--red);background:var(--red-bg);padding:1px 8px;border-radius:10px">易錯</span>';
+  if(flag==="important")h+='<span style="font-size:11px;color:var(--amber);background:var(--amber-bg);padding:1px 8px;border-radius:10px">重點</span>';
+  h+='</div><span style="font-size:12px;color:var(--text3)" id="notesArrow">▾</span></div>';
+
   h+='<div class="notes-body" id="notesBody">';
-  h+='<textarea id="noteInput" placeholder="在這裡記錄你的學習心得、重點、口訣..." oninput="autoSaveNote()">' + (note||"").replace(/&/g,"&amp;").replace(/</g,"&lt;") + '</textarea>';
+  // Flag toggles
+  h+='<div class="mark-flags">';
+  h+='<span class="mark-flags-label">標記為：</span>';
+  h+='<button class="mark-flag-btn'+(flag==="weak"?" on-weak":"")+'" onclick="toggleFlag(\'weak\')"><i class="ti ti-alert-triangle"></i> 易錯</button>';
+  h+='<button class="mark-flag-btn'+(flag==="important"?" on-important":"")+'" onclick="toggleFlag(\'important\')"><i class="ti ti-star"></i> 重點</button>';
+  h+='</div>';
+  // Note textarea
+  h+='<textarea id="noteInput" placeholder="在這裡記錄這個 '+escHtml(tabLabel)+' 的助記、口訣、易錯原因..." oninput="autoSaveNote()">' + note.replace(/&/g,"&amp;").replace(/</g,"&lt;") + '</textarea>';
   h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">';
-  h+='<span style="font-size:11px;color:#7ab3d9" id="noteSaved"></span>';
-  if(hasNote)h+='<button style="font-size:11px;color:#E24B4A;background:none;border:none;cursor:pointer" onclick="clearNote()">清除筆記</button>';
+  h+='<span style="font-size:11px;color:var(--text3)" id="noteSaved"></span>';
+  h+='<a style="font-size:11px;color:var(--blue);cursor:pointer" onclick="showMyMarks()">查看所有標記 →</a>';
   h+='</div></div></div>';
   return h;
+}
+
+function toggleFlag(which){
+  var cur = getMark(currentId, currentTab);
+  var curFlag = cur ? cur.flag : null;
+  var newFlag = (curFlag === which) ? null : which; // toggle off if same
+  setMark(currentId, currentTab, { flag: newFlag });
+  // re-render just the panel area by re-rendering the entry
+  renderEntry();
+  if(newFlag) ensureSyncOffered("登入後，這些易錯/重點標記會跨裝置同步，換電腦也不會不見。");
 }
 
 var noteTimer=null;
@@ -2610,17 +3302,10 @@ function autoSaveNote(){
   noteTimer=setTimeout(function(){
     var el=document.getElementById("noteInput");
     if(!el)return;
-    var val=el.value.trim();
-    if(val)notes[currentId]=val;else delete notes[currentId];
-    saveNotes();
+    setMark(currentId, currentTab, { note: el.value });
     var saved=document.getElementById("noteSaved");
     if(saved){saved.textContent="已自動儲存";setTimeout(function(){if(saved)saved.textContent=""},1500)}
   },800);
-}
-
-function clearNote(){
-  if(!confirm("確定清除此筆記？"))return;
-  delete notes[currentId];saveNotes();renderEntry();
 }
 
 function toggleNotes(){
@@ -2718,13 +3403,13 @@ function parseTopicBody(body, images){
   return { blocks: blocks, used: used };
 }
 
-function renderInlineImage(im){
+function renderInlineImage(im, inRow){
   // Disease-section inline image. Caption falls back across caption/title/description.
   var url = escAttr(im.url);
   var caption = im.caption || im.title || im.description || "";
   var capAttr = escAttr(caption);
-  var s = '<figure class="inline-img">';
-  s += '<div class="inline-img-frame" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" alt="' + escAttr(caption) + '"></div>';
+  var s = '<figure class="inline-img' + (inRow ? " inline-img-incol" : "") + '">';
+  s += '<div class="inline-img-frame" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" alt="' + escAttr(caption) + '" loading="lazy" onerror="imgErr(this)"></div>';
   if (caption) s += '<figcaption class="inline-img-cap">' + fmt(caption) + '</figcaption>';
   s += '</figure>';
   return s;
@@ -2734,7 +3419,7 @@ function renderTopicInlineImage(im){
   var url = escAttr(im.url);
   var capAttr = escAttr(im.caption || "");
   var s = '<figure style="margin:18px 0;border:0.5px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg2);max-width:600px">';
-  s += '<div style="background:#1a1a2e;cursor:zoom-in" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" style="display:block;width:100%;max-height:400px;object-fit:contain"></div>';
+  s += '<div style="background:#1a1a2e;cursor:zoom-in" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" loading="lazy" onerror="imgErr(this)" style="display:block;width:100%;max-height:400px;object-fit:contain"></div>';
   if (im.caption) s += '<figcaption style="padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.55">' + escHtml(im.caption) + '</figcaption>';
   s += '</figure>';
   return s;
@@ -2767,6 +3452,7 @@ function openTopicImage(url, caption){
 
 function showTopics(){
   currentView = "topics";
+  clearBreadcrumb();
   currentTopicId = null;
   try{history.pushState(null,null,"#topics")}catch(e){}
   closeSidebarMobile();
@@ -2840,6 +3526,7 @@ function renderTopicList(query){
   }
   h += '</div>';
   document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
 }
 
 function selectTopic(id){
@@ -2847,6 +3534,7 @@ function selectTopic(id){
   if (!t) return;
   currentTopicId = id;
   currentView = "topic-detail";
+  clearBreadcrumb();
   try{history.pushState(null,null,"#topic:"+id)}catch(e){}
   document.getElementById("topTitle").textContent = t.name;
   var meta = TOPIC_TYPES[t.topic_type] || { zh: t.topic_type, icon: "ti-circle" };
@@ -2912,7 +3600,7 @@ function selectTopic(id){
         h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:' + (hasBody ? '14' : '0') + 'px">';
         leftover.forEach(function(im){
           h += '<figure style="margin:0;border:0.5px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg2)">';
-          h += '<div style="background:#1a1a2e;cursor:zoom-in" onclick="openTopicImage(\'' + escAttr(im.url) + '\',\'' + escAttr(im.caption||"") + '\')"><img src="' + escHtml(im.url) + '" style="display:block;width:100%;max-height:220px;object-fit:contain"></div>';
+          h += '<div style="background:#1a1a2e;cursor:zoom-in" onclick="openTopicImage(\'' + escAttr(im.url) + '\',\'' + escAttr(im.caption||"") + '\')"><img src="' + escHtml(im.url) + '" loading="lazy" onerror="imgErr(this)" style="display:block;width:100%;max-height:220px;object-fit:contain"></div>';
           if (im.caption) h += '<figcaption style="padding:8px 12px;font-size:12px;color:var(--text2);line-height:1.5">' + escHtml(im.caption) + '</figcaption>';
           h += '</figure>';
         });
@@ -2924,11 +3612,13 @@ function selectTopic(id){
 
   h += '</div>';
   document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
 }
 
 
 function showSymptoms(){
   currentView = "symptoms";
+  clearBreadcrumb();
   currentSxId = null;
   try{history.pushState(null,null,"#symptoms")}catch(e){}
   closeSidebarMobile();
@@ -2988,12 +3678,14 @@ function renderSymptomList(query){
   h += '</div>';
 
   document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
   var inp = document.getElementById("sxmSearch");
   if (inp && query){ inp.focus(); inp.setSelectionRange(query.length, query.length); }
 }
 
 function showSymptomDetail(sxId){
   currentView = "symptomDetail";
+  clearBreadcrumb();
   try{history.pushState(null,null,"#sx:"+sxId)}catch(e){}
   // Reset mode-specific state when switching symptoms
   if (currentSxId !== sxId){
@@ -3039,6 +3731,7 @@ function showSymptomDetail(sxId){
     h += '<div class="sxm-empty"><div class="sxm-empty-icon">🧠</div><div class="sxm-empty-text">此症狀尚未建立機轉<br><span style="font-size:12px;color:var(--text3)">請在 symptom_mechanisms 中新增</span></div></div>';
     h += '</div>';
     document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
     return;
   }
 
@@ -3050,6 +3743,7 @@ function showSymptomDetail(sxId){
 
   h += '</div>';
   document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
 }
 
 function renderModeSelector(){
@@ -4463,8 +5157,438 @@ function renderInlineBold(s){
   return escHtml(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
 }
 
+/* ===== Differential comparison mode (鑑別表) ===== */
+function getQuickFacts(id){
+  var secs = sectionMap[id] || {};
+  var c = secs.quick_facts;
+  if (typeof c === "string") try { c = JSON.parse(c); } catch(e){ c = null; }
+  if (!c || !Array.isArray(c.facts)) return [];
+  return c.facts;
+}
+
+function startCompare(id){
+  compareIds = id ? [id] : [];
+  showCompare();
+}
+
+function addToCompare(id){
+  if (compareIds.indexOf(id) < 0 && compareIds.length < 4) compareIds.push(id);
+  showCompare();
+}
+
+function removeFromCompare(id){
+  compareIds = compareIds.filter(function(x){ return x !== id; });
+  showCompare();
+}
+
+function showCompare(){
+  currentView = "compare";
+  currentId = null;
+  clearBreadcrumb();
+  try{ history.pushState(null,null,"#compare"); }catch(e){}
+  closeSidebarMobile();
+  renderSidebar(diseases);
+  document.getElementById("topTitle").textContent = "鑑別比較";
+  document.getElementById("topBadges").innerHTML = "";
+  document.getElementById("topStatus").innerHTML = "";
+  syncTopbarRow2();
+
+  var byId = {};
+  diseases.forEach(function(d){ byId[d.id] = d; });
+  var picked = compareIds.map(function(id){ return byId[id]; }).filter(Boolean);
+
+  var h = '<div class="cmp">';
+  h += '<div class="cmp-head"><div class="cmp-title">鑑別比較表</div>';
+  h += '<div class="cmp-sub">選 2–4 個疾病，逐列對照 quick facts</div></div>';
+
+  // Picker row
+  h += '<div class="cmp-picker">';
+  picked.forEach(function(d){
+    var col = CAT_COLORS[d.category] || "#7ab3d9";
+    h += '<span class="cmp-chip"><span class="cmp-chip-dot" style="background:'+col+'"></span>'+escHtml(d.name)+
+         '<i class="ti ti-x cmp-chip-x" onclick="removeFromCompare(\''+d.id+'\')"></i></span>';
+  });
+  if (picked.length < 4){
+    h += '<div class="cmp-add-wrap"><input id="cmpAdd" class="cmp-add" type="text" placeholder="+ 加入疾病…" oninput="cmpAddInput(this.value)" onkeydown="cmpAddKey(event)" autocomplete="off"><div id="cmpAddResults" class="cmp-add-results"></div></div>';
+  }
+  h += '</div>';
+
+  if (picked.length < 2){
+    h += '<div class="cmp-empty"><i class="ti ti-columns-3"></i><div>再加入至少一個疾病即可開始比較</div>';
+    // suggest some common pairs that both have quick_facts
+    var withFacts = diseases.filter(function(d){ return getQuickFacts(d.id).length > 0; });
+    if (withFacts.length >= 2){
+      h += '<div class="cmp-suggest-label">有鑑別資料的疾病：</div><div class="cmp-suggest">';
+      withFacts.slice(0, 8).forEach(function(d){
+        h += '<button class="cmp-suggest-btn" onclick="addToCompare(\''+d.id+'\')">'+escHtml(d.name)+'</button>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+    h += '</div>';
+    document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
+    return;
+  }
+
+  // Collect facts per disease, preserving key order & grouping from first disease that has each key
+  var order = [];          // ordered list of {key, group}
+  var seenKey = {};
+  var valueMap = {};       // key -> {diseaseId -> {value, highlight}}
+  picked.forEach(function(d){
+    getQuickFacts(d.id).forEach(function(f){
+      if (!f.key) return;
+      if (!seenKey[f.key]){
+        seenKey[f.key] = true;
+        order.push({ key: f.key, group: f.group || "" });
+      }
+      if (!valueMap[f.key]) valueMap[f.key] = {};
+      valueMap[f.key][d.id] = { value: f.value || "", highlight: !!f.highlight };
+    });
+  });
+
+  if (!order.length){
+    h += '<div class="cmp-empty"><i class="ti ti-info-circle"></i><div>所選疾病尚無 quick facts 鑑別資料</div></div></div>';
+    document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
+    return;
+  }
+
+  // Build table grouped by group — collect rows per group first to avoid duplicate group headers
+  var groupOrder = [];
+  var rowsByGroup = {};
+  order.forEach(function(row){
+    var g = row.group || "其他";
+    if (!rowsByGroup[g]){ rowsByGroup[g] = []; groupOrder.push(g); }
+    rowsByGroup[g].push(row);
+  });
+
+  h += '<div class="cmp-table-wrap"><table class="cmp-table">';
+  h += '<thead><tr><th class="cmp-th-key"></th>';
+  picked.forEach(function(d){
+    var col = CAT_COLORS[d.category] || "#7ab3d9";
+    h += '<th class="cmp-th"><a onclick="selectDisease(\''+d.id+'\')"><span class="cmp-th-dot" style="background:'+col+'"></span>'+escHtml(d.name)+'</a>'+
+         (d.name_en?'<span class="cmp-th-en">'+escHtml(d.name_en)+'</span>':'')+'</th>';
+  });
+  h += '</tr></thead><tbody>';
+
+  groupOrder.forEach(function(g){
+    if (g && g !== "其他"){
+      h += '<tr class="cmp-group-row"><td colspan="'+(picked.length+1)+'">'+escHtml(g)+'</td></tr>';
+    }
+    rowsByGroup[g].forEach(function(row){
+      var anyHl = picked.some(function(d){ var c=valueMap[row.key][d.id]; return c && c.highlight; });
+      h += '<tr class="'+(anyHl?'cmp-row-hl':'')+'">';
+      h += '<td class="cmp-key">'+escHtml(row.key)+(anyHl?' <i class="ti ti-star-filled cmp-key-star"></i>':'')+'</td>';
+      picked.forEach(function(d){
+        var c = valueMap[row.key][d.id];
+        if (c && c.value){
+          h += '<td class="cmp-cell'+(c.highlight?' cmp-cell-hl':'')+'">'+linkifyEntities(fmt(c.value))+'</td>';
+        } else {
+          h += '<td class="cmp-cell cmp-cell-empty">—</td>';
+        }
+      });
+      h += '</tr>';
+    });
+  });
+  h += '</tbody></table></div>';
+  h += '</div>';
+  document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
+}
+
+function cmpAddInput(q){
+  var box = document.getElementById("cmpAddResults");
+  if (!box) return;
+  q = (q||"").trim().toLowerCase();
+  if (q.length < 1){ box.innerHTML=""; box.classList.remove("show"); return; }
+  var hits = diseases.filter(function(d){
+    if (compareIds.indexOf(d.id) >= 0) return false;
+    return (d.name && d.name.toLowerCase().indexOf(q)>=0) ||
+           (d.name_en && d.name_en.toLowerCase().indexOf(q)>=0);
+  }).slice(0, 6);
+  if (!hits.length){ box.innerHTML='<div class="cmp-add-empty">無相符疾病</div>'; box.classList.add("show"); return; }
+  box.innerHTML = hits.map(function(d){
+    var col = CAT_COLORS[d.category] || "#7ab3d9";
+    var hasFacts = getQuickFacts(d.id).length > 0;
+    return '<a class="cmp-add-item" onclick="addToCompare(\''+d.id+'\')"><span class="cmp-add-dot" style="background:'+col+'"></span>'+
+      escHtml(d.name)+(hasFacts?'':' <span class="cmp-add-nofacts">無鑑別資料</span>')+'</a>';
+  }).join("");
+  box.classList.add("show");
+}
+function cmpAddKey(e){
+  if (e.key === "Enter"){
+    var first = document.querySelector("#cmpAddResults .cmp-add-item");
+    if (first) first.click();
+  }
+}
+
+function showHome(){
+  currentView = "home";
+  currentId = null;
+  clearBreadcrumb();
+  try{history.pushState(null,null,"#home")}catch(e){}
+  closeSidebarMobile();
+  renderSidebar(diseases);
+  document.getElementById("topTitle").textContent = "MedBase TW";
+  document.getElementById("topBadges").innerHTML = "";
+  document.getElementById("topStatus").innerHTML = "";
+  syncTopbarRow2();
+
+  var byId = {};
+  diseases.forEach(function(d){ byId[d.id] = d; });
+
+  // ----- Continue reading (recent) -----
+  var recent = recentIds.map(function(id){ return byId[id]; }).filter(Boolean).slice(0, 6);
+  // ----- Today's review -----
+  var review = diseases.filter(function(d){ return dStatus[d.id] === "review"; });
+  // ----- Progress by category -----
+  var catAgg = {};
+  diseases.forEach(function(d){
+    var c = d.category || "其他";
+    if(!catAgg[c]) catAgg[c] = { total:0, read:0 };
+    catAgg[c].total++;
+    if(dStatus[d.id] === "read") catAgg[c].read++;
+  });
+  var cats = Object.keys(catAgg).sort(function(a,b){ return catAgg[b].total - catAgg[a].total; });
+  var totalRead = diseases.filter(function(d){return dStatus[d.id]==="read";}).length;
+
+  function dzCard(d, sub, removable){
+    var col = CAT_COLORS[d.category] || "#7ab3d9";
+    return '<div class="hm-card" onclick="selectDisease(\''+d.id+'\')">'+
+      '<span class="hm-card-dot" style="background:'+col+'"></span>'+
+      '<span class="hm-card-body"><span class="hm-card-name">'+escHtml(d.name)+'</span>'+
+      (d.name_en?'<span class="hm-card-en">'+escHtml(d.name_en)+'</span>':'')+
+      (sub?'<span class="hm-card-sub">'+sub+'</span>':'')+'</span>'+
+      (removable
+        ? '<i class="ti ti-x hm-card-x" title="從繼續閱讀移除" onclick="event.stopPropagation();removeRecent(\''+d.id+'\')"></i>'
+        : '<i class="ti ti-chevron-right hm-card-chev"></i>')+
+      '</div>';
+  }
+
+  var h = '<div class="home">';
+
+  // Hero + search
+  h += '<div class="hm-hero">';
+  h += '<div class="hm-hero-title">MedBase <span>TW</span></div>';
+  h += '<div class="hm-hero-sub">機轉導向的臨床醫學知識庫 · 共 '+diseases.length+' 個疾病</div>';
+  h += '<div class="hm-search"><i class="ti ti-search"></i>'+
+       '<input id="hmSearch" type="text" placeholder="搜尋疾病、症狀或關鍵字…" '+
+       'oninput="hmSearchInput(this.value)" onkeydown="hmSearchKey(event)" autocomplete="off">'+
+       '</div>';
+  h += '<div id="hmSearchResults" class="hm-search-results"></div>';
+  h += '</div>';
+
+  // Quick actions
+  h += '<div class="hm-quick">';
+  h += '<button class="hm-quick-btn" onclick="showSymptoms()"><i class="ti ti-stethoscope"></i><span>症狀導向學習</span></button>';
+  h += '<button class="hm-quick-btn" onclick="showTopics()"><i class="ti ti-books"></i><span>知識專題</span></button>';
+  h += '<button class="hm-quick-btn" onclick="showGraph()"><i class="ti ti-affiliate"></i><span>疾病關係圖</span></button>';
+  h += '<button class="hm-quick-btn" onclick="showCompare()"><i class="ti ti-columns-3"></i><span>鑑別比較</span></button>';
+  h += '<button class="hm-quick-btn" onclick="showBookmarks()"><i class="ti ti-star"></i><span>書籤列表</span></button>';
+  h += '</div>';
+
+  // Build the 學習路徑 (paths) block as a reusable string
+  var pathsInner = '<div class="hm-sect-head"><span class="hm-sect-zh">學習路徑</span><span class="hm-sect-en">LEARNING PATHS</span>';
+  pathsInner += '<span class="hm-sect-meta">已讀 '+totalRead+' / '+diseases.length+'</span></div>';
+  pathsInner += '<div class="hm-paths">';
+  cats.forEach(function(c){
+    var agg = catAgg[c];
+    var col = CAT_COLORS[c] || "#7ab3d9";
+    var pct = agg.total ? Math.round(agg.read/agg.total*100) : 0;
+    pathsInner += '<button class="hm-path" onclick="goCategory(\''+encodeURIComponent(c)+'\')">';
+    pathsInner += '<span class="hm-path-top"><span class="hm-path-dot" style="background:'+col+'"></span>'+
+         '<span class="hm-path-name">'+escHtml(c)+'</span>'+
+         '<span class="hm-path-count">'+agg.read+'/'+agg.total+'</span></span>';
+    pathsInner += '<span class="hm-path-bar"><span class="hm-path-fill" style="width:'+pct+'%;background:'+col+'"></span></span>';
+    pathsInner += '</button>';
+  });
+  pathsInner += '</div>';
+
+  // Build the 繼續閱讀 (continue) block as a reusable string
+  var continueInner = "";
+  if (recent.length){
+    continueInner = '<div class="hm-sect-head"><span class="hm-sect-zh">繼續閱讀</span><span class="hm-sect-en">CONTINUE</span>'+
+      '<a class="hm-sect-clear" onclick="clearAllRecent()">清空</a></div><div class="hm-list">';
+    recent.forEach(function(d){
+      var stSub = dStatus[d.id]==="read"?"已讀完":(dStatus[d.id]==="review"?"需複習":"");
+      continueInner += dzCard(d, stSub, true);
+    });
+    continueInner += '</div>';
+  }
+
+  if (recent.length){
+    // 繼續閱讀 + 學習路徑 並排（兩欄）；今日複習若有則放在下方全寬
+    h += '<div class="hm-cols">';
+    h += '<div class="hm-sect">' + continueInner + '</div>';
+    h += '<div class="hm-sect hm-paths-col">' + pathsInner + '</div>';
+    h += '</div>';
+    if (review.length){
+      h += '<div class="hm-sect hm-sect-wide"><div class="hm-sect-head"><span class="hm-sect-zh">今日複習</span><span class="hm-sect-en">REVIEW · '+review.length+'</span></div><div class="hm-list hm-list-grid">';
+      review.slice(0, 8).forEach(function(d){ h += dzCard(d, "標記為需複習"); });
+      h += '</div></div>';
+    }
+  } else {
+    // 沒有繼續閱讀 → 今日複習（若有）+ 學習路徑全寬（維持原樣）
+    if (review.length){
+      h += '<div class="hm-sect hm-sect-wide"><div class="hm-sect-head"><span class="hm-sect-zh">今日複習</span><span class="hm-sect-en">REVIEW · '+review.length+'</span></div><div class="hm-list hm-list-grid">';
+      review.slice(0, 8).forEach(function(d){ h += dzCard(d, "標記為需複習"); });
+      h += '</div></div>';
+    }
+    h += '<div class="hm-sect hm-sect-wide">' + pathsInner + '</div>';
+  }
+
+  h += '</div>'; // home
+  document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
+}
+
+// Open a category: expand its accordion and select its first disease
+function goCategory(encName){
+  var name = decodeURIComponent(encName);
+  var first = diseases.find(function(d){ return (d.category||"其他") === name; });
+  expandedCat = name;
+  if (first) selectDisease(first.id);
+}
+
+// Home search — searches diseases AND symptoms (症狀導向) by name/name_en/category
+function hmSearchInput(q){
+  var box = document.getElementById("hmSearchResults");
+  if(!box) return;
+  q = (q||"").trim().toLowerCase();
+  if(q.length < 1){ box.innerHTML=""; box.classList.remove("show"); return; }
+  // Diseases
+  var dHits = diseases.filter(function(d){
+    return (d.name && d.name.toLowerCase().indexOf(q)>=0) ||
+           (d.name_en && d.name_en.toLowerCase().indexOf(q)>=0) ||
+           (d.category && d.category.toLowerCase().indexOf(q)>=0);
+  }).map(function(d){ return {kind:"disease", item:d}; });
+  // Symptoms (症狀導向學習)
+  var sHits = (symptoms||[]).filter(function(s){
+    return (s.name && s.name.toLowerCase().indexOf(q)>=0) ||
+           (s.name_en && s.name_en.toLowerCase().indexOf(q)>=0);
+  }).map(function(s){ return {kind:"symptom", item:s}; });
+  // Symptoms first (a symptom query usually means "I don't know the disease yet"), then diseases
+  var hits = sHits.concat(dHits).slice(0, 10);
+  if(!hits.length){ box.innerHTML='<div class="hm-sr-empty">找不到「'+escHtml(q)+'」相關內容</div>'; box.classList.add("show"); return; }
+  box.innerHTML = hits.map(function(h){
+    if(h.kind === "symptom"){
+      var s = h.item;
+      return '<a class="hm-sr-item" onclick="showSymptomDetail(\''+s.id+'\')">'+
+        '<span class="hm-sr-dot" style="background:#3B6D11"></span>'+
+        '<span class="hm-sr-name">'+escHtml(s.name)+'</span>'+
+        (s.name_en?'<span class="hm-sr-en">'+escHtml(s.name_en)+'</span>':'')+
+        '<span class="hm-sr-cat hm-sr-cat-sx">症狀導向</span></a>';
+    }
+    var d = h.item;
+    var col = CAT_COLORS[d.category] || "#7ab3d9";
+    return '<a class="hm-sr-item" onclick="selectDisease(\''+d.id+'\')">'+
+      '<span class="hm-sr-dot" style="background:'+col+'"></span>'+
+      '<span class="hm-sr-name">'+escHtml(d.name)+'</span>'+
+      (d.name_en?'<span class="hm-sr-en">'+escHtml(d.name_en)+'</span>':'')+
+      '<span class="hm-sr-cat">'+escHtml(d.category||"")+'</span></a>';
+  }).join("");
+  box.classList.add("show");
+}
+function hmSearchKey(e){
+  if(e.key === "Enter"){
+    var first = document.querySelector("#hmSearchResults .hm-sr-item");
+    if(first) first.click();
+  }
+}
+
+function showMyMarks(){
+  currentView = "mymarks";
+  currentId = null;
+  clearBreadcrumb();
+  try{ history.pushState(null,null,"#mymarks"); }catch(e){}
+  closeSidebarMobile();
+  renderSidebar(diseases);
+  document.getElementById("topTitle").textContent = "我的學習標記";
+  document.getElementById("topBadges").innerHTML = "";
+  document.getElementById("topStatus").innerHTML = "";
+  syncTopbarRow2();
+
+  var byId = {};
+  diseases.forEach(function(d){ byId[d.id] = d; });
+  var all = getAllMarks().filter(function(m){ return byId[m.disease_id]; });
+  // newest first
+  all.sort(function(a,b){ return (b.updated_at||"").localeCompare(a.updated_at||""); });
+
+  var weak = all.filter(function(m){ return m.flag === "weak"; });
+  var important = all.filter(function(m){ return m.flag === "important"; });
+  var noted = all.filter(function(m){ return m.note && m.note.trim(); });
+
+  var h = '<div class="mm">';
+  h += '<div class="mm-head"><div class="mm-title">我的學習標記</div>';
+  h += '<div class="mm-sub">跨疾病彙整你的筆記、易錯點與重點標記</div></div>';
+
+  if (!all.length){
+    h += '<div class="mm-empty"><i class="ti ti-notebook"></i><div>還沒有任何標記</div>'+
+         '<div class="mm-empty-hint">在任何疾病的 tab 下方「我的標記」面板，寫筆記或標記易錯/重點，就會集中顯示在這裡。</div></div>';
+    h += '</div>';
+    document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
+    return;
+  }
+
+  // Filter chips
+  h += '<div class="mm-tabs">';
+  h += '<button class="mm-tab on" onclick="filterMarks(this,\'all\')">全部 '+all.length+'</button>';
+  if(weak.length) h += '<button class="mm-tab" onclick="filterMarks(this,\'weak\')">⚠ 易錯 '+weak.length+'</button>';
+  if(important.length) h += '<button class="mm-tab" onclick="filterMarks(this,\'important\')">★ 重點 '+important.length+'</button>';
+  if(noted.length) h += '<button class="mm-tab" onclick="filterMarks(this,\'note\')">📝 有筆記 '+noted.length+'</button>';
+  h += '</div>';
+
+  h += '<div class="mm-list" id="mmList">';
+  all.forEach(function(m){ h += mmRow(m, byId); });
+  h += '</div>';
+
+  h += '</div>';
+  document.getElementById("mainContent").innerHTML = h;
+  scrollMainTop();
+}
+
+function mmRow(m, byId){
+  var d = byId[m.disease_id];
+  if(!d) return "";
+  var t = TABS.find(function(x){ return x.key === m.tab; });
+  var tabLabel = t ? t.label : m.tab;
+  var col = CAT_COLORS[d.category] || "#7ab3d9";
+  var flagCls = m.flag === "weak" ? "weak" : (m.flag === "important" ? "important" : "");
+  var dataAttr = 'data-flag="'+(m.flag||"")+'" data-note="'+(m.note&&m.note.trim()?"1":"0")+'"';
+  var h = '<div class="mm-row '+flagCls+'" '+dataAttr+' onclick="openMark(\''+m.disease_id+'\',\''+m.tab+'\')">';
+  h += '<span class="mm-row-dot" style="background:'+col+'"></span>';
+  h += '<div class="mm-row-body">';
+  h += '<div class="mm-row-head"><span class="mm-row-dz">'+escHtml(d.name)+'</span>';
+  h += '<span class="mm-row-tab">'+escHtml(tabLabel)+'</span>';
+  if(m.flag==="weak") h += '<span class="mm-row-flag mm-flag-weak">易錯</span>';
+  if(m.flag==="important") h += '<span class="mm-row-flag mm-flag-important">重點</span>';
+  h += '</div>';
+  if(m.note && m.note.trim()) h += '<div class="mm-row-note">'+escHtml(m.note)+'</div>';
+  h += '</div><i class="ti ti-chevron-right mm-row-chev"></i></div>';
+  return h;
+}
+
+function filterMarks(btn, kind){
+  document.querySelectorAll(".mm-tab").forEach(function(b){ b.classList.remove("on"); });
+  btn.classList.add("on");
+  document.querySelectorAll("#mmList .mm-row").forEach(function(row){
+    var show = true;
+    if(kind === "weak") show = row.getAttribute("data-flag") === "weak";
+    else if(kind === "important") show = row.getAttribute("data-flag") === "important";
+    else if(kind === "note") show = row.getAttribute("data-note") === "1";
+    row.style.display = show ? "" : "none";
+  });
+}
+
+function openMark(diseaseId, tab){
+  selectDisease(diseaseId, tab);
+}
+
 function showBookmarks(){
   currentView="bookmarks";
+  clearBreadcrumb();
   try{history.pushState(null,null,"#bookmarks")}catch(e){}
   closeSidebarMobile();
   renderSidebar(diseases);
@@ -4488,10 +5612,14 @@ function showBookmarks(){
       var stBadge="";
       if(st==="read")stBadge='<span style="font-size:11px;background:#EAF3DE;color:#3B6D11;padding:1px 8px;border-radius:10px">已讀完</span>';
       if(st==="review")stBadge='<span style="font-size:11px;background:#FAEEDA;color:#854F0B;padding:1px 8px;border-radius:10px">需複習</span>';
-      var hasNote=notes[d.id]&&notes[d.id].trim();
+      var mk=diseaseMarkSummary(d.id);
+      var subExtra="";
+      if(mk.hasNote)subExtra+=' · 📝 有筆記';
+      if(mk.hasWeak)subExtra+=' · ⚠ 易錯';
+      if(mk.hasImportant)subExtra+=' · ★ 重點';
       h+='<div class="bm-item" onclick="selectDisease(\''+d.id+'\')">';
       h+='<div><div class="bm-name">'+d.name+' <span style="font-weight:400;color:#4a7fa5;font-size:13px">'+(d.name_en||"")+'</span></div>';
-      h+='<div class="bm-sub">'+(d.category||"")+(hasNote?' · 📝 有筆記':'')+'</div></div>';
+      h+='<div class="bm-sub">'+(d.category||"")+subExtra+'</div></div>';
       h+='<div style="display:flex;gap:6px;align-items:center">'+stBadge+'</div>';
       h+='</div>';
     });
