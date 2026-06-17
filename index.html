@@ -18,6 +18,32 @@
   --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;
   /* Letterspacing for uppercase EN labels */
   --ls-label:0.08em}
+/* ── #3 motion + z-index tokens (consistency) ── */
+:root{
+  --t-fast:0.12s; --t-base:0.2s; --t-slow:0.3s;
+  --z-base:1; --z-dropdown:100; --z-sticky:200; --z-overlay:900; --z-modal:1000; --z-toast:2000;
+}
+/* ── #2 keyboard focus visibility (a11y) ──
+   Mouse clicks won't show a ring (focus-visible), but Tab navigation will.
+   Covers buttons, links, inputs, and the clickable div/span elements. */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, [onclick]:focus-visible, [tabindex]:focus-visible, [role="button"]:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+  border-radius:4px;
+}
+body.dark a:focus-visible, body.dark button:focus-visible, body.dark [onclick]:focus-visible{
+  outline-color:var(--blue);
+}
+/* ── #3 respect reduced-motion preference ── */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:0.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.001ms !important;
+    scroll-behavior:auto !important;
+  }
+}
 body.dark{--bg:#1a1e2e;--bg2:#1e2235;--bg3:#232840;--card:#252a3d;--border:#2e3550;--border2:#3a4260;--text:#c8cdd8;--text2:#8892a8;--text3:#5a6478;--blue:#5b9adf;--blue-bg:#1e2a42;--green:#7fc44e;--green-bg:#1e2e1e;--amber:#e8a838;--amber-bg:#2e2818;--red:#f07070;--red-bg:#2e1c1c;--step-bg:#2a2f42;--hover:rgba(90,140,220,0.08);--active:rgba(90,140,220,0.15);--img-bg:#0d0f18}
 body.dark .sidebar-search input,body.dark .fg input,body.dark .fg select,body.dark .fg textarea,body.dark .notes-body textarea{background:var(--bg3);color:var(--text);border-color:var(--border)}
 body.dark p,body.dark div,body.dark span,body.dark li,body.dark td,body.dark th{color:inherit}
@@ -159,6 +185,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 @media(max-width:768px){.sidebar-close{display:flex}}
 .logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:#185FA5}
 .sidebar-search{padding:10px 10px 6px}
+.search-wrap{position:relative;display:flex;align-items:center}
+.search-wrap input{padding-right:30px!important}
+.search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:20px;height:20px;display:flex;align-items:center;justify-content:center;border:none;background:var(--bg2);color:var(--text3);border-radius:50%;cursor:pointer;font-size:11px;line-height:1;padding:0}
+.search-clear:hover{background:var(--border);color:var(--text)}
+.sidebar-empty{padding:28px 20px;text-align:center}
+.sidebar-empty-icon{font-size:28px;margin-bottom:8px;opacity:0.8}
+.sidebar-empty-title{font-size:var(--fs-sm);font-weight:var(--fw-semi);color:var(--text2);margin-bottom:4px}
+.sidebar-empty-sub{font-size:var(--fs-xs);color:var(--text3);line-height:1.5;margin-bottom:6px;word-break:break-word}
+.sidebar-empty-hint{font-size:var(--fs-label);color:var(--text3);line-height:1.5;margin-bottom:12px}
+.sidebar-empty-btn{font-size:var(--fs-xs);color:var(--blue);background:var(--blue-bg);border:0.5px solid var(--border);border-radius:8px;padding:5px 14px;cursor:pointer;font-family:inherit}
+.sidebar-empty-btn:hover{background:var(--border)}
 .sidebar-search input{width:100%;padding:7px 10px;font-size:13px;border:0.5px solid #B5D4F4;border-radius:8px;background:#fff;color:#185FA5}
 .sidebar-search input::placeholder{color:#7ab3d9}
 .sidebar-section{padding:6px 10px 2px;font-size:11px;color:#378ADD;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
@@ -187,6 +224,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .btn-primary:hover{background:#0C447C}
 .btn-ghost{background:transparent;color:#4a7fa5;border:0.5px solid #B5D4F4}
 .btn-home{background:var(--blue-bg);color:var(--blue);border:1px solid var(--border2);font-weight:600}
+/* grouped sidebar navigation */
+.nav-group{margin-top:12px}
+.nav-group-label{font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--text3);text-transform:uppercase;letter-spacing:var(--ls-label);padding:0 4px 5px}
+.nav-item{display:flex;align-items:center;gap:9px;width:100%;justify-content:flex-start;background:var(--card);color:var(--text2);border:0.5px solid var(--border);text-align:left;margin-top:5px;font-weight:var(--fw-medium)}
+.nav-item:hover{background:var(--blue-bg);color:var(--blue);border-color:var(--border2)}
+.nav-item-ghost{background:transparent}
+.nav-ico{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+body.dark .nav-item{background:var(--bg3);color:var(--text2);border-color:var(--border)}
+body.dark .nav-item:hover{background:var(--blue-bg);color:var(--blue)}
+body.dark .nav-group-label{color:var(--text3)}
 .btn-home:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
 /* Auth button + modal */
 .btn-auth{background:var(--card);color:var(--text2);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px}
@@ -499,10 +546,41 @@ body.dark .step-quiz .step-q:not(.revealed) .step-num{background:var(--bg);color
 .hm-sr-en{font-size:var(--fs-xs);color:var(--text3)}
 .hm-sr-cat{margin-left:auto;font-size:var(--fs-label);color:var(--text2);background:var(--bg2);padding:2px 8px;border-radius:6px}
 .hm-sr-cat-sx{color:var(--green);background:var(--green-bg)}
+.hm-sr-cat-topic{color:#6B3FA0;background:#F0E8FB}
+body.dark .hm-sr-cat-topic{color:#b794e0;background:#2a2140}
 .hm-sr-empty{padding:14px;text-align:center;font-size:var(--fs-sm);color:var(--text3)}
 .hm-quick{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:22px 0 28px}
+/* feature tool cards (home) */
+.hm-tools-sect{max-width:760px;margin:24px auto 28px}
+.hm-tools-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.hm-tools-zh{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--blue)}
+.hm-tools-en{font-size:var(--fs-label);color:var(--text3);text-transform:uppercase;letter-spacing:var(--ls-label)}
+.hm-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hm-tool{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:16px;border:0.5px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;font-family:inherit;transition:border-color var(--t-fast),background var(--t-fast),box-shadow var(--t-fast)}
+.hm-tool:hover{border-color:var(--border2);background:var(--blue-bg);box-shadow:0 2px 12px rgba(24,95,165,0.08)}
+.hm-tool-star{border-color:var(--border2)}
+.hm-tool-star::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 3px 3px 0;background:var(--blue)}
+.hm-tool-badge{position:absolute;top:12px;right:12px;font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--blue);background:var(--blue-bg);border:0.5px solid var(--border2);padding:1px 8px;border-radius:10px}
+.hm-tool-ico{font-size:22px;color:var(--blue);line-height:1}
+.hm-tool-ico .ti{width:1em;height:1em}
+.hm-tool-name{font-size:var(--fs-body);font-weight:var(--fw-semi);color:var(--text)}
+.hm-tool-desc{font-size:var(--fs-xs);color:var(--text2);line-height:1.5}
+body.dark .hm-tool{background:var(--bg3)}
+body.dark .hm-tool:hover{background:var(--blue-bg)}
+@media(max-width:600px){.hm-tools-grid{grid-template-columns:1fr}}
 .hm-quick-btn{display:flex;align-items:center;gap:7px;padding:9px 16px;border:0.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-size:var(--fs-sm);font-weight:var(--fw-medium);cursor:pointer;transition:border-color 0.12s,background 0.12s;font-family:inherit}
 .hm-quick-btn:hover{border-color:var(--border2);background:var(--blue-bg)}
+/* lightweight onboarding card */
+.hm-onboard{position:relative;max-width:760px;margin:6px auto 0;padding:16px 18px;background:var(--card);border:0.5px solid var(--border);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:opacity .2s,transform .2s}
+.hm-onboard-x{position:absolute;top:10px;right:10px;width:22px;height:22px;border:none;background:var(--bg2);color:var(--text3);border-radius:50%;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0}
+.hm-onboard-x:hover{background:var(--border);color:var(--text)}
+.hm-onboard-title{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--text);margin-bottom:12px}
+.hm-onboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hm-onboard-item{display:flex;gap:9px;align-items:flex-start}
+.hm-onboard-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.hm-onboard-item b{display:block;font-size:var(--fs-sm);color:var(--text);margin-bottom:2px}
+.hm-onboard-item span{display:block;font-size:var(--fs-xs);color:var(--text2);line-height:1.5}
+@media(max-width:720px){.hm-onboard-grid{grid-template-columns:1fr;gap:11px}}
 .hm-quick-btn i{font-size:17px;color:var(--blue)}
 .hm-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:720px){.hm-grid{grid-template-columns:1fr}}
@@ -656,6 +734,31 @@ a.bc-item:hover{color:var(--blue);background:var(--hover)}
 .pat-answer-pearl{font-size:var(--fs-sm);color:var(--text2);text-align:center;line-height:var(--lh-normal);max-width:480px;background:var(--blue-bg);border-radius:8px;padding:8px 14px;margin-top:2px}
 /* Inline images inside disease section paragraphs */
 .inline-img{margin:16px 0;border:0.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg2);max-width:560px}
+/* ---- Image protection + 醫謀 watermark ---- */
+img{ -webkit-user-drag:none; -khtml-user-drag:none; -moz-user-drag:none; -o-user-drag:none; user-drag:none; -webkit-touch-callout:none; user-select:none; -webkit-user-select:none; }
+/* watermark layer sits above the image; pointer-events:none keeps zoom-click working */
+.wm-frame{position:relative}
+.wm-frame::after{
+  content:"醫謀";
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:clamp(20px,9vw,52px); font-weight:800; letter-spacing:0.18em;
+  color:rgba(255,255,255,0.16);
+  text-shadow:0 1px 2px rgba(0,0,0,0.25);
+  pointer-events:none; user-select:none;
+  /* repeat diagonally so a crop still catches it */
+  background-image:repeating-linear-gradient(-30deg, transparent 0 90px, rgba(255,255,255,0.015) 90px 180px);
+  transform:rotate(-18deg) scale(1.4);
+  overflow:hidden;
+}
+/* corner mark — always-visible source tag, harder to crop out cleanly */
+.wm-frame::before{
+  content:"醫謀 yìmóu";
+  position:absolute; right:6px; bottom:5px; z-index:2;
+  font-size:11px; font-weight:700; letter-spacing:0.05em;
+  color:rgba(255,255,255,0.55); text-shadow:0 1px 3px rgba(0,0,0,0.6);
+  pointer-events:none; user-select:none;
+}
 .inline-img-frame{background:var(--img-bg);cursor:zoom-in;line-height:0}
 .inline-img-frame img{display:block;width:100%;max-height:420px;object-fit:contain}
 .inline-img-cap{padding:10px 14px;font-size:var(--fs-xs);color:var(--text2);line-height:var(--lh-snug)}
@@ -905,7 +1008,7 @@ body.dark #minimap{background:rgba(20,30,50,0.85);border-color:#3a4a6a;box-shado
 .notes-header:hover{background:#f0f5fb}
 .notes-body{padding:12px 14px}
 .notes-body textarea{width:100%;min-height:80px;padding:10px;border:0.5px solid #B5D4F4;border-radius:8px;font-size:15px;font-family:inherit;resize:vertical;line-height:1.6;color:#2c4a63}
-.notes-body textarea:focus{outline:none;border-color:#185FA5}
+.notes-body textarea:focus{outline:none;border-color:var(--blue)}
 .bm-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #f0f5fb;cursor:pointer;transition:background 0.1s}
 .bm-item:hover{background:rgba(24,95,165,0.06)}
 .bm-item:last-child{border-bottom:none}
@@ -1283,7 +1386,7 @@ body.dark .clue-badge-xref{color:var(--text3)}
 <div class="loading" id="loadingScreen">
   <div style="text-align:center">
     <div class="spinner" style="margin:0 auto 12px"></div>
-    <div style="font-size:14px;color:#185FA5">連接 Supabase 中...</div>
+    <div style="font-size:14px;color:var(--blue)">連接 Supabase 中...</div>
   </div>
 </div>
 
@@ -1291,18 +1394,27 @@ body.dark .clue-badge-xref{color:var(--text3)}
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <div class="sidebar hidden" id="sidebar">
     <div class="sidebar-header"><div class="logo" onclick="showHome()" style="cursor:pointer"><i class="ti ti-stethoscope"></i>MedBase TW</div><button class="sidebar-close" onclick="toggleSidebar()">✕</button></div>
-    <div class="sidebar-search"><input id="searchInput" placeholder="搜尋疾病..." oninput="filterList()"></div>
+    <div class="sidebar-search"><div class="search-wrap"><input id="searchInput" placeholder="搜尋疾病、症狀、檢驗值…" oninput="filterListDebounced()" aria-label="搜尋"><button id="searchClear" class="search-clear" onclick="clearSearch()" title="清除" aria-label="清除搜尋" style="display:none">✕</button></div></div>
     <div class="sidebar-section" id="countLabel">知識庫</div>
     <div class="sidebar-list" id="sidebarList"></div>
     <div class="sidebar-bottom">
       <button class="btn btn-auth" id="authBtn" onclick="openLoginModal()"><i class="ti ti-cloud"></i> 登入 / 同步</button>
       <button class="btn btn-home" onclick="showHome()">🏠 首頁</button>
-      <button class="btn btn-primary" onclick="showSymptoms()" style="background:#2E8B57">🧠 症狀導向學習</button>
-      <button class="btn btn-primary" onclick="showTopics()" style="background:#6B3FA0">📚 知識專題</button>
-      <button class="btn btn-primary" onclick="showGraph()">🔗 疾病關係圖</button>
-      <button class="btn btn-primary" onclick="showCompare()" style="background:#B5651D">⇄ 鑑別比較</button>
-      <button class="btn btn-ghost" onclick="showMyMarks()">📝 我的標記</button>
-      <button class="btn btn-ghost" onclick="showBookmarks()">⭐ 書籤列表</button>
+      <div class="nav-group">
+        <div class="nav-group-label">學習</div>
+        <button class="btn nav-item" onclick="showSymptoms()"><span class="nav-ico">🧠</span>症狀導向學習</button>
+        <button class="btn nav-item" onclick="showTopics()"><span class="nav-ico">📚</span>知識專題</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">瀏覽與比較</div>
+        <button class="btn nav-item" onclick="showGraph()"><span class="nav-ico">🔗</span>疾病關係圖</button>
+        <button class="btn nav-item" onclick="showCompare()"><span class="nav-ico">⇄</span>鑑別比較</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">我的收藏</div>
+        <button class="btn nav-item nav-item-ghost" onclick="showMyMarks()"><span class="nav-ico">📝</span>我的標記</button>
+        <button class="btn nav-item nav-item-ghost" onclick="showBookmarks()"><span class="nav-ico">⭐</span>書籤列表</button>
+      </div>
     </div>
   </div>
   <div class="main">
@@ -1429,6 +1541,12 @@ var SECTION_LABELS = {
 var bookmarks = {}, dStatus = {};
 var recentIds = [];
 function loadRecent(){ try{var r=localStorage.getItem("mb_recent");if(r)recentIds=JSON.parse(r)}catch(e){recentIds=[]} }
+function _onboardDismissed(){ try{ return localStorage.getItem("mb_onboard_done")==="1"; }catch(e){ return false; } }
+function dismissOnboard(){
+  try{ localStorage.setItem("mb_onboard_done","1"); }catch(e){}
+  var el = document.getElementById("hmOnboard");
+  if (el){ el.style.opacity="0"; el.style.transform="translateY(-6px)"; setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 200); }
+}
 // Reset the content pane (and window) to the top after navigating to a new view
 function scrollMainTop(){
   var mc = document.getElementById("mainContent");
@@ -1943,13 +2061,16 @@ async function init() {
       }
     } else if (hash && diseases.find(function(d){return d.id===hash})) {
       selectDisease(hash);
+    } else if (hash.indexOf(":") > 0 && diseases.find(function(d){return d.id===hash.split(":")[0]})) {
+      var dzId = hash.split(":")[0], dzTab = hash.split(":")[1];
+      selectDisease(dzId, dzTab);
     } else if (hash === "home" || !hash) {
       showHome();
     } else if (diseases.length > 0) {
       showHome();
     }
   } catch(e) {
-    document.getElementById("loadingScreen").innerHTML = '<div style="text-align:center;padding:20px"><div style="color:#A32D2D;font-size:14px;background:#FCEBEB;border:0.5px solid #F09595;border-radius:12px;padding:16px 20px"><b>連線失敗</b><br>' + (e.message || "請檢查網路") + '</div></div>';
+    document.getElementById("loadingScreen").innerHTML = '<div style="text-align:center;padding:20px"><div style="color:#A32D2D;font-size:14px;background:var(--red-bg);border:0.5px solid #F09595;border-radius:12px;padding:16px 20px"><b>連線失敗</b><br>' + (e.message || "請檢查網路") + '</div></div>';
   }
 }
 
@@ -2007,7 +2128,7 @@ function renderSidebar(list) {
       var cls = isActive ? "si active" : "si";
       var icons = '';
       if (bookmarks[d.id]) icons += '<span style="font-size:11px">⭐</span>';
-      if (dStatus[d.id] === "read") icons += '<span class="si-dot" style="background:#3B6D11"></span>';
+      if (dStatus[d.id] === "read") icons += '<span class="si-dot" style="background:var(--green)"></span>';
       if (dStatus[d.id] === "review") icons += '<span class="si-dot" style="background:#BA7517"></span>';
       var hit = searchHitMap[d.id];
       var hitHtml = "";
@@ -2029,7 +2150,21 @@ function renderSidebar(list) {
     h += '</div>';
   });
 
-  if (!list.length) h = '<div class="empty" style="padding:20px">' + (diseases.length === 0 ? "資料庫尚無條目" : "找不到符合的疾病") + '</div>';
+  if (!list.length){
+    if (diseases.length === 0){
+      h = '<div class="empty sidebar-empty"><div class="sidebar-empty-icon">📭</div><div class="sidebar-empty-title">資料庫尚無條目</div></div>';
+    } else {
+      var qEl = document.getElementById("searchInput");
+      var qv = qEl ? qEl.value.trim() : "";
+      h = '<div class="empty sidebar-empty">'+
+          '<div class="sidebar-empty-icon">🔍</div>'+
+          '<div class="sidebar-empty-title">找不到符合的結果</div>'+
+          (qv ? '<div class="sidebar-empty-sub">沒有疾病、症狀或內容符合「'+escHtml(qv)+'」</div>' : '')+
+          '<div class="sidebar-empty-hint">試試更短的關鍵字，或檢驗值（如 haptoglobin、JAK2）</div>'+
+          '<button class="sidebar-empty-btn" onclick="clearSearch()">清除搜尋</button>'+
+          '</div>';
+    }
+  }
   document.getElementById("sidebarList").innerHTML = h;
 }
 
@@ -2140,6 +2275,25 @@ function findMatchLocation(diseaseId, q){
   return null;
 }
 
+var _searchDebounceTimer = null;
+// Debounced search: avoids rebuilding the whole sidebar + running the full-text
+// index on every keystroke (noticeable lag at 130+ diseases with deep search).
+function filterListDebounced(){
+  var el = document.getElementById("searchInput");
+  var clr = document.getElementById("searchClear");
+  if (clr) clr.style.display = (el && el.value) ? "flex" : "none";
+  if (_searchDebounceTimer) clearTimeout(_searchDebounceTimer);
+  _searchDebounceTimer = setTimeout(filterList, 150);
+}
+function clearSearch(){
+  var el = document.getElementById("searchInput");
+  if (el){ el.value = ""; el.focus(); }
+  var clr = document.getElementById("searchClear");
+  if (clr) clr.style.display = "none";
+  if (_searchDebounceTimer) clearTimeout(_searchDebounceTimer);
+  filterList();
+}
+
 function filterList() {
   var q = document.getElementById("searchInput").value.toLowerCase().trim();
   searchHitMap = {};
@@ -2195,12 +2349,14 @@ function selectDisease(id, startTab, fromHistory) {
   if (d && d.category) expandedCat = d.category;
   if (!fromHistory){
     try{
+      // build hash with tab if we already know a concrete startTab (deep-link / link share)
+      var tabPart = (currentTab && currentTab !== "__first__") ? (":" + currentTab) : "";
       // Same disease already open (e.g. tab switch) → replace; navigating to a different
       // disease (or coming from another view) → push a new history entry so Back works.
       if(prevView === "entry" && prevId === id){
-        history.replaceState(null,null,"#"+id);
+        history.replaceState(null,null,"#"+id+tabPart);
       } else {
-        history.pushState(null,null,"#"+id);
+        history.pushState(null,null,"#"+id+tabPart);
       }
     }catch(e){}
   }
@@ -2313,6 +2469,13 @@ function renderEntry() {
   if (availTabs.length > 0 && !availTabs.find(function(t){return t.key===currentTab})) {
     currentTab = availTabs[0].key;
   }
+  // keep URL in sync with the actually-shown tab (covers __first__ sentinel resolution)
+  if (currentView === "entry" && currentId && currentTab && currentTab !== "__first__"){
+    try{
+      var want = "#" + currentId + ":" + currentTab;
+      if (location.hash !== want) history.replaceState(null, null, want);
+    }catch(e){}
+  }
 
   var tabsHtml = availTabs.map(function(t) {
     var cls = "tab" + (t.key === currentTab ? " active" : "");
@@ -2320,7 +2483,7 @@ function renderEntry() {
   }).join("");
 
   if (availTabs.length === 0) {
-    document.getElementById("mainContent").innerHTML = renderPathNav() + '<div class="card"><div style="padding:40px;text-align:center;color:#7ab3d9;font-size:15px">此疾病尚無任何內容，請在 CMS 中編輯</div></div>' + renderNotesPanel();
+    document.getElementById("mainContent").innerHTML = renderPathNav() + '<div class="card"><div style="padding:40px;text-align:center;color:var(--text3);font-size:15px">此疾病尚無任何內容，請在 CMS 中編輯</div></div>' + renderNotesPanel();
     renderBreadcrumb(d, availTabs);
     scrollMainTop();
     return;
@@ -2435,28 +2598,12 @@ function getRelatedDiseases(id){
     seen[d.id] = true;
     out.push({ disease: d, reason: reason, score: score });
   }
-  // 1) Manual (highest priority — explicit differential)
+  // Manual only — explicitly curated related diseases (auto symptom/category derivation removed by design)
   _manualRelatedIds(self).forEach(function(rid){
     var d = diseases.find(function(x){ return x.id === rid; });
     add(d, "manual", 100);
   });
-  // 2) Symptom-shared (differential-by-presentation), ranked by # shared symptoms
-  var shared = _buildSymptomShared()[id] || {};
-  Object.keys(shared).sort(function(a,b){ return shared[b]-shared[a]; }).forEach(function(oid){
-    var d = diseases.find(function(x){ return x.id === oid; });
-    // prefer those that also share category (stronger "same-class" signal)
-    var score = 50 + shared[oid] + (d && d.category === self.category ? 5 : 0);
-    add(d, "symptom", score);
-  });
-  // 3) Same category (same-class learning), only if we still have few
-  if(out.length < 6){
-    diseases.forEach(function(d){
-      if(d.category && d.category === self.category) add(d, "category", 20);
-    });
-  }
-  // cap and sort by score
-  out.sort(function(a,b){ return b.score - a.score; });
-  return out.slice(0, 8);
+  return out;
 }
 
 function renderRelNav(id){
@@ -2516,22 +2663,17 @@ function renderRelNav(id){
   }
   // Related (differential / same-class) diseases
   if (related.length){
-    var reasonLabel = { manual: "相關", symptom: "表現相似", category: "同類", compare: "可比較" };
-    var reasonCls = { manual: "rd-manual", symptom: "rd-symptom", category: "rd-cat", compare: "rd-cmp" };
     html += '<div class="relnav-header rd-header"><span class="relnav-header-zh">相關疾病</span>' +
       '<span class="relnav-header-en">· RELATED</span></div>';
     html += '<div class="rd-list">';
     related.forEach(function(it){
       var d = it.disease;
       var col = CAT_COLORS[d.category] || "#7ab3d9";
-      var lbl = reasonLabel[it.reason] || "相關";
-      var rcls = reasonCls[it.reason] || "rd-cat";
       html += '<div class="rd-item">' +
         '<a class="rd-item-main" onclick="selectDisease(\'' + d.id + '\')">' +
         '<span class="rd-dot" style="background:' + col + '"></span>' +
         '<span class="rd-body"><span class="rd-name">' + escHtml(d.name) + '</span>' +
-        (d.name_en ? '<span class="rd-en">' + escHtml(d.name_en) + '</span>' : '') + '</span>' +
-        '<span class="rd-reason ' + rcls + '">' + lbl + '</span></a>' +
+        (d.name_en ? '<span class="rd-en">' + escHtml(d.name_en) + '</span>' : '') + '</span></a>' +
         '<button class="rd-cmp-btn" title="加入鑑別比較" onclick="startCompareWith(\'' + id + '\',\'' + d.id + '\')"><i class="ti ti-arrows-left-right"></i></button>' +
         '</div>';
     });
@@ -2618,6 +2760,10 @@ function togglePattern(i){
 
 function switchTab(key) {
   currentTab = key;
+  // reflect tab in URL without adding a history entry (Back shouldn't step through tabs)
+  if (currentId){
+    try{ history.replaceState(null, null, "#" + currentId + ":" + key); }catch(e){}
+  }
   renderEntry();
 }
 
@@ -2709,13 +2855,13 @@ function renderRichText(text){
         html+='<table style="width:100%;border-collapse:collapse;margin:8px 0;font-size:15px">';
         html+='<tbody>';
         html+='<tr>';
-        cells.forEach(function(c){html+='<th style="padding:8px 10px;text-align:left;border:0.5px solid #B5D4F4;background:#f0f5fb;color:#185FA5;font-weight:500;font-size:14px;vertical-align:top">'+fmt(c.trim())+'</th>'});
+        cells.forEach(function(c){html+='<th style="padding:8px 10px;text-align:left;border:0.5px solid var(--border);background:var(--bg);color:var(--blue);font-weight:500;font-size:14px;vertical-align:top">'+fmt(c.trim())+'</th>'});
         html+='</tr>';
         inTable=true;
         return;
       }
       html+='<tr>';
-      cells.forEach(function(c){html+='<td style="padding:8px 10px;border:0.5px solid #B5D4F4;font-size:15px;vertical-align:top">'+fmt(c.trim())+'</td>'});
+      cells.forEach(function(c){html+='<td style="padding:8px 10px;border:0.5px solid var(--border);font-size:15px;vertical-align:top">'+fmt(c.trim())+'</td>'});
       html+='</tr>';
       return;
     }
@@ -2747,11 +2893,11 @@ function renderRichText(text){
       if(inList){html+="</ul>";inList=false}
       var level = hm[1].length;
       if (level === 1){
-        html+='<div style="font-size:17px;font-weight:600;color:#185FA5;margin:18px 0 6px;line-height:1.4">'+fmt(hm[2])+'</div>';
+        html+='<div style="font-size:17px;font-weight:600;color:var(--blue);margin:18px 0 6px;line-height:1.4">'+fmt(hm[2])+'</div>';
       } else if (level === 2){
-        html+='<div style="font-size:14px;font-weight:600;color:#185FA5;margin:14px 0 4px;line-height:1.4">'+fmt(hm[2])+'</div>';
+        html+='<div style="font-size:14px;font-weight:600;color:var(--blue);margin:14px 0 4px;line-height:1.4">'+fmt(hm[2])+'</div>';
       } else {
-        html+='<div style="font-size:11px;font-weight:600;color:#185FA5;text-transform:uppercase;letter-spacing:0.1em;margin:12px 0 3px;line-height:1.4">'+fmt(hm[2])+'</div>';
+        html+='<div style="font-size:11px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;margin:12px 0 3px;line-height:1.4">'+fmt(hm[2])+'</div>';
       }
       return;
     }
@@ -2816,8 +2962,8 @@ function buildIvHtml(){
   var canvasCls = "iv-canvas" + (hasAnnot && !ivState.showAnnot ? " no-annot" : "");
   h += '<div class="' + canvasCls + '" id="iv-canvas" onmousedown="ivStartDrag(event)" onmousemove="ivDrag(event)" onmouseup="ivEndDrag()" onmouseleave="ivEndDrag()" onwheel="ivWheel(event)" ondblclick="ivFit()">';
   if (img.url){
-    h += '<div class="iv-img-wrap" id="iv-img-wrap">';
-    h += '<img class="iv-img" id="iv-img" src="' + escAttr(img.url) + '" alt="' + escAttr(img.title || "") + '" draggable="false" onerror="imgErr(this)">';
+    h += '<div class="iv-img-wrap wm-frame" id="iv-img-wrap">';
+    h += '<img class="iv-img" id="iv-img" src="' + escAttr(img.url) + '" alt="' + escAttr(img.title || "") + '" draggable="false" oncontextmenu="return false" onerror="imgErr(this)">';
     if (hasAnnot){
       h += renderAnnotSvg(img.annotations);
     }
@@ -3135,6 +3281,8 @@ window.addEventListener("popstate", function(){
     }
   } else if (hash && diseases.find(function(d){ return d.id === hash; })) {
     selectDisease(hash, null, true);
+  } else if (hash.indexOf(":") > 0 && diseases.find(function(d){ return d.id === hash.split(":")[0]; })) {
+    selectDisease(hash.split(":")[0], hash.split(":")[1], true);
   } else if (hash === "home" || !hash) {
     showHome();
   } else if (diseases.length > 0) {
@@ -3155,7 +3303,7 @@ function sectionUsesInlineImages(content){
 function renderSection(data, drugs, comps, raw) {
   var content = data;
   if (typeof content === "string") try { content = JSON.parse(content); } catch(e) {}
-  if (!content && !drugs && !comps) return '<p style="color:#7ab3d9">此區段尚無內容</p>';
+  if (!content && !drugs && !comps) return '<p style="color:var(--text3)">此區段尚無內容</p>';
 
   // Custom renderers for high-yield & pattern-recognition tabs
   if (currentTab === "pearls") return renderPearls(content);
@@ -3375,7 +3523,7 @@ function renderSection(data, drugs, comps, raw) {
     html += '</div>';
   }
 
-  return html || '<p style="color:#7ab3d9">此區段尚無內容</p>';
+  return html || '<p style="color:var(--text3)">此區段尚無內容</p>';
 }
 
 function showGraph() {
@@ -3567,9 +3715,9 @@ function showGraph() {
   controls += '</div>';
   controls += '<span class="graph-toolbar-hint">點節點高亮關係 · 再點一次開啟 · 點空白還原</span></div>';
 
-  var info = '<div style="font-size:12px;color:#7ab3d9;text-align:center;margin-top:8px">連線 = 併發症關係（箭頭方向為併發症指向） · 共 ' + edgeCount + ' 條連結</div>';
+  var info = '<div style="font-size:12px;color:var(--text3);text-align:center;margin-top:8px">連線 = 併發症關係（箭頭方向為併發症指向） · 共 ' + edgeCount + ' 條連結</div>';
 
-  document.getElementById("mainContent").innerHTML = '<div class="card" style="padding:16px">' + controls + '<div id="graphWrap" style="overflow:hidden;border:0.5px solid #B5D4F4;border-radius:8px;height:calc(100vh - 180px);position:relative;cursor:grab;touch-action:none"><div id="graphInner" style="transform-origin:0 0">' + svg + '</div><div id="minimap"></div></div>' + legend + info + '</div>';
+  document.getElementById("mainContent").innerHTML = '<div class="card" style="padding:16px">' + controls + '<div id="graphWrap" style="overflow:hidden;border:0.5px solid var(--border);border-radius:8px;height:calc(100vh - 180px);position:relative;cursor:grab;touch-action:none"><div id="graphInner" style="transform-origin:0 0">' + svg + '</div><div id="minimap"></div></div>' + legend + info + '</div>';
 
   // Init pan/zoom
   var gx=0,gy=0,gs=1,dragging=false,sx=0,sy=0;
@@ -3975,7 +4123,7 @@ function renderInlineImage(im, inRow){
   var caption = im.caption || im.title || im.description || "";
   var capAttr = escAttr(caption);
   var s = '<figure class="inline-img' + (inRow ? " inline-img-incol" : "") + '">';
-  s += '<div class="inline-img-frame" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" alt="' + escAttr(caption) + '" loading="lazy" onerror="imgErr(this)"></div>';
+  s += '<div class="inline-img-frame wm-frame" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" alt="' + escAttr(caption) + '" loading="lazy" oncontextmenu="return false" onerror="imgErr(this)"></div>';
   if (caption) s += '<figcaption class="inline-img-cap">' + fmt(caption) + '</figcaption>';
   s += '</figure>';
   return s;
@@ -3985,7 +4133,7 @@ function renderTopicInlineImage(im){
   var url = escAttr(im.url);
   var capAttr = escAttr(im.caption || "");
   var s = '<figure style="margin:18px 0;border:0.5px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg2);max-width:600px">';
-  s += '<div style="background:#1a1a2e;cursor:zoom-in" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" loading="lazy" onerror="imgErr(this)" style="display:block;width:100%;max-height:400px;object-fit:contain"></div>';
+  s += '<div class="wm-frame" style="position:relative;background:var(--img-bg);cursor:zoom-in" onclick="openTopicImage(\'' + url + '\',\'' + capAttr + '\')"><img src="' + escHtml(im.url) + '" loading="lazy" draggable="false" oncontextmenu="return false" onerror="imgErr(this)" style="display:block;width:100%;max-height:400px;object-fit:contain"></div>';
   if (im.caption) s += '<figcaption style="padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.55">' + escHtml(im.caption) + '</figcaption>';
   s += '</figure>';
   return s;
@@ -3995,11 +4143,17 @@ function openTopicImage(url, caption){
   var bg = document.createElement("div");
   bg.style.cssText = "position:fixed;inset:0;background:rgba(10,15,25,0.9);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;cursor:zoom-out;backdrop-filter:blur(6px)";
   bg.onclick = function(){ document.body.removeChild(bg); };
+  var frame = document.createElement("div");
+  frame.className = "wm-frame";
+  frame.style.cssText = "position:relative;display:inline-flex;line-height:0;max-width:100%;max-height:85vh";
   var img = document.createElement("img");
   img.src = url;
+  img.draggable = false;
+  img.oncontextmenu = function(){ return false; };
   img.style.cssText = "max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.5)";
   img.onclick = function(e){ e.stopPropagation(); };
-  bg.appendChild(img);
+  frame.appendChild(img);
+  bg.appendChild(frame);
   if (caption){
     var cap = document.createElement("div");
     cap.textContent = caption;
@@ -4166,7 +4320,7 @@ function selectTopic(id, fromHistory){
         h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:' + (hasBody ? '14' : '0') + 'px">';
         leftover.forEach(function(im){
           h += '<figure style="margin:0;border:0.5px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg2)">';
-          h += '<div style="background:#1a1a2e;cursor:zoom-in" onclick="openTopicImage(\'' + escAttr(im.url) + '\',\'' + escAttr(im.caption||"") + '\')"><img src="' + escHtml(im.url) + '" loading="lazy" onerror="imgErr(this)" style="display:block;width:100%;max-height:220px;object-fit:contain"></div>';
+          h += '<div style="background:var(--img-bg);cursor:zoom-in" onclick="openTopicImage(\'' + escAttr(im.url) + '\',\'' + escAttr(im.caption||"") + '\')"><img src="' + escHtml(im.url) + '" loading="lazy" onerror="imgErr(this)" style="display:block;width:100%;max-height:220px;object-fit:contain"></div>';
           if (im.caption) h += '<figcaption style="padding:8px 12px;font-size:12px;color:var(--text2);line-height:1.5">' + escHtml(im.caption) + '</figcaption>';
           h += '</figure>';
         });
@@ -4191,7 +4345,7 @@ function showSymptoms(){
   renderSidebar(diseases);
   document.getElementById("topTitle").textContent = "🧠 症狀導向學習";
   document.getElementById("topBadges").innerHTML = symptoms.length ?
-    '<span class="badge" style="background:#EAF3DE;color:#3B6D11">' + symptoms.length + ' 個症狀</span>' : '';
+    '<span class="badge" style="background:var(--green-bg);color:var(--green)">' + symptoms.length + ' 個症狀</span>' : '';
   document.getElementById("topStatus").innerHTML = "";
   syncTopbarRow2();
 
@@ -4637,7 +4791,7 @@ function renderCompareMatrix(diseaseMap){
     h += '<div class="cmp-dx-meta">';
     h += '<span style="color:' + color + ';font-weight:600">' + escHtml(item.mechanism.name) + '</span>';
     h += '<span>📍 ' + escHtml(item.anatomy.name) + (item.anatomy.body_region ? ' [' + escHtml(item.anatomy.body_region) + ']' : '') + '</span>';
-    if (item.is_classic) h += '<span style="font-size:11px;color:#854F0B">⭐ 經典</span>';
+    if (item.is_classic) h += '<span style="font-size:11px;color:var(--amber)">⭐ 經典</span>';
     h += '</div>';
     h += '</th>';
   });
@@ -4666,7 +4820,7 @@ function renderCompareMatrix(diseaseMap){
 
   // Legend
   h += '<div class="cmp-hint">';
-  h += '<span class="cmp-hint-item"><span style="color:#3B6D11;font-weight:700">✓</span> 此疾病有此 clue</span>';
+  h += '<span class="cmp-hint-item"><span style="color:var(--green);font-weight:700">✓</span> 此疾病有此 clue</span>';
   h += '<span class="cmp-hint-item"><span style="color:var(--text3)">—</span> 此疾病無此 clue</span>';
   h += '<span class="cmp-hint-item"><span class="cmp-hint-key">key</span> 只有一個疾病有 = 區分要點</span>';
   h += '</div>';
@@ -6114,13 +6268,42 @@ function showHome(){
   h += '</div>';
 
   // Quick actions
-  h += '<div class="hm-quick">';
-  h += '<button class="hm-quick-btn" onclick="showSymptoms()"><i class="ti ti-stethoscope"></i><span>症狀導向學習</span></button>';
-  h += '<button class="hm-quick-btn" onclick="showTopics()"><i class="ti ti-books"></i><span>知識專題</span></button>';
-  h += '<button class="hm-quick-btn" onclick="showGraph()"><i class="ti ti-affiliate"></i><span>疾病關係圖</span></button>';
-  h += '<button class="hm-quick-btn" onclick="showCompare()"><i class="ti ti-columns-3"></i><span>鑑別比較</span></button>';
-  h += '<button class="hm-quick-btn" onclick="showBookmarks()"><i class="ti ti-star"></i><span>書籤列表</span></button>';
-  h += '</div>';
+  // Feature tools — descriptive cards so first-timers understand what each does
+  h += '<div class="hm-tools-sect">';
+  h += '<div class="hm-tools-head"><span class="hm-tools-zh">探索工具</span><span class="hm-tools-en">· TOOLS</span></div>';
+  h += '<div class="hm-tools-grid">';
+  h += '<button class="hm-tool hm-tool-star" onclick="showGraph()">'+
+       '<span class="hm-tool-badge">亮點</span>'+
+       '<span class="hm-tool-ico"><i class="ti ti-affiliate"></i></span>'+
+       '<span class="hm-tool-name">疾病關係圖</span>'+
+       '<span class="hm-tool-desc">互動式圖譜，看疾病如何互相連結 —— 致病、併發、同源一目了然</span></button>';
+  h += '<button class="hm-tool hm-tool-star" onclick="showCompare()">'+
+       '<span class="hm-tool-badge">亮點</span>'+
+       '<span class="hm-tool-ico"><i class="ti ti-columns-3"></i></span>'+
+       '<span class="hm-tool-name">鑑別比較</span>'+
+       '<span class="hm-tool-desc">把相似疾病並排，逐項對照診斷、檢驗、治療的關鍵差異</span></button>';
+  h += '<button class="hm-tool" onclick="showSymptoms()">'+
+       '<span class="hm-tool-ico"><i class="ti ti-stethoscope"></i></span>'+
+       '<span class="hm-tool-name">症狀導向學習</span>'+
+       '<span class="hm-tool-desc">從症狀反推 —— 病人這樣表現，可能是哪些病？</span></button>';
+  h += '<button class="hm-tool" onclick="showTopics()">'+
+       '<span class="hm-tool-ico"><i class="ti ti-books"></i></span>'+
+       '<span class="hm-tool-name">知識專題</span>'+
+       '<span class="hm-tool-desc">跨疾病的機制與主題深入，補足單一疾病看不到的全貌</span></button>';
+  h += '</div></div>';
+
+  // Lightweight onboarding (shown until dismissed, remembered in localStorage)
+  if (!_onboardDismissed()){
+    h += '<div class="hm-onboard" id="hmOnboard">'+
+      '<button class="hm-onboard-x" onclick="dismissOnboard()" title="不再顯示" aria-label="關閉">✕</button>'+
+      '<div class="hm-onboard-title">👋 快速上手</div>'+
+      '<div class="hm-onboard-grid">'+
+        '<div class="hm-onboard-item"><span class="hm-onboard-num">1</span><div><b>搜尋什麼都行</b><span>不只病名 —— 連症狀、檢驗值（如 haptoglobin、JAK2）都搜得到，會告訴你命中在哪個分頁</span></div></div>'+
+        '<div class="hm-onboard-item"><span class="hm-onboard-num">2</span><div><b>用學習路徑成套學</b><span>下方主題路徑（溶血鑑別、骨髓衰竭…）依機轉排序，一個接一個看、自動記進度</span></div></div>'+
+        '<div class="hm-onboard-item"><span class="hm-onboard-num">3</span><div><b>並排比較鑑別</b><span>用「鑑別比較」把相似疾病並列，逐項對照診斷與治療差異</span></div></div>'+
+      '</div>'+
+      '</div>';
+  }
 
   // Build the 學習路徑 (topic paths) block as a reusable string
   var pathsInner = '<div class="hm-sect-head"><span class="hm-sect-zh">學習路徑</span><span class="hm-sect-en">LEARNING PATHS</span>';
@@ -6279,17 +6462,32 @@ function hmSearchInput(q){
     return (s.name && s.name.toLowerCase().indexOf(q)>=0) ||
            (s.name_en && s.name_en.toLowerCase().indexOf(q)>=0);
   }).map(function(s){ return {kind:"symptom", item:s}; });
-  // Symptoms first (a symptom query usually means "I don't know the disease yet"), then diseases
-  var hits = sHits.concat(dHits).slice(0, 10);
+  // Knowledge topics (知識專題)
+  var tHits = (topics||[]).filter(function(t){
+    return (t.name && t.name.toLowerCase().indexOf(q)>=0) ||
+           (t.name_en && t.name_en.toLowerCase().indexOf(q)>=0) ||
+           (t.summary && t.summary.toLowerCase().indexOf(q)>=0) ||
+           (t.specialty && t.specialty.toLowerCase().indexOf(q)>=0);
+  }).map(function(t){ return {kind:"topic", item:t}; });
+  // Symptoms first (a symptom query usually means "I don't know the disease yet"), then topics, then diseases
+  var hits = sHits.concat(tHits).concat(dHits).slice(0, 12);
   if(!hits.length){ box.innerHTML='<div class="hm-sr-empty">找不到「'+escHtml(q)+'」相關內容</div>'; box.classList.add("show"); return; }
   box.innerHTML = hits.map(function(h){
     if(h.kind === "symptom"){
       var s = h.item;
       return '<a class="hm-sr-item" onclick="showSymptomDetail(\''+s.id+'\')">'+
-        '<span class="hm-sr-dot" style="background:#3B6D11"></span>'+
+        '<span class="hm-sr-dot" style="background:var(--green)"></span>'+
         '<span class="hm-sr-name">'+escHtml(s.name)+'</span>'+
         (s.name_en?'<span class="hm-sr-en">'+escHtml(s.name_en)+'</span>':'')+
         '<span class="hm-sr-cat hm-sr-cat-sx">症狀導向</span></a>';
+    }
+    if(h.kind === "topic"){
+      var t = h.item;
+      return '<a class="hm-sr-item" onclick="selectTopic(\''+t.id+'\')">'+
+        '<span class="hm-sr-dot" style="background:#6B3FA0"></span>'+
+        '<span class="hm-sr-name">'+escHtml(t.name)+'</span>'+
+        (t.name_en?'<span class="hm-sr-en">'+escHtml(t.name_en)+'</span>':'')+
+        '<span class="hm-sr-cat hm-sr-cat-topic">知識專題</span></a>';
     }
     var d = h.item;
     var col = CAT_COLORS[d.category] || "#7ab3d9";
@@ -6409,8 +6607,8 @@ function showBookmarks(){
 
   var bmList=diseases.filter(function(d){return bookmarks[d.id]}).sort(function(a,b){return(bookmarks[b.id]||0)-(bookmarks[a.id]||0)});
   var h='<div class="card">';
-  h+='<div style="padding:12px 16px;background:#f0f5fb;border-bottom:0.5px solid #B5D4F4;display:flex;justify-content:space-between;align-items:center">';
-  h+='<span style="font-size:14px;font-weight:500;color:#185FA5">⭐ 書籤（'+bmList.length+'）</span>';
+  h+='<div style="padding:12px 16px;background:var(--bg);border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center">';
+  h+='<span style="font-size:14px;font-weight:500;color:var(--blue)">⭐ 書籤（'+bmList.length+'）</span>';
   if(bmList.length)h+='<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="if(confirm(\'清除所有書籤？\')){bookmarks={};saveBookmarks();showBookmarks()}">清除全部</button>';
   h+='</div>';
 
@@ -6420,15 +6618,15 @@ function showBookmarks(){
     bmList.forEach(function(d){
       var st=dStatus[d.id];
       var stBadge="";
-      if(st==="read")stBadge='<span style="font-size:11px;background:#EAF3DE;color:#3B6D11;padding:1px 8px;border-radius:10px">已讀完</span>';
-      if(st==="review")stBadge='<span style="font-size:11px;background:#FAEEDA;color:#854F0B;padding:1px 8px;border-radius:10px">需複習</span>';
+      if(st==="read")stBadge='<span style="font-size:11px;background:var(--green-bg);color:var(--green);padding:1px 8px;border-radius:10px">已讀完</span>';
+      if(st==="review")stBadge='<span style="font-size:11px;background:var(--amber-bg);color:var(--amber);padding:1px 8px;border-radius:10px">需複習</span>';
       var mk=diseaseMarkSummary(d.id);
       var subExtra="";
       if(mk.hasNote)subExtra+=' · 📝 有筆記';
       if(mk.hasWeak)subExtra+=' · ⚠ 易錯';
       if(mk.hasImportant)subExtra+=' · ★ 重點';
       h+='<div class="bm-item" onclick="selectDisease(\''+d.id+'\')">';
-      h+='<div><div class="bm-name">'+d.name+' <span style="font-weight:400;color:#4a7fa5;font-size:13px">'+(d.name_en||"")+'</span></div>';
+      h+='<div><div class="bm-name">'+d.name+' <span style="font-weight:400;color:var(--text2);font-size:13px">'+(d.name_en||"")+'</span></div>';
       h+='<div class="bm-sub">'+(d.category||"")+subExtra+'</div></div>';
       h+='<div style="display:flex;gap:6px;align-items:center">'+stBadge+'</div>';
       h+='</div>';
@@ -6438,11 +6636,11 @@ function showBookmarks(){
   // Review section
   var reviewList=diseases.filter(function(d){return dStatus[d.id]==="review"});
   if(reviewList.length){
-    h+='<div style="padding:12px 16px;background:#FAEEDA;border-top:0.5px solid #FAC775">';
-    h+='<div style="font-size:13px;font-weight:500;color:#854F0B;margin-bottom:6px">⟳ 需複習（'+reviewList.length+'）</div>';
+    h+='<div style="padding:12px 16px;background:var(--amber-bg);border-top:0.5px solid #FAC775">';
+    h+='<div style="font-size:13px;font-weight:500;color:var(--amber);margin-bottom:6px">⟳ 需複習（'+reviewList.length+'）</div>';
     h+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
     reviewList.forEach(function(d){
-      h+='<span style="padding:4px 12px;background:#fff;border:0.5px solid #FAC775;border-radius:16px;font-size:13px;color:#854F0B;cursor:pointer" onclick="selectDisease(\''+d.id+'\')">'+d.name+'</span>';
+      h+='<span style="padding:4px 12px;background:var(--card);border:0.5px solid #FAC775;border-radius:16px;font-size:13px;color:var(--amber);cursor:pointer" onclick="selectDisease(\''+d.id+'\')">'+d.name+'</span>';
     });
     h+='</div></div>';
   }
@@ -6548,6 +6746,37 @@ init();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function(){ sweep(document); });
   else sweep(document);
 
+  // Global image-protection: block right-click context menu on any <img> (incl. dynamically added)
+  document.addEventListener("contextmenu", function(e){
+    if (e.target && e.target.tagName === "IMG") e.preventDefault();
+  }, true);
+
+  // ── #2 a11y: make clickable non-native elements keyboard-operable ──
+  // Elements with onclick that are <div>/<span> get keyboard support (Tab + Enter/Space).
+  function makeFocusable(root){
+    var nodes = (root||document).querySelectorAll('[onclick]');
+    for (var i=0;i<nodes.length;i++){
+      var el = nodes[i];
+      var tag = el.tagName;
+      if (tag === "BUTTON" || tag === "A" || tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") continue;
+      if (el.getAttribute("data-kb") === "1") continue;
+      el.setAttribute("data-kb","1");
+      if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex","0");
+      if (!el.hasAttribute("role")) el.setAttribute("role","button");
+    }
+  }
+  // Enter / Space triggers click on these synthetic buttons
+  document.addEventListener("keydown", function(e){
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var el = e.target;
+    if (!el || el.getAttribute("data-kb") !== "1") return;
+    e.preventDefault();
+    el.click();
+  });
+  // run after icon sweep + on mutations (reuse the observer below via window hook)
+  makeFocusable(document);
+  window._makeFocusable = makeFocusable;
+
   // observe future renders (the app rewrites innerHTML a lot)
   try {
     var obs = new MutationObserver(function(muts){
@@ -6558,6 +6787,8 @@ init();
           if (n.nodeType !== 1) continue;
           if (n.matches && n.matches("i.ti")) swap(n);
           if (n.querySelectorAll) n.querySelectorAll("i.ti").forEach(swap);
+          if (n.matches && n.matches("[onclick]")) makeFocusable(n.parentNode || document);
+          if (n.querySelectorAll && n.querySelector("[onclick]")) makeFocusable(n);
         }
       }
     });
