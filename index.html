@@ -161,7 +161,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
   .content{padding:10px}
   .tc{padding:12px 14px;font-size:15px;line-height:1.65}
   .tabs{padding:0 2px}
-  .tab{padding:9px 8px;font-size:12px}
+  .tabs{display:none}
+  .tab-select{display:block}
+  .tab{padding:9px 10px;font-size:13px}
+  /* bedside readability: lift the smallest fonts on mobile */
+  .pearl-body,.drug-field-value,.drug-dose-val,.comp-name{font-size:15px}
+  .pearl-tag,.drug-field-label,.drug-dose-lbl{font-size:11.5px}
+  .si-hit,.meta-footer{font-size:12px}
   .sidebar-bottom .btn{font-size:12px;padding:7px 10px}
   .drug-fields{grid-template-columns:1fr}
   .drug-field-label{padding-top:0}
@@ -215,6 +221,10 @@ body.dark .si-mark{background:#7a6320;color:#fff}
 .cat-group.expanded .cat-chev{transform:rotate(90deg)}
 .cat-name{font-size:13px;font-weight:500}
 .cat-count{font-size:11px;color:#7ab3d9;background:#E6F1FB;border-radius:10px;padding:1px 7px;flex-shrink:0;margin-left:6px}
+.cat-meta{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:6px}
+.cat-prog{display:inline-block;width:26px;height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;flex-shrink:0}
+.cat-prog-fill{display:block;height:100%;border-radius:2px;transition:width 0.3s}
+body.dark .cat-prog{background:var(--bg)}
 .cat-items{max-height:0;overflow:hidden;opacity:0;transition:max-height 0.28s ease, opacity 0.18s ease 0s}
 .cat-group.expanded .cat-items{max-height:2000px;opacity:1;transition:max-height 0.38s ease, opacity 0.22s ease 0.04s}
 .si:hover{background:rgba(24,95,165,0.08);color:#185FA5}
@@ -437,6 +447,9 @@ body.dark .cmp-table thead th{background:var(--bg3)}
 .content{flex:1;padding:16px;overflow-y:auto}
 .card{background:#fff;border:0.5px solid #B5D4F4;border-radius:12px;overflow:hidden}
 .tabs{display:flex;border-bottom:0.5px solid #B5D4F4;padding:0 6px;background:#f8fbff;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs-bar{position:relative}
+.tab-select{display:none;width:100%;font-family:inherit;font-size:15px;font-weight:600;color:var(--blue);background:#f8fbff;border:none;border-bottom:0.5px solid var(--border);padding:11px 14px;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23185FA5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+body.dark .tab-select{background-color:var(--bg3);color:var(--blue)}
 .tabs::-webkit-scrollbar{display:none}
 .tab{padding:10px 11px;font-size:13px;color:#4a7fa5;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.1s;white-space:nowrap;flex-shrink:0}
 .tab:hover{color:#185FA5}
@@ -552,6 +565,15 @@ body.dark .step-quiz .step-q:not(.revealed) .step-num{background:var(--bg);color
 body.dark .hm-sr-cat-topic{color:#b794e0;background:#2a2140}
 .hm-sr-empty{padding:14px;text-align:center;font-size:var(--fs-sm);color:var(--text3)}
 .hm-quick{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:22px 0 28px}
+/* support footer (home only) — deliberately understated */
+.hm-support{max-width:760px;margin:36px auto 12px;padding-top:22px;border-top:0.5px solid var(--border);text-align:center}
+.hm-support-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;background:var(--card);border:0.5px solid var(--border);border-radius:24px;text-decoration:none;cursor:pointer;transition:border-color var(--t-fast),background var(--t-fast),box-shadow var(--t-fast)}
+.hm-support-btn:hover{border-color:#FFC971;background:#FFF8EC;box-shadow:0 2px 12px rgba(255,179,0,0.12)}
+.hm-support-cup{font-size:18px;line-height:1}
+.hm-support-txt{font-size:var(--fs-sm);color:var(--text2)}
+.hm-support-txt b{color:var(--text);font-weight:var(--fw-semi)}
+.hm-support-note{margin-top:10px;font-size:var(--fs-label);color:var(--text3);opacity:0.85}
+body.dark .hm-support-btn:hover{background:#2a2418;border-color:#7a6320}
 /* feature tool cards (home) */
 .hm-tools-sect{max-width:760px;margin:24px auto 28px}
 .hm-tools-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
@@ -652,6 +674,9 @@ body.dark .pathnav-bar{background:var(--bg)}
 .pathnav-empty{flex:1;background:transparent;border:none;cursor:default}
 .pathnav-done{flex:1;justify-content:center;color:var(--text3);font-size:var(--fs-sm);background:transparent;border:0.5px dashed var(--border);cursor:default}
 .pathnav-done:hover{border-color:var(--border);background:transparent}
+.pathnav-kbd-hint{margin-top:9px;font-size:var(--fs-label);color:var(--text3);text-align:center}
+.pathnav-kbd-hint kbd{font-family:inherit;font-size:10px;background:var(--bg2);border:0.5px solid var(--border);border-radius:4px;padding:0 5px;color:var(--text2)}
+@media(hover:none){.pathnav-kbd-hint{display:none}}
 /* Disease metadata footer (last-updated + source) */
 .meta-footer{margin-top:var(--sp-2);padding:12px 14px;border-top:0.5px solid var(--border);display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;font-size:var(--fs-xs);color:var(--text3)}
 .meta-item{display:inline-flex;align-items:center;gap:5px}
@@ -709,6 +734,21 @@ a.bc-item:hover{color:var(--blue);background:var(--hover)}
 .pearls-intro i{font-size:16px}
 .pearls-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
 .pearl{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:var(--bg3);border:0.5px solid var(--border);border-left:3px solid var(--blue);border-radius:8px}
+/* clinical red-flag vs exam-point pearls */
+.pearl-clinical{border-left-color:#C0392B;background:var(--red-bg)}
+.pearl-exam{border-left-color:#6B3FA0;background:#F4EFFB}
+body.dark .pearl-clinical{background:rgba(192,57,43,0.12)}
+body.dark .pearl-exam{background:rgba(107,63,160,0.14)}
+.pearl-clinical .pearl-mark,.pearl-exam .pearl-mark{font-size:14px}
+.pearl-tag-clinical{color:#C0392B!important;background:var(--red-bg)!important}
+.pearl-tag-exam{color:#6B3FA0!important;background:#F0E8FB!important}
+.pearls-filter{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.pf-btn{font-size:var(--fs-xs);font-weight:var(--fw-medium);color:var(--text2);background:var(--card);border:0.5px solid var(--border);border-radius:18px;padding:5px 13px;cursor:pointer;font-family:inherit;transition:all var(--t-fast)}
+.pf-btn:hover{border-color:var(--border2)}
+.pf-btn.active{background:var(--text);color:var(--card);border-color:var(--text)}
+.pf-btn.pf-clinical.active{background:#C0392B;border-color:#C0392B;color:#fff}
+.pf-btn.pf-exam.active{background:#6B3FA0;border-color:#6B3FA0;color:#fff}
+.pf-n{opacity:0.7;font-size:10px}
 .pearl-mark{color:var(--blue);flex-shrink:0;line-height:1;margin-top:3px}
 .pearl-mark i{font-size:14px}
 .pearl-body{flex:1;min-width:0;font-size:var(--fs-body);line-height:var(--lh-normal);color:var(--text)}
@@ -784,6 +824,11 @@ img{ -webkit-user-drag:none; -khtml-user-drag:none; -moz-user-drag:none; -o-user
 .drug-class{font-size:var(--fs-xs);color:var(--text2);background:var(--blue-bg);padding:3px 10px;border-radius:6px;letter-spacing:0.02em;font-weight:var(--fw-medium);white-space:nowrap}
 .drug-badge{display:inline-flex;align-items:center;font-size:var(--fs-label);padding:3px 9px;border-radius:6px;font-weight:var(--fw-semi);white-space:nowrap}
 .drug-body{padding:12px 16px 14px}
+/* dosage banner — most-scanned field in clinical quick-reference, visually elevated */
+.drug-dose{display:flex;align-items:baseline;gap:10px;margin:0 16px 12px;padding:9px 13px;background:var(--blue-bg);border:0.5px solid var(--border2);border-left:3px solid var(--blue);border-radius:8px}
+.drug-dose-lbl{flex-shrink:0;font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--blue);text-transform:uppercase;letter-spacing:var(--ls-label)}
+.drug-dose-val{font-size:var(--fs-body);font-weight:var(--fw-medium);color:var(--text);line-height:var(--lh-snug)}
+body.dark .drug-dose{background:rgba(24,95,165,0.14)}
 .drug-field{margin-bottom:12px}
 .drug-field:last-child{margin-bottom:0}
 .drug-field-label{font-size:var(--fs-label);color:var(--text2);font-weight:var(--fw-semi);text-transform:uppercase;letter-spacing:var(--ls-label);margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -988,6 +1033,17 @@ body.dark #minimap{background:rgba(20,30,50,0.85);border-color:#3a4a6a;box-shado
 #offlineBanner .ti{font-size:15px}
 #appToast{position:fixed;left:50%;bottom:64px;transform:translateX(-50%) translateY(8px);z-index:var(--z-toast,2000);background:#2d2d2d;color:#fff;font-size:13.5px;padding:10px 18px;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,0.28);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:88vw;text-align:center}
 #appToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* keyboard shortcut help overlay */
+#kbdHelp{position:fixed;inset:0;z-index:var(--z-modal,1000);background:rgba(10,15,25,0.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px}
+.kbd-card{background:var(--card);border:0.5px solid var(--border);border-radius:16px;padding:18px 22px;max-width:420px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,0.25)}
+.kbd-head{display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--text);margin-bottom:14px}
+.kbd-x{width:26px;height:26px;border:none;background:var(--bg2);color:var(--text3);border-radius:50%;cursor:pointer;font-size:12px}
+.kbd-x:hover{background:var(--border);color:var(--text)}
+.kbd-sect-label{font-size:var(--fs-label);font-weight:var(--fw-semi);color:var(--text3);text-transform:uppercase;letter-spacing:var(--ls-label);margin:12px 0 6px}
+.kbd-row{display:flex;align-items:center;gap:12px;padding:5px 0}
+.kbd-row kbd{flex-shrink:0;min-width:54px;text-align:center;font-family:inherit;font-size:var(--fs-xs);font-weight:var(--fw-semi);color:var(--text);background:var(--bg2);border:0.5px solid var(--border);border-bottom-width:2px;border-radius:6px;padding:3px 8px}
+.kbd-row span{font-size:var(--fs-sm);color:var(--text2)}
+body.dark .kbd-row kbd{background:var(--bg3)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .empty{text-align:center;padding:60px 20px;color:#7ab3d9;font-size:14px}
 .topbar-right{display:flex;gap:6px;align-items:center}
@@ -1483,6 +1539,8 @@ var quizMode = false; // 病生理 self-test mode: hide mechanism, reveal on cli
 var qCountByDisease = {}; // disease_id → number of qbank questions
 var learningPaths = [];   // [{id,name,description,disease_ids[],icon,color,sort_order}] topic paths
 var QBANK_URL = "https://hunium-med.github.io/emo/qbank.html"; // qbank app (for 相關考題 link)
+// Buy Me a Coffee 贊助連結 —— 把 yourhandle 改成你的 Buy Me a Coffee 帳號代號
+var BMC_URL = "https://www.buymeacoffee.com/yourhandle";
 var expandedCat = null; // accordion: only one category open at a time, null = all collapsed
 var activePath = null;  // learning path: {name, ids:[...]} when navigating through a category path
 var graphState = { focusedId: null, onlyConnected: false };
@@ -1989,15 +2047,89 @@ window.addEventListener("online",  function(){ showOfflineBanner(false); });
 document.addEventListener("keydown", function(e){
   var t = e.target;
   var typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
-  if (e.key === "/" && !typing && !e.ctrlKey && !e.metaKey && !e.altKey){
+  if (e.ctrlKey || e.metaKey || e.altKey) return; // leave browser shortcuts alone
+
+  // "/" → focus search
+  if (e.key === "/" && !typing){
     var s = document.getElementById("searchInput");
     if (s){ e.preventDefault(); s.focus(); s.select(); }
-  } else if (e.key === "Escape" && t && t.id === "searchInput" && t.value){
-    // Esc while typing in search → clear it (first press), don't blur immediately
+    return;
+  }
+  // Esc while typing in search → clear it first
+  if (e.key === "Escape" && t && t.id === "searchInput" && t.value){
     e.preventDefault();
     if (typeof clearSearch === "function") clearSearch();
+    return;
+  }
+  if (typing) return; // remaining shortcuts shouldn't fire while typing
+
+  // "?" → toggle keyboard-shortcuts help
+  if (e.key === "?"){ e.preventDefault(); toggleShortcutHelp(); return; }
+
+  // Esc → close help, else from a disease page go Home
+  if (e.key === "Escape"){
+    if (document.getElementById("kbdHelp")){ closeShortcutHelp(); return; }
+    // defer to image-viewer term popover / any open lightbox (handled by their own listeners)
+    if (document.getElementById("iv-term-popover")) return;
+    if (currentView === "entry" && currentId){ e.preventDefault(); showHome(); return; }
+    return;
+  }
+
+  // ← / → → previous / next disease in the active learning path
+  // (defer to the image viewer, which uses arrows for slice switching when open)
+  if ((e.key === "ArrowLeft" || e.key === "ArrowRight")){
+    if (document.getElementById("iv-canvas") && ivState.images && ivState.images.length) return;
+    if (currentView === "entry" && activePath && activePath.ids && activePath.ids.length){
+      var i = activePath.ids.indexOf(currentId);
+      if (i === -1) return;
+      if (e.key === "ArrowLeft" && i > 0){ e.preventDefault(); pathNav(-1); }
+      else if (e.key === "ArrowRight" && i < activePath.ids.length - 1){ e.preventDefault(); pathNav(1); }
+    }
+    return;
   }
 });
+
+// ── Keyboard shortcut help overlay ──
+function toggleShortcutHelp(){
+  if (document.getElementById("kbdHelp")) closeShortcutHelp();
+  else openShortcutHelp();
+}
+function closeShortcutHelp(){
+  var el = document.getElementById("kbdHelp");
+  if (el && el.parentNode) el.parentNode.removeChild(el);
+}
+function openShortcutHelp(){
+  if (document.getElementById("kbdHelp")) return;
+  var rows = [
+    ["/", "聚焦搜尋框"],
+    ["← →", "學習路徑中切換上一個 / 下一個疾病"],
+    ["Esc", "從疾病頁返回首頁（或關閉彈窗）"],
+    ["?", "顯示 / 關閉此快捷鍵說明"]
+  ];
+  var ivRows = [
+    ["← →", "影像檢視器：切換切面"],
+    ["+ / −", "影像檢視器：縮放"],
+    ["0", "影像檢視器：還原縮放"],
+    ["A", "影像檢視器：切換標註"]
+  ];
+  function tbl(list){
+    return list.map(function(r){
+      return '<div class="kbd-row"><kbd>'+escHtml(r[0])+'</kbd><span>'+escHtml(r[1])+'</span></div>';
+    }).join("");
+  }
+  var bg = document.createElement("div");
+  bg.id = "kbdHelp";
+  bg.setAttribute("role","dialog");
+  bg.setAttribute("aria-label","鍵盤快捷鍵說明");
+  bg.innerHTML =
+    '<div class="kbd-card" onclick="event.stopPropagation()">'+
+      '<div class="kbd-head"><span>⌨️ 鍵盤快捷鍵</span><button class="kbd-x" onclick="closeShortcutHelp()" aria-label="關閉">✕</button></div>'+
+      '<div class="kbd-sect-label">瀏覽</div>'+ tbl(rows)+
+      '<div class="kbd-sect-label">影像檢視器</div>'+ tbl(ivRows)+
+    '</div>';
+  bg.onclick = function(){ closeShortcutHelp(); };
+  document.body.appendChild(bg);
+}
 
 async function init() {
   loadUserData();
@@ -2005,127 +2137,165 @@ async function init() {
   // Load dark mode preference
   try{var dm=localStorage.getItem("mb_dark");if(dm==="1"){document.body.classList.add("dark")}}catch(e){}
   try {
-    var results = await Promise.all([
+    // ── Progressive load: core tables first (so a clerk can read a disease ASAP),
+    //    then secondary tables (symptoms / topics / paths / questions) in the background. ──
+    var core = await Promise.all([
       sb("diseases?select=*&order=category,sort_order,name"),
       sb("disease_sections?select=*"),
       sb("drugs?select=*&order=sort_order"),
       sb("complications?select=*&order=sort_order"),
+      sb("disease_categories?select=*&order=sort_order").catch(function(){return []})
+    ]);
+    diseases = core[0] || [];
+    (core[1] || []).forEach(function(s) {
+      if (!sectionMap[s.disease_id]) sectionMap[s.disease_id] = {};
+      sectionMap[s.disease_id][s.section_type] = s.content;
+      if (s.updated_at){
+        var t = Date.parse(s.updated_at);
+        if (!isNaN(t) && (!sectionUpdated[s.disease_id] || t > sectionUpdated[s.disease_id])) sectionUpdated[s.disease_id] = t;
+      }
+    });
+    (core[2] || []).forEach(function(d) {
+      if (!drugMap[d.disease_id]) drugMap[d.disease_id] = [];
+      drugMap[d.disease_id].push(d);
+    });
+    (core[3] || []).forEach(function(c) {
+      if (!compMap[c.source_disease_id]) compMap[c.source_disease_id] = [];
+      compMap[c.source_disease_id].push(c);
+    });
+    categoryList = Array.isArray(core[4]) ? core[4] : [];
+    CAT_COLORS = {};
+    categoryList.forEach(function(c){ CAT_COLORS[c.name] = c.color; });
+    if(!CAT_COLORS["其他"]) CAT_COLORS["其他"] = "#7ab3d9";
+
+    buildSearchIndex();
+    buildEntityIndex();
+
+    document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("app").style.display = "flex";
+    if(!isMobile())document.getElementById("sidebar").classList.remove("hidden");
+    document.getElementById("countLabel").textContent = "知識庫（" + diseases.length + "）";
+    renderSidebar(diseases);
+    updateAuthUI();
+    restoreSession().then(function(){ updateAuthUI(); });
+
+    // Kick off route handling now (core data is enough for disease pages & home)
+    handleInitialRoute();
+
+    // ── Secondary data in the background — doesn't block first paint ──
+    loadSecondaryData();
+    return; // route handled in handleInitialRoute()
+  } catch (e) {
+    document.getElementById("loadingScreen").innerHTML = '<div style="text-align:center;padding:20px"><div style="color:#A32D2D;font-size:14px;background:var(--red-bg);border:0.5px solid #F09595;border-radius:12px;padding:16px 20px"><b>連線失敗</b><br>' + (e.message || "請檢查網路") + '<br><button onclick="retryInit()" style="margin-top:12px;padding:7px 18px;font-size:13px;font-weight:600;color:#fff;background:var(--blue);border:none;border-radius:8px;cursor:pointer">重新載入</button></div></div>';
+  }
+}
+
+// Resolve the initial route from the URL hash (core data is loaded by now)
+function handleInitialRoute(){
+  var hash = location.hash.replace("#","");
+  // Routes that need secondary data (symptoms/topics) — defer until it's loaded
+  var needsSecondary = (hash === "symptoms" || hash === "topics" ||
+                        hash.indexOf("sx:") === 0 || hash.indexOf("topic:") === 0);
+  if (needsSecondary && !symptoms.length && !topics.length){
+    _pendingRoute = hash;          // run once loadSecondaryData() finishes
+    showHome();                    // show something usable meanwhile
+    return;
+  }
+  routeTo(hash);
+}
+
+var _pendingRoute = null;
+function routeTo(hash){
+  if (hash === "graph") {
+    showGraph();
+  } else if (hash === "symptoms") {
+    showSymptoms();
+  } else if (hash === "topics") {
+    showTopics();
+  } else if (hash === "bookmarks") {
+    showBookmarks();
+  } else if (hash === "compare") {
+    showCompare();
+  } else if (hash === "mymarks") {
+    showMyMarks();
+  } else if (hash === "review") {
+    showHome();
+  } else if (hash.indexOf("sx:") === 0) {
+    var sxId = hash.slice(3);
+    if (symptoms.find(function(s){ return s.id === sxId; })) {
+      showSymptomDetail(sxId);
+    } else {
+      showSymptoms();
+    }
+  } else if (hash.indexOf("topic:") === 0) {
+    var topicId = hash.slice(6);
+    if (topics.find(function(t){ return t.id === topicId; })) {
+      selectTopic(topicId);
+    } else {
+      showTopics();
+    }
+  } else if (hash && diseases.find(function(d){return d.id===hash})) {
+    selectDisease(hash);
+  } else if (hash.indexOf(":") > 0 && diseases.find(function(d){return d.id===hash.split(":")[0]})) {
+    var dzId = hash.split(":")[0], dzTab = hash.split(":")[1];
+    selectDisease(dzId, dzTab);
+  } else if (hash === "home" || !hash) {
+    showHome();
+  } else if (diseases.length > 0) {
+    showHome();
+  }
+}
+
+// Background-load secondary tables (symptoms / mechanisms / topics / questions / paths).
+// These power features the user reaches *after* first paint, so they don't block startup.
+async function loadSecondaryData(){
+  try{
+    var r = await Promise.all([
       sb("symptoms?select=*&order=sort_order,name").catch(function(){return []}),
       sb("symptom_mechanisms?select=*&order=sort_order").catch(function(){return []}),
       sb("mechanism_anatomies?select=*&order=sort_order").catch(function(){return []}),
       sb("anatomy_diseases?select=*&order=sort_order").catch(function(){return []}),
-      sb("disease_categories?select=*&order=sort_order").catch(function(){return []}),
       sb("knowledge_topics?select=*&order=sort_order,name").catch(function(){return []}),
       sb("knowledge_topic_sections?select=*&order=sort_order").catch(function(){return []}),
       sb("topic_types?select=*&order=sort_order").catch(function(){return []}),
       sb("questions?select=disease_id").catch(function(){return []}),
       sb("learning_paths?select=*&order=sort_order,name").catch(function(){return []})
     ]);
-    diseases = results[0] || [];
-    (results[1] || []).forEach(function(s) {
-      if (!sectionMap[s.disease_id]) sectionMap[s.disease_id] = {};
-      sectionMap[s.disease_id][s.section_type] = s.content;
-      // track latest section update per disease (Supabase auto column if present)
-      if (s.updated_at){
-        var t = Date.parse(s.updated_at);
-        if (!isNaN(t) && (!sectionUpdated[s.disease_id] || t > sectionUpdated[s.disease_id])) sectionUpdated[s.disease_id] = t;
-      }
-    });
-    (results[2] || []).forEach(function(d) {
-      if (!drugMap[d.disease_id]) drugMap[d.disease_id] = [];
-      drugMap[d.disease_id].push(d);
-    });
-    (results[3] || []).forEach(function(c) {
-      if (!compMap[c.source_disease_id]) compMap[c.source_disease_id] = [];
-      compMap[c.source_disease_id].push(c);
-    });
-    symptoms = Array.isArray(results[4]) ? results[4] : [];
-    mechanisms = Array.isArray(results[5]) ? results[5] : [];
+    symptoms = Array.isArray(r[0]) ? r[0] : [];
+    mechanisms = Array.isArray(r[1]) ? r[1] : [];
     mechanisms.forEach(function(m){
       mechById[m.id] = m;
       if (!mechBySxId[m.symptom_id]) mechBySxId[m.symptom_id] = [];
       mechBySxId[m.symptom_id].push(m);
     });
-    var anats = Array.isArray(results[6]) ? results[6] : [];
-    anats.forEach(function(a){
+    (Array.isArray(r[2]) ? r[2] : []).forEach(function(a){
       anatomyById[a.id] = a;
       if (!anatomyByMechId[a.mechanism_id]) anatomyByMechId[a.mechanism_id] = [];
       anatomyByMechId[a.mechanism_id].push(a);
     });
-    var ads = Array.isArray(results[7]) ? results[7] : [];
-    ads.forEach(function(ad){
+    (Array.isArray(r[3]) ? r[3] : []).forEach(function(ad){
       if (!anatomyDxMap[ad.anatomy_id]) anatomyDxMap[ad.anatomy_id] = [];
       anatomyDxMap[ad.anatomy_id].push(ad);
     });
-    categoryList = Array.isArray(results[8]) ? results[8] : [];
-    CAT_COLORS = {};
-    categoryList.forEach(function(c){ CAT_COLORS[c.name] = c.color; });
-    if(!CAT_COLORS["其他"]) CAT_COLORS["其他"] = "#7ab3d9";
-    topics = Array.isArray(results[9]) ? results[9] : [];
+    topics = Array.isArray(r[4]) ? r[4] : [];
     topicSecMap = {};
-    (Array.isArray(results[10]) ? results[10] : []).forEach(function(s){
+    (Array.isArray(r[5]) ? r[5] : []).forEach(function(s){
       if (!topicSecMap[s.topic_id]) topicSecMap[s.topic_id] = {};
       topicSecMap[s.topic_id][s.section_type] = s;
     });
-    topicTypesList = Array.isArray(results[11]) ? results[11] : [];
-    // Count questions per disease (for "相關考題" on disease pages)
-    (Array.isArray(results[12]) ? results[12] : []).forEach(function(q){
+    topicTypesList = Array.isArray(r[6]) ? r[6] : [];
+    (Array.isArray(r[7]) ? r[7] : []).forEach(function(q){
       if(q.disease_id) qCountByDisease[q.disease_id] = (qCountByDisease[q.disease_id]||0) + 1;
     });
-    learningPaths = Array.isArray(results[13]) ? results[13] : [];
+    learningPaths = Array.isArray(r[8]) ? r[8] : [];
     buildTopicTypesMap();
     buildClueIndex();
-    buildEntityIndex();
-    document.getElementById("loadingScreen").style.display = "none";
-    document.getElementById("app").style.display = "flex";
-    if(!isMobile())document.getElementById("sidebar").classList.remove("hidden");
-    document.getElementById("countLabel").textContent = "知識庫（" + diseases.length + "）";
-    buildSearchIndex();
-    renderSidebar(diseases);
-    updateAuthUI();
-    restoreSession().then(function(){ updateAuthUI(); });
-    var hash = location.hash.replace("#","");
-    if (hash === "graph") {
-      showGraph();
-    } else if (hash === "symptoms") {
-      showSymptoms();
-    } else if (hash === "topics") {
-      showTopics();
-    } else if (hash === "bookmarks") {
-      showBookmarks();
-    } else if (hash === "compare") {
-      showCompare();
-    } else if (hash === "mymarks") {
-      showMyMarks();
-    } else if (hash === "review") {
-      showHome();
-    } else if (hash.indexOf("sx:") === 0) {
-      var sxId = hash.slice(3);
-      if (symptoms.find(function(s){ return s.id === sxId; })) {
-        showSymptomDetail(sxId);
-      } else {
-        showSymptoms();
-      }
-    } else if (hash.indexOf("topic:") === 0) {
-      var topicId = hash.slice(6);
-      if (topics.find(function(t){ return t.id === topicId; })) {
-        selectTopic(topicId);
-      } else {
-        showTopics();
-      }
-    } else if (hash && diseases.find(function(d){return d.id===hash})) {
-      selectDisease(hash);
-    } else if (hash.indexOf(":") > 0 && diseases.find(function(d){return d.id===hash.split(":")[0]})) {
-      var dzId = hash.split(":")[0], dzTab = hash.split(":")[1];
-      selectDisease(dzId, dzTab);
-    } else if (hash === "home" || !hash) {
-      showHome();
-    } else if (diseases.length > 0) {
-      showHome();
-    }
-  } catch(e) {
-    document.getElementById("loadingScreen").innerHTML = '<div style="text-align:center;padding:20px"><div style="color:#A32D2D;font-size:14px;background:var(--red-bg);border:0.5px solid #F09595;border-radius:12px;padding:16px 20px"><b>連線失敗</b><br>' + (e.message || "請檢查網路") + '<br><button onclick="retryInit()" style="margin-top:12px;padding:7px 18px;font-size:13px;font-weight:600;color:#fff;background:var(--blue);border:none;border-radius:8px;cursor:pointer">重新載入</button></div></div>';
-  }
+    // If a deep-link route was waiting for this data, run it now
+    if (_pendingRoute){ var pr = _pendingRoute; _pendingRoute = null; routeTo(pr); return; }
+    // Otherwise refresh whatever view depends on secondary data
+    if (currentView === "home" && typeof showHome === "function") showHome();
+    if (currentView === "entry" && currentId) renderEntry();
+  }catch(e){ /* secondary data is non-critical; ignore */ }
 }
 
 function renderSidebar(list) {
@@ -2173,7 +2343,13 @@ function renderSidebar(list) {
     h += '<span class="dot" style="background:' + color + '"></span>';
     h += '<span class="cat-name" style="color:' + color + '">' + cat + '</span>';
     h += '</div>';
-    h += '<span class="cat-count">' + items.length + '</span>';
+    // read-progress: how many diseases in this category are marked 已讀
+    var readN = items.filter(function(x){ return dStatus[x.id] === "read"; }).length;
+    var pct = items.length ? Math.round(readN / items.length * 100) : 0;
+    h += '<span class="cat-meta">';
+    if (readN > 0) h += '<span class="cat-prog" title="已讀 ' + readN + '/' + items.length + '"><span class="cat-prog-fill" style="width:' + pct + '%;background:' + color + '"></span></span>';
+    h += '<span class="cat-count">' + (readN > 0 ? readN + '/' + items.length : items.length) + '</span>';
+    h += '</span>';
     h += '</div>';
 
     h += '<div class="cat-items">';
@@ -2486,7 +2662,9 @@ function renderPathNav(){
   } else {
     h += '<span class="pathnav-btn pathnav-done">🎉 已是路徑最後一個</span>';
   }
-  h += '</div></div>';
+  h += '</div>';
+  h += '<div class="pathnav-kbd-hint">提示：用 <kbd>←</kbd> <kbd>→</kbd> 切換疾病 · <kbd>?</kbd> 看所有快捷鍵</div>';
+  h += '</div>';
   return h;
 }
 
@@ -2536,6 +2714,11 @@ function renderEntry() {
     var cls = "tab" + (t.key === currentTab ? " active" : "");
     return '<div class="' + cls + '" onclick="switchTab(\'' + t.key + '\')">' + t.label + '</div>';
   }).join("");
+  // Mobile: a dropdown that lists every tab so you can jump directly (no horizontal scrolling)
+  var tabSelectHtml = '<select class="tab-select" onchange="switchTab(this.value)" aria-label="選擇分頁">' +
+    availTabs.map(function(t){
+      return '<option value="' + t.key + '"' + (t.key === currentTab ? " selected" : "") + '>' + escHtml(t.label) + '</option>';
+    }).join("") + '</select>';
 
   if (availTabs.length === 0) {
     document.getElementById("mainContent").innerHTML = renderPathNav() + '<div class="card"><div style="padding:40px;text-align:center;color:var(--text3);font-size:15px">此疾病尚無任何內容，請在 CMS 中編輯</div></div>' + renderNotesPanel();
@@ -2545,9 +2728,14 @@ function renderEntry() {
   }
 
   var bodyHtml = renderSection(secs[currentTab], currentTab === "drug" ? drugs : null, currentTab === "prog" ? comps : null, secs[currentTab]);
-  document.getElementById("mainContent").innerHTML = renderPathNav() + '<div class="card"><div class="tabs">' + tabsHtml + '</div><div class="tc">' + bodyHtml + '</div></div>' + renderRelatedQuestions(currentId) + renderRelNav(currentId) + renderNotesPanel() + renderMetaFooter(currentId);
+  document.getElementById("mainContent").innerHTML = renderPathNav() + '<div class="card"><div class="tabs-bar"><div class="tabs">' + tabsHtml + '</div>' + tabSelectHtml + '</div><div class="tc">' + bodyHtml + '</div></div>' + renderRelatedQuestions(currentId) + renderRelNav(currentId) + renderNotesPanel() + renderMetaFooter(currentId);
   renderBreadcrumb(d, availTabs);
   scrollMainTop();
+  // keep the active tab visible in the horizontally-scrolling tab strip (mobile)
+  try{
+    var at = document.querySelector(".tabs .tab.active");
+    if (at && at.scrollIntoView) at.scrollIntoView({ inline: "center", block: "nearest" });
+  }catch(e){}
 }
 
 /* Lightweight location breadcrumb: 首頁 › 分類 › 疾病 › 當前tab */
@@ -2741,31 +2929,83 @@ function renderRelNav(id){
 /* ===== High-yield facts (pearls) ===== */
 // Schema: { groups: [ { title, facts: [ "fact text", ... ] } ] }
 //   or flat: { facts: [ ... ] }
+// Classify a pearl tag into a "kind": clinical red-flag, exam point, or neutral.
+// Detects keywords so existing free-text tags light up without a data migration.
+function pearlKind(tag){
+  if (!tag) return "";
+  var t = String(tag);
+  if (/紅旗|臨床|致命|must|miss|危|急|警/i.test(t)) return "clinical";
+  if (/考|高頻|陷阱|常考|題|易錯|國考/i.test(t)) return "exam";
+  return "";
+}
+
 function renderPearls(content){
   if (!content) return '<p style="color:var(--text3)">此疾病尚無重點整理</p>';
   var groups = content.groups;
   if (!groups && content.facts) groups = [{ title: "", facts: content.facts }];
   if (!groups || !groups.length) return '<p style="color:var(--text3)">此疾病尚無重點整理</p>';
 
+  // Count how many clinical / exam pearls exist (to decide whether to show filters)
+  var nClin = 0, nExam = 0;
+  groups.forEach(function(g){
+    (g.facts || []).forEach(function(f){
+      var tag = (typeof f === "object" && f.tag) ? f.tag : "";
+      var k = pearlKind(tag);
+      if (k === "clinical") nClin++;
+      else if (k === "exam") nExam++;
+    });
+  });
+  var hasBoth = nClin > 0 && nExam > 0;
+
   var html = '<div class="pearls-wrap">';
-  html += '<div class="pearls-intro"><i class="ti ti-bulb"></i> 高分重點 — 考前快速掃描</div>';
+  html += '<div class="pearls-intro"><i class="ti ti-bulb"></i> 高分重點 — 重點快速掃描</div>';
+  // Filter toggles (only when both kinds are present)
+  if (hasBoth){
+    html += '<div class="pearls-filter" id="pearlsFilter">'+
+      '<button class="pf-btn active" data-pf="all" onclick="setPearlFilter(\'all\')">全部</button>'+
+      '<button class="pf-btn pf-clinical" data-pf="clinical" onclick="setPearlFilter(\'clinical\')">⚠️ 臨床紅旗 <span class="pf-n">'+nClin+'</span></button>'+
+      '<button class="pf-btn pf-exam" data-pf="exam" onclick="setPearlFilter(\'exam\')">📝 考點 <span class="pf-n">'+nExam+'</span></button>'+
+      '</div>';
+  }
   groups.forEach(function(g){
     if (g.title) html += '<div class="sl">' + fmt(g.title) + '</div>';
     html += '<div class="pearls-list">';
     (g.facts || []).forEach(function(f){
-      // A fact may be a plain string or {text, tag}
       var text = (typeof f === "string") ? f : (f.text || "");
       var tag = (typeof f === "object" && f.tag) ? f.tag : "";
-      html += '<div class="pearl">';
-      html += '<span class="pearl-mark"><i class="ti ti-point-filled"></i></span>';
+      var kind = pearlKind(tag);
+      var cls = "pearl" + (kind ? " pearl-" + kind : "");
+      var mark = kind === "clinical" ? "⚠️" : (kind === "exam" ? "📝" : '<i class="ti ti-point-filled"></i>');
+      html += '<div class="' + cls + '" data-kind="' + (kind || "neutral") + '">';
+      html += '<span class="pearl-mark">' + mark + '</span>';
       html += '<div class="pearl-body">' + linkifyEntities(fmt(text));
-      if (tag) html += ' <span class="pearl-tag">' + escHtml(tag) + '</span>';
+      if (tag) html += ' <span class="pearl-tag pearl-tag-' + (kind || "neutral") + '">' + escHtml(tag) + '</span>';
       html += '</div></div>';
     });
     html += '</div>';
   });
   html += '</div>';
   return html;
+}
+
+// Filter pearls by kind (all / clinical / exam) without re-rendering
+function setPearlFilter(kind){
+  var wrap = document.querySelector(".pearls-wrap");
+  if (!wrap) return;
+  wrap.querySelectorAll(".pf-btn").forEach(function(b){
+    b.classList.toggle("active", b.getAttribute("data-pf") === kind);
+  });
+  wrap.querySelectorAll(".pearl").forEach(function(p){
+    var k = p.getAttribute("data-kind");
+    var show = (kind === "all") || (k === kind);
+    p.style.display = show ? "" : "none";
+  });
+  // hide group sub-labels that now have no visible pearls
+  wrap.querySelectorAll(".pearls-list").forEach(function(list){
+    var anyVisible = Array.prototype.some.call(list.querySelectorAll(".pearl"), function(p){ return p.style.display !== "none"; });
+    var sl = list.previousElementSibling;
+    if (sl && sl.classList.contains("sl")) sl.style.display = anyVisible ? "" : "none";
+  });
 }
 
 /* ===== Pattern recognition (cover-the-answer cards) ===== */
@@ -3504,10 +3744,12 @@ function renderSection(data, drugs, comps, raw) {
         }
         html += '</div>';
 
-        // Body — each field as a labeled section
+        // Body — dosage gets a prominent banner (clinical quick-reference); rest are labeled rows
+        if (dr.dosage){
+          html += '<div class="drug-dose"><span class="drug-dose-lbl">劑量</span><span class="drug-dose-val">' + renderRichText(dr.dosage) + '</span></div>';
+        }
         var rows = [];
         if (dr.mechanism)  rows.push({ label: "機轉", en: "MECHANISM", value: dr.mechanism });
-        if (dr.dosage)     rows.push({ label: "劑量", en: "DOSAGE", value: dr.dosage });
         if (dr.indication) rows.push({ label: "適應症", en: "INDICATION", value: dr.indication });
         if (dr.notes)      rows.push({ label: "注意", en: "CAUTION", value: dr.notes, caution: true });
 
@@ -6471,6 +6713,15 @@ function showHome(){
     }
     h += '<div class="hm-sect hm-sect-wide">' + pathsInner + '</div>';
   }
+
+  // Support footer — low-key, only on home (never on content pages)
+  h += '<div class="hm-support">'+
+    '<a class="hm-support-btn" href="'+BMC_URL+'" target="_blank" rel="noopener">'+
+    '<span class="hm-support-cup">☕</span>'+
+    '<span class="hm-support-txt"><b>覺得有幫助？</b>請我喝杯咖啡，支持持續更新</span>'+
+    '</a>'+
+    '<div class="hm-support-note">本平台免費提供，無廣告 · 純個人醫學教育專案</div>'+
+    '</div>';
 
   h += '</div>'; // home
   document.getElementById("mainContent").innerHTML = h;
