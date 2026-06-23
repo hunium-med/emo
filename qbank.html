@@ -330,6 +330,10 @@ var diseaseNameMap={}; // disease_id → name (loaded from diseases table)
 var diseaseFilter = (function(){
   try{ return new URLSearchParams(location.search).get("disease") || null; }catch(e){ return null; }
 })();
+// Fallback: ?organ=<系統名> restricts to an organ system (when a disease has no linked questions yet)
+var organFilter = (function(){
+  try{ return new URLSearchParams(location.search).get("organ") || null; }catch(e){ return null; }
+})();
 try{ var raw=localStorage.getItem("qbank_user"); if(raw)SB_USER=JSON.parse(raw); }catch(e){}
 
 function authHDRS(){
@@ -700,6 +704,7 @@ function applyFilters(){
 
   filtered = allQuestions.filter(function(q){
     if(diseaseFilter && q.disease_id!==diseaseFilter) return false;
+    if(organFilter && !diseaseFilter && q.organ_system!==organFilter) return false;
     if(subj  && q.subject!==subj)  return false;
     if(organ && q.organ_system!==organ) return false;
     if(topic && q.topic!==topic)   return false;
@@ -775,12 +780,10 @@ function startSession(){
   // Pre-compute option permutation for each question (display index -> real index)
   var optionMaps = {};
   queue.forEach(function(q){
-    var n = q.num_options || 5;
-    if(q.num_options==null){
-      n = q.option4 ? 5 : 4;
-    }
+    // Include every option column that actually has content (option0..option4 → A..E).
+    // This shows E whenever it exists, regardless of num_options being set correctly.
     var arr = [];
-    for(var i=0;i<n;i++) if(q["option"+i]) arr.push(i);
+    for(var i=0;i<5;i++){ if(q["option"+i]!=null && String(q["option"+i]).trim()!=="") arr.push(i); }
     optionMaps[q.id] = shufO ? shuffle(arr) : arr;
   });
 
@@ -841,7 +844,18 @@ function renderQuestion(){
   var el = document.getElementById("mainContent");
   var list = activeList();
   if(!list.length){
-    el.innerHTML = '<div style="text-align:center;padding:60px;color:#7ab3d9"><div style="font-size:32px;margin-bottom:12px">📋</div><div style="font-size:15px">'+(allQuestions.length===0?"題庫為空":"沒有符合條件的題目")+'</div></div>';
+    var msg, extra = "";
+    if(allQuestions.length===0){
+      msg = "題庫為空";
+    } else if(diseaseFilter){
+      var dzName = diseaseNameMap[diseaseFilter] || "此疾病";
+      msg = "「"+esc(dzName)+"」目前還沒有專屬題目";
+      extra = '<div style="font-size:13px;color:#7ab3d9;margin-top:8px;line-height:1.6">這個疾病的題目尚未在題庫中建立連結<br>你可以練習全部題目，或在題庫 CMS 把題目關聯到此疾病</div>'+
+        '<button class="btn" style="margin-top:14px;background:#185FA5;color:#fff;border:none;padding:9px 20px;border-radius:9px;cursor:pointer;font-size:14px" onclick="clearDiseaseFilter()">練習全部題目</button>';
+    } else {
+      msg = "沒有符合條件的題目";
+    }
+    el.innerHTML = '<div style="text-align:center;padding:60px;color:#7ab3d9"><div style="font-size:32px;margin-bottom:12px">📋</div><div style="font-size:15px">'+msg+'</div>'+extra+'</div>';
     return;
   }
   if(curIdx>=list.length) curIdx=list.length-1;
@@ -856,8 +870,7 @@ function renderQuestion(){
   if(session && session.optionMaps[q.id]) optOrder = session.optionMaps[q.id];
   else {
     optOrder = [];
-    var n = q.num_options || (q.option4 ? 5 : 4);
-    for(var i=0;i<n;i++) if(q["option"+i]) optOrder.push(i);
+    for(var i=0;i<5;i++){ if(q["option"+i]!=null && String(q["option"+i]).trim()!=="") optOrder.push(i); }
   }
 
   var inTest = session && session.mode==="test";
@@ -1041,7 +1054,7 @@ function selectOption(qid, realIdx){
   var qq = list[curIdx];
   var optOrder;
   if(session && session.optionMaps[qq.id]) optOrder = session.optionMaps[qq.id];
-  else { optOrder=[]; var n=qq.num_options||(qq.option4?5:4); for(var i=0;i<n;i++) if(qq["option"+i]) optOrder.push(i); }
+  else { optOrder=[]; for(var i=0;i<5;i++){ if(qq["option"+i]!=null && String(qq["option"+i]).trim()!=="") optOrder.push(i); } }
   var dispIdx = optOrder.indexOf(realIdx);
   els.forEach(function(o,i){
     o.classList.remove("selected");
@@ -1055,23 +1068,36 @@ function selectOption(qid, realIdx){
 async function showDiseaseFilterBanner(){
   var existing = document.getElementById("dzFilterBanner");
   if(existing) existing.remove();
-  if(!diseaseFilter) return;
-  var name = diseaseNameMap[diseaseFilter] || "指定疾病";
-  var n = filtered.length;
-  var bar = document.createElement("div");
-  bar.id = "dzFilterBanner";
-  bar.className = "dz-filter-banner";
-  var backUrl = MAIN_APP_URL + "#" + encodeURIComponent(diseaseFilter);
-  bar.innerHTML = '<span><i class="ti ti-filter"></i> 只顯示「<b>'+esc(name)+'</b>」的題目（'+n+' 題）</span>'+
-    '<span class="dz-filter-actions">'+
-      '<a class="dz-back-btn" href="'+backUrl+'"><i class="ti ti-arrow-back-up"></i> 返回「'+esc(name)+'」</a>'+
-      '<button onclick="clearDiseaseFilter()">顯示全部題目 ✕</button>'+
-    '</span>';
-  var content = document.querySelector(".content");
-  if(content) content.insertBefore(bar, content.firstChild);
+  if(diseaseFilter){
+    var name = diseaseNameMap[diseaseFilter] || "指定疾病";
+    var n = filtered.length;
+    var bar = document.createElement("div");
+    bar.id = "dzFilterBanner";
+    bar.className = "dz-filter-banner";
+    var backUrl = MAIN_APP_URL + "#" + encodeURIComponent(diseaseFilter);
+    bar.innerHTML = '<span><i class="ti ti-filter"></i> 只顯示「<b>'+esc(name)+'</b>」的題目（'+n+' 題）</span>'+
+      '<span class="dz-filter-actions">'+
+        '<a class="dz-back-btn" href="'+backUrl+'"><i class="ti ti-arrow-back-up"></i> 返回「'+esc(name)+'」</a>'+
+        '<button onclick="clearDiseaseFilter()">顯示全部題目 ✕</button>'+
+      '</span>';
+    var content = document.querySelector(".content");
+    if(content) content.insertBefore(bar, content.firstChild);
+  } else if(organFilter){
+    var n2 = filtered.length;
+    var bar2 = document.createElement("div");
+    bar2.id = "dzFilterBanner";
+    bar2.className = "dz-filter-banner";
+    bar2.innerHTML = '<span><i class="ti ti-filter"></i> 只顯示「<b>'+esc(organFilter)+'</b>」系統的題目（'+n2+' 題）</span>'+
+      '<span class="dz-filter-actions">'+
+        '<button onclick="clearDiseaseFilter()">顯示全部題目 ✕</button>'+
+      '</span>';
+    var content2 = document.querySelector(".content");
+    if(content2) content2.insertBefore(bar2, content2.firstChild);
+  }
 }
 function clearDiseaseFilter(){
   diseaseFilter = null;
+  organFilter = null;
   try{ history.replaceState(null,null,location.pathname); }catch(e){}
   var b = document.getElementById("dzFilterBanner"); if(b) b.remove();
   applyFilters();
@@ -1352,7 +1378,7 @@ document.addEventListener("keydown", function(e){
     var di = parseInt(e.key)-1;
     var optOrder;
     if(session && session.optionMaps[q.id]) optOrder = session.optionMaps[q.id];
-    else { optOrder=[]; var n=q.num_options||(q.option4?5:4); for(var i=0;i<n;i++) if(q["option"+i]) optOrder.push(i); }
+    else { optOrder=[]; for(var i=0;i<5;i++){ if(q["option"+i]!=null && String(q["option"+i]).trim()!=="") optOrder.push(i); } }
     if(di<optOrder.length){
       e.preventDefault();
       selectOption(q.id, optOrder[di]);

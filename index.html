@@ -147,7 +147,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99}
 @media(max-width:768px){.sidebar-overlay.show{display:block}}
 @media(max-width:768px){
-  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:100;width:100%;min-width:100%;margin-left:0!important;opacity:1!important;pointer-events:auto!important;transform:translateX(-100%);transition:transform 0.25s ease;box-shadow:none}
+  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:100;width:100%;min-width:100%;margin-left:0!important;opacity:1!important;pointer-events:auto!important;transform:translateX(-100%);transition:transform 0.25s ease;box-shadow:none;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  /* on mobile the whole sidebar scrolls as one column (list + nav buttons),
+     instead of the disease list scrolling inside a squeezed flex:1 box */
+  .sidebar-list{flex:none;overflow-y:visible}
+  .sidebar-header{position:sticky;top:0;z-index:2;background:#f0f5fb}
+  body.dark .sidebar-header{background:var(--bg)}
   .sidebar:not(.hidden){transform:translateX(0)}
   .sidebar.hidden{transform:translateX(-100%)}
   body.dark .sidebar{background:var(--bg)}
@@ -161,8 +166,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
   .content{padding:10px}
   .tc{padding:12px 14px;font-size:15px;line-height:1.65}
   .tabs{padding:0 2px}
-  .tabs{display:none}
-  .tab-select{display:block}
+  .card .tabs{display:none}
+  .card .tab-select{display:block}
   .tab{padding:9px 10px;font-size:13px}
   /* bedside readability: lift the smallest fonts on mobile */
   .pearl-body,.drug-field-value,.drug-dose-val,.comp-name{font-size:15px}
@@ -327,6 +332,8 @@ body.dark .nav-group-label{color:var(--text3)}
 .relq-title{font-size:var(--fs-h3);font-weight:var(--fw-semi);color:var(--text)}
 .relq-sub{font-size:var(--fs-sm);color:var(--text2);margin-top:2px}
 .relq-btn{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;text-decoration:none;padding:9px 18px;border-radius:9px;font-size:var(--fs-body);font-weight:var(--fw-semi);white-space:nowrap}
+.relq-card-soft{background:var(--bg2);border-left-color:var(--text3)}
+.relq-btn-soft{background:var(--blue)}
 .relq-btn:hover{filter:brightness(0.93)}
 /* Related diseases (differential / same-class) */
 .rd-header{margin-top:18px;padding-top:16px;border-top:0.5px solid var(--border)}
@@ -4248,19 +4255,33 @@ function setStatus(s){
 }
 
 function renderRelatedQuestions(diseaseId){
-  var n = qCountByDisease[diseaseId] || 0;
-  if(!n) return ""; // no linked questions → omit
   var d = diseases.find(function(x){ return x.id === diseaseId; });
-  var dzName = d ? d.name : "";
-  // Link to qbank filtered to this disease (qbank reads ?disease= from URL)
-  var url = QBANK_URL + "?disease=" + encodeURIComponent(diseaseId);
-  var h = '<div class="relq-card">';
-  h += '<div class="relq-left"><i class="ti ti-clipboard-text relq-icon"></i>';
-  h += '<div><div class="relq-title">相關考題</div>';
-  h += '<div class="relq-sub">這個疾病有 <b>' + n + '</b> 題練習，讀完馬上測驗自己</div></div></div>';
-  h += '<a class="relq-btn" href="' + url + '" target="_blank" rel="noopener">前往練習 <i class="ti ti-arrow-right"></i></a>';
-  h += '</div>';
-  return h;
+  if(!d) return "";
+  var n = qCountByDisease[diseaseId] || 0;
+  if(n > 0){
+    // Disease has questions directly linked → precise practice link
+    var url = QBANK_URL + "?disease=" + encodeURIComponent(diseaseId);
+    var h = '<div class="relq-card">';
+    h += '<div class="relq-left"><i class="ti ti-clipboard-text relq-icon"></i>';
+    h += '<div><div class="relq-title">相關考題</div>';
+    h += '<div class="relq-sub">這個疾病有 <b>' + n + '</b> 題練習，讀完馬上測驗自己</div></div></div>';
+    h += '<a class="relq-btn" href="' + url + '" target="_blank" rel="noopener">前往練習 <i class="ti ti-arrow-right"></i></a>';
+    h += '</div>';
+    return h;
+  }
+  // No disease-linked questions → offer the organ-system bank, but label it honestly
+  // so the user understands these are system-wide (not disease-specific) questions.
+  if(d.category){
+    var url2 = QBANK_URL + "?organ=" + encodeURIComponent(d.category);
+    var h2 = '<div class="relq-card relq-card-soft">';
+    h2 += '<div class="relq-left"><i class="ti ti-clipboard-text relq-icon"></i>';
+    h2 += '<div><div class="relq-title">練習「' + escHtml(d.category) + '」題庫</div>';
+    h2 += '<div class="relq-sub">此疾病尚無專屬題目，先練習同系統題庫（非單一疾病）</div></div></div>';
+    h2 += '<a class="relq-btn relq-btn-soft" href="' + url2 + '" target="_blank" rel="noopener">前往題庫 <i class="ti ti-arrow-right"></i></a>';
+    h2 += '</div>';
+    return h2;
+  }
+  return "";
 }
 
 function renderNotesPanel(){
